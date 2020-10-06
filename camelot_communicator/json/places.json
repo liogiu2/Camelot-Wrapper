@@ -1,0 +1,707 @@
+[{
+	"name": "AlchemyShop",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Bar",
+		"attribute": ["Open", "Close", "Surface"],
+		"position": ["Behind", "Left", "Center", "Right"]
+	}, {
+		"name": "BackDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "RightBookcase",
+		"attribute": [""]
+	}, {
+		"name": "LeftBookcase",
+		"attribute": [""]
+	}, {
+		"name": "BookShelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "BackLeft", "FrontRight", "BackRight"]
+	}, {
+		"name": "AlchemistTable",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "Center"]
+	}, {
+		"name": "Cauldron",
+		"attribute": [""]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}]
+}, {
+	"name": "Blacksmith",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Target",
+		"attribute": [""]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "FrontRight"]
+	}, {
+		"name": "Anvil",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "BackDoor",
+		"attribute": ["Open", "Close"]
+	}]
+}, {
+	"name": "Bridge",
+	"type": ["outside", "connection"],
+	"room_components": [{
+		"name": "NorthEnd",
+		"attribute": [""]
+	}, {
+		"name": "WestEnd",
+		"attribute": [""]
+	}, {
+		"name": "SouthEnd",
+		"attribute": [""]
+	}, {
+		"name": "SouthSign",
+		"attribute": ["Furniture"]
+	}, {
+		"name": "WestSign",
+		"attribute": ["Furniture"]
+	}, {
+		"name": "NorthSign",
+		"attribute": ["Furniture"]
+	}, {
+		"name": "Flowers",
+		"attribute": [""],
+		"position": ["Flowers"]
+	}, {
+		"name": "Woods",
+		"attribute": [""],
+		"position": ["Woods"]
+	}]
+}, {
+	"name": "Camp",
+	"type": ["outside", "place"],
+	"room_components": [{
+		"name": "Exit",
+		"attribute": [""]
+	}, {
+		"name": "Plant",
+		"attribute": [""]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Stall",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "LeftLog",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Cauldron",
+		"attribute": [""]
+	}, {
+		"name": "Roast",
+		"attribute": [""]
+	}, {
+		"name": "Firepit",
+		"attribute": [""]
+	}, {
+		"name": "Log",
+		"attribute": ["Seat"]
+	}, {
+		"name": "RightLog",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Horse",
+		"attribute": [""]
+	}]
+}, {
+	"name": "CastleBedroom",
+	"type": ["room", "fancy"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Couch",
+		"attribute": ["Seat"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "FrontRight", "BackLeft", "BackRight"]
+	}, {
+		"name": "RightChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "LeftChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "SmallTable",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Bed",
+		"attribute": ["Seat"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Closet",
+		"attribute": [""]
+	}]
+}, {
+	"name": "CastleCrossroads",
+	"type": ["outside", "connection"],
+	"room_components": [{
+		"name": "WestEnd",
+		"attribute": [""]
+	}, {
+		"name": "Right",
+		"attribute": [""],
+		"position": ["Right"]
+	}, {
+		"name": "Left",
+		"attribute": [""],
+		"position": ["Left"]
+	}, {
+		"name": "EastEnd",
+		"attribute": [""]
+	}, {
+		"name": "Gate",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "WestSign",
+		"attribute": ["Furniture"]
+	}, {
+		"name": "Eastsight",
+		"attribute": ["Furniture"]
+	}]
+}, {
+	"name": "City",
+	"type": ["outside", "place"],
+	"room_components": [{
+		"name": "NorthEnd",
+		"attribute": [""]
+	}, {
+		"name": "GreenHouseDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Beanch",
+		"attribute": ["Seat"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Fountain",
+		"attribute": [""]
+	}, {
+		"name": "EastEnd",
+		"attribute": [""]
+	}, {
+		"name": "BrownHouseDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Plant",
+		"attribute": [""]
+	}, {
+		"name": "RedHouseDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Alley",
+		"attribute": [""],
+		"position": ["Alley"]
+	}, {
+		"name": "Alley2",
+		"attribute": [""],
+		"position": ["Alley2"]
+	}, {
+		"name": "blueHouseDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Horse",
+		"attribute": [""]
+	}, {
+		"name": "WestEnd",
+		"attribute": [""]
+	}]
+}, {
+	"name": "Cottage",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Bed",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}, {
+		"name": "Chair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Shelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "BookShelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}]
+}, {
+	"name": "Courtyard",
+	"type": ["room", "fancy"],
+	"room_components": [{
+		"name": "Gate",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Fountain",
+		"attribute": [""]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "SmallStall",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "Exit",
+		"attribute": [""]
+	}, {
+		"name": "Horse",
+		"attribute": [""]
+	}, {
+		"name": "Target",
+		"attribute": [""]
+	}, {
+		"name": "RightBeanch",
+		"attribute": ["Seat"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "LeftBeanch",
+		"attribute": ["Seat"],
+		"position": ["Left", "Right"]
+	}]
+}, {
+	"name": "Dining Room",
+	"type": ["room", "fancy"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "BackDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}, {
+		"name": "FrontLeftChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "FrontRightChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "RightChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "BackRightChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "BackLeftChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "LeftChair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "DiningTable",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "FrontRight", "BackLeft", "BackRight"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"]
+	}, {
+		"name": "LeftWindow",
+		"attribute": [""],
+		"position": ["LeftWindow"]
+	}, {
+		"name": "Window",
+		"attribute": [""],
+		"position": ["Window"]
+	}, {
+		"name": "RightWindow",
+		"attribute": [""],
+		"position": ["RightWindow"]
+	}, {
+		"name": "Shelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}]
+}, {
+	"name": "Dungeon",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "FrontRight", "BackLeft", "BackRight"]
+	}, {
+		"name": "Chair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "BookShelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "CellDoor",
+		"attribute": ["Open", "Close"],
+		"position": ["inside"]
+	}, {
+		"name": "RoundTable",
+		"attribute": ["Surface"]
+	}, {
+		"name": "DirtPile",
+		"attribute": [""]
+	}, {
+		"name": "Bed",
+		"attribute": ["Seat"]
+	}]
+}, {
+	"name": "Farm",
+	"type": ["outside", "place"],
+	"room_components": [{
+		"name": "Exit",
+		"attribute": [""]
+	}, {
+		"name": "HayPiles",
+		"attribute": [""],
+		"position": ["HayPiles"]
+	}, {
+		"name": "Horse",
+		"attribute": [""]
+	}, {
+		"name": "Anvil",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Well",
+		"attribute": [""]
+	}]
+}, {
+	"name": "ForestPath",
+	"type": ["outside", "connection"],
+	"room_components": [{
+		"name": "EastEnd",
+		"attribute": [""]
+	}, {
+		"name": "Well",
+		"attribute": [""]
+	}, {
+		"name": "Plant",
+		"attribute": [""]
+	}, {
+		"name": "DirtPile",
+		"attribute": [""]
+	}, {
+		"name": "Pathblock",
+		"attribute": [""],
+		"position": ["Pathblock"]
+	}, {
+		"name": "WestEnd",
+		"attribute": [""]
+	}]
+}, {
+	"name": "GreatHall",
+	"type": ["room", "fancy", "connection"],
+	"room_components": [{
+		"name": "Gate",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Leftfoyer",
+		"attribute": [""],
+		"position": ["Leftfoyer"]
+	}, {
+		"name": "Rightfoyer",
+		"attribute": [""],
+		"position": ["Rightfoyer"]
+	}, {
+		"name": "BasementDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "LeftSupplicant",
+		"attribute": [""],
+		"position": ["LeftSupplicant"]
+	}, {
+		"name": "Supplicant",
+		"attribute": [""],
+		"position": ["Supplicant"]
+	}, {
+		"name": "RightSupplicant",
+		"attribute": [""],
+		"position": ["RightSupplicant"]
+	}, {
+		"name": "LeftGuard",
+		"attribute": [""],
+		"position": ["LeftGuard"]
+	}, {
+		"name": "RightGuard",
+		"attribute": [""],
+		"position": ["RightGuard"]
+	}, {
+		"name": "LeftThrone",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Throne",
+		"attribute": ["Seat"]
+	}, {
+		"name": "RightThrone",
+		"attribute": ["Seat"]
+	}, {
+		"name": "LeftDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "LeftBalcony",
+		"attribute": [""],
+		"position": ["LeftBalcony"]
+	}, {
+		"name": "RightBalcony",
+		"attribute": [""],
+		"position": ["RightBalcony"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"]
+	}]
+}, {
+	"name": "Hallway",
+	"type": ["room", "fancy", "connection"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Center",
+		"attribute": [""],
+		"position": ["Center"]
+	}, {
+		"name": "BackDoor",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Stairs",
+		"attribute": [""]
+	}]
+}, {
+	"name": "Library",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Bookcase",
+		"attribute": [""]
+	}, {
+		"name": "Bookcase2",
+		"attribute": [""]
+	}, {
+		"name": "Bookcase3",
+		"attribute": [""]
+	}, {
+		"name": "Bookcase4",
+		"attribute": [""]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Chair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "AlchemistTable",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "Center"]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}, {
+		"name": "Cauldron",
+		"attribute": [""]
+	}, {
+		"name": "Stand",
+		"attribute": [""]
+	}, {
+		"name": "SpellBook",
+		"attribute": [""]
+	}, {
+		"name": "Window",
+		"attribute": [""],
+		"position": ["Window"]
+	}]
+}, {
+	"name": "Port",
+	"type": ["outside", "connection"],
+	"room_components": [{
+		"name": "Exit",
+		"attribute": [""]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "SmallStall",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Barrel2",
+		"attribute": ["Surface"]
+	}, {
+		"name": "BigStall",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "SmallShip",
+		"attribute": [""]
+	}, {
+		"name": "BigShip",
+		"attribute": [""]
+	}]
+}, {
+	"name": "Ruins",
+	"type": ["outside", "place"],
+	"room_components": [{
+		"name": "Exit",
+		"attribute": [""]
+	}, {
+		"name": "DirtPile",
+		"attribute": [""]
+	}, {
+		"name": "Plant",
+		"attribute": [""]
+	}, {
+		"name": "Altar",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Throne",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Altar",
+		"attribute": ["Surface"],
+		"position": ["Behind"]
+	}]
+}, {
+	"name": "SpookyPath",
+	"type": ["outside", "connection"],
+	"room_components": [{
+		"name": "WestEnd",
+		"attribute": [""]
+	}, {
+		"name": "DirtPile",
+		"attribute": [""]
+	}, {
+		"name": "Plant",
+		"attribute": [""]
+	}, {
+		"name": "Well",
+		"attribute": [""]
+	}, {
+		"name": "Pathblock",
+		"attribute": [""],
+		"position": ["Pathblock"]
+	}, {
+		"name": "EastEnd",
+		"attribute": [""]
+	}]
+}, {
+	"name": "Storage",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Chest",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "Shelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}]
+}, {
+	"name": "Tavern",
+	"type": ["room"],
+	"room_components": [{
+		"name": "Door",
+		"attribute": ["Open", "Close"]
+	}, {
+		"name": "FrontLeftStool",
+		"attribute": ["Seat"]
+	}, {
+		"name": "FrontRightStool",
+		"attribute": ["Seat"]
+	}, {
+		"name": "BackLeftStool",
+		"attribute": ["Seat"]
+	}, {
+		"name": "BackRightStool",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Table",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right", "FrontLeft", "FrontRight", "BackLeft", "BackRight"]
+	}, {
+		"name": "RoundTable",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Chair",
+		"attribute": ["Seat"]
+	}, {
+		"name": "Fireplace",
+		"attribute": [""]
+	}, {
+		"name": "Bar",
+		"attribute": ["Surface", "Open", "Close"],
+		"position": ["Behind", "Left", "Center", "Right"]
+	}, {
+		"name": "Barrel",
+		"attribute": ["Surface"]
+	}, {
+		"name": "Shelf",
+		"attribute": ["Surface"],
+		"position": ["Left", "Right"]
+	}, {
+		"name": "BackDoor",
+		"attribute": ["Open", "Close"]
+	}]
+}]

@@ -1,0 +1,1021 @@
+[{
+		"name": "AddToList",
+		"desc": "Adds an entity to the list with an optional description. The list structure keeps track of a set of entities that could be used to represent the contents of a furniture or the possessions of a character. Entities can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an entity can be accessed by right clicking that entity in the list.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to add to the list"
+		}, {
+			"name": "Entity Description",
+			"type": "String",
+			"default": "",
+			"desc": "Description of the entity to add to the list"
+		}]
+	},
+	{
+		"name": "Attack",
+		"desc": "A character attacks another character using the item in their right hand. If the attack hits, the victim bleeds, otherwise, they dodge the attack.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the attacker"
+		}, {
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the victim"
+		}, {
+			"name": "Attack Hits",
+			"type": "Boolean",
+			"default": "FALSE",
+			"desc": "Whether the attack hits the target or they dodge it."
+		}]
+	},
+	{
+		"name": "Bash",
+		"desc": "A character bashes the specified furniture with their right hand",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the attacker"
+		}, {
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "REQUIRED",
+			"desc": "Name of the furniture"
+		}]
+	},
+	{
+		"name": "Cast",
+		"desc": "Character casts a spell. If a target is specified, the caster faces the target first. There are two different animations for casting spell with or without a target. You can specify the projectile color if a target is specified.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the caster"
+		}, {
+			"name": "Character Name",
+			"type": "Character",
+			"default": "null",
+			"desc": "Name of the target"
+		}, {
+			"name": "Projectile Color",
+			"type": "red, blue, or purple",
+			"default": "red",
+			"desc": "Color of the projectile to create"
+		}]
+	},
+	{
+		"name": "CheckVersion",
+		"desc": "Checks the current version of Camelot. If the versions do not match, the action fails.",
+		"param": [{
+			"name": "Expected Version",
+			"type": "String",
+			"default": "0",
+			"desc": "The version number to compare against."
+		}]
+	},
+	{
+		"name": "Clap",
+		"desc": "Character claps for a few seconds.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to clap"
+		}]
+	},
+	{
+		"name": "ClearDialog",
+		"desc": "Removes all lines from the dialog but does not hide the dialog window.",
+		"param": []
+	},
+	{
+		"name": "ClearList",
+		"desc": "Removes all the items from the list. The list structure keeps track of a set of items that could be used to represent the contents of a furniture or the possessions of a character. Items can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an item can be accessed by right clicking that item in the list.",
+		"param": []
+	},
+	{
+		"name": "CloseFurniture",
+		"desc": "Character walks to a furniture and closes it.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to close the furniture"
+		}, {
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "REQUIRED",
+			"desc": "Name of the furniture to be closed"
+		}]
+	},
+	{
+		"name": "CreateCharacter",
+		"desc": "Creates a character with a specific name and body-type. If a character with that name already exists, the action fails with an error.",
+		"param": [{
+			"name": "Character Name",
+			"type": "String",
+			"default": "REQUIRED",
+			"desc": "Name of the character to create"
+		}, {
+			"name": "Body-type",
+			"type": "A, B, C, D, E, F, G, or H",
+			"default": "A",
+			"desc": "The body-type of the character to create (refer to Characters to view different body-types)"
+		}]
+	},
+	{
+		"name": "CreateEffect",
+		"desc": "Creates a transient effect on an entity which disappears after a few seconds. Created effect is not attached to the entity. In other words, the effect remains at the spot it was created for its duration even if the entity moves or becomes hidden.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity as the effect target"
+		}, {
+			"name": "Effect Name",
+			"type": "Effect",
+			"default": "Diamond",
+			"desc": "Name of the effect to create"
+		}]
+	},
+	{
+		"name": "CreateItem",
+		"desc": "Creates an instance of an item type and gives it a name. If an item with that name already exists, the action fails with an error. In order to use any items, they must be first created.",
+		"param": [{
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item to create"
+		}, {
+			"name": "Item Type",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Type of the item to create (refer to Items for a list of all item types)"
+		}]
+	},
+	{
+		"name": "CreatePlace",
+		"desc": "Create an instance of a place and assign it a name. If a place with that name already exists, the action fails with an error.",
+		"param": [{
+			"name": "Place Name",
+			"type": "Place",
+			"default": "REQUIRED",
+			"desc": "Name of the place to create"
+		}, {
+			"name": "Place Type",
+			"type": "Place",
+			"default": "REQUIRED",
+			"desc": "Type of the item to create (refer to Places for a list of all places)"
+		}]
+	},
+	{
+		"name": "Dance",
+		"desc": "Character dances where they're standing. There are two different animations for male and female characters.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to dance"
+		}]
+	},
+	{
+		"name": "DanceTogether",
+		"desc": "Two characters approach one another and dance. There are two different animations for male and female characters.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to dance"
+		}, {
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the other character to dance"
+		}]
+	},
+	{
+		"name": "Die",
+		"desc": "Character dies where they're standing. The action does not include any sound effects.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to die"
+		}]
+	},
+	{
+		"name": "DisableEffect",
+		"desc": "Hides an effect that was enabled on an entity.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity as the effect target"
+		}, {
+			"name": "Effect Name",
+			"type": "Effect",
+			"default": "Hides all enabled effects on the entity",
+			"desc": "Name of the effect to disable"
+		}]
+	},
+	{
+		"name": "DisableIcon",
+		"desc": "Disables an experience manager defined action that was previous enabled on an entity.",
+		"param": [{
+			"name": "Action Name",
+			"type": "String",
+			"default": "REQUIRED",
+			"desc": "Name of the enabled action"
+		}, {
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to disable the action for"
+		}]
+	},
+	{
+		"name": "DisableInput",
+		"desc": "Disables mouse and keyboard controls. Disabling the input in Camelot is managed as an integer. It means that each time DisableInput succeeds, it disables the input once, and EnableInput must called as many times as DisableInput was called to actually enable the player input.Pressing the escape button disables the input and pressing it again enables it.Certain actions including ShowList, ShowCredits, ShowNarration, ShowList, and ShowDialog also enable the input since they are normally followed by a corresponding Show action, e.g. HideDialog, and those actions disable the input.",
+		"param": []
+	},
+	{
+		"name": "Draw",
+		"desc": "Character draws an item and holds it with their right hand. If an item with the provided name does not exist, the action fails with an error.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to draw"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item to draw"
+		}]
+	},
+	{
+		"name": "Drink",
+		"desc": "Character drinks from the items they're holding in their left hand.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to drink"
+		}]
+	},
+	{
+		"name": "EnableEffect",
+		"desc": "Creates an effect on an entity which remains until disabled. The enabled effect is attached to the entity. Therefore, it is moved or becomes hidden if the entity moves or becomes hidden.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity as the effect target"
+		}, {
+			"name": "Effect Name",
+			"type": "Effect",
+			"default": "Diamond",
+			"desc": "Name of the effect to enable"
+		}]
+	},
+	{
+		"name": "EnableIcon",
+		"desc": "Enables an experience manager defined action on an entity. Camelot only sends a string message in format \"input [action] [target]\" when an action is selected by the player. The default action is selected by left clicking on the target. Otherwise, an action can be selected from a radial menu that is displayed by right clicking on the target.",
+		"param": [{
+			"name": "Action Name",
+			"type": "String",
+			"default": "REQUIRED",
+			"desc": "The action string to send when selected"
+		}, {
+			"name": "Icon Name",
+			"type": "Icon",
+			"default": "REQUIRED",
+			"desc": "The name of the icon to be displayed in the radial menu"
+		}, {
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to enable an action on"
+		}, {
+			"name": "Description",
+			"type": "String",
+			"default": "Empty string",
+			"desc": "The description of the enabled icon"
+		}, {
+			"name": "Default Action",
+			"type": "Boolean",
+			"default": "FALSE",
+			"desc": "Whether this is the default action (performed by left clicking on the target)"
+		}]
+	},
+	{
+		"name": "EnableInput",
+		"desc": "Enables mouse and keybord input for the character that is set to the focus of the camera by SetCameraFocus. Regardless of how many times EnableInput was called in succession, if the player controls are enabled, it is only necessary to call. DisableInput once to disable them.Pressing the escape button disables the input and pressing it again enables it.Certain actions including HideList, HideCredits, HideNarration, HideList, and HideDialog also enable the input since they are normally called after a corresponding Show action, e.g. ShowMenu, and those actions disable the input.",
+		"param": []
+	},
+	{
+		"name": "Enter",
+		"desc": "Character enters from a door. If the third parameter is set to true, the screen fades in as the character is entering through the door. The door opens and closes on its own.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to enter"
+		}, {
+			"name": "Door Name",
+			"type": "Portal (door or exit)",
+			"default": "REQUIRED",
+			"desc": "Name of the door to enter from"
+		}, {
+			"name": "Fade In",
+			"type": "Boolean",
+			"default": "FALSE",
+			"desc": "Whether to fade in as the character is entering through the door"
+		}]
+	},
+	{
+		"name": "Exit",
+		"desc": "Character walks to, opens, and exits through a door. If the third parameter is set to true, the screen fades out as the character is exiting through the door. The door closes on its own.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to exit"
+		}, {
+			"name": "Door Name",
+			"type": "Portal (door or exit)",
+			"default": "REQUIRED",
+			"desc": "Name of the door to exit through"
+		}, {
+			"name": "Fade Out",
+			"type": "Boolean",
+			"default": "FALSE",
+			"desc": "Whether to fade out as the character is exiting through the door"
+		}]
+	},
+	{
+		"name": "Face",
+		"desc": "Character turns to face an entity.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to turn"
+		}, {
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the target to face"
+		}]
+	},
+	{
+		"name": "FadeIn",
+		"desc": "The screen fades in from black.",
+		"param": []
+	},
+	{
+		"name": "FadeOut",
+		"desc": "The screen fades out to black.",
+		"param": []
+	},
+	{
+		"name": "Give",
+		"desc": "Character walks to and hands an item to another character with their left hand.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character that gives the item"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item"
+		}, {
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character that takes the item"
+		}]
+	},
+	{
+		"name": "HideCredits",
+		"desc": "Closes the credits window.",
+		"param": []
+	},
+	{
+		"name": "HideDialog",
+		"desc": "Closes the dialog window. HideDialog also clears the dialog lines.",
+		"param": []
+	},
+	{
+		"name": "HideFurniture",
+		"desc": "Hides a furniture from a place. Furniture names are specified in format \"[place name].[furniture name]\".",
+		"param": [{
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "REQUIRED",
+			"desc": "Name of the furniture to hide"
+		}]
+	},
+	{
+		"name": "HideList",
+		"desc": "Closes the list window. The list structure keeps track of a set of items that could be used to represent the contents of a furniture or the possessions of a character. Items can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an item can be accessed by right clicking that item in the list.",
+		"param": []
+	},
+	{
+		"name": "HideMenu",
+		"desc": "Closes the menu. After this action succeeds for the first time running Camelot, the Start button on the menu is changed to Resume",
+		"param": []
+	},
+	{
+		"name": "HideNarration",
+		"desc": "Closes the narration window.",
+		"param": []
+	},
+	{
+		"name": "Kneel",
+		"desc": "Character kneels where they're standing. While kneeling, the character may fail certain action. Try to make them stand up using WalkTo before starting other actions",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to kneel"
+		}]
+	},
+	{
+		"name": "Laugh",
+		"desc": "Character laughs for a few seconds. The action does not include any sound effects.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to laugh"
+		}]
+	},
+	{
+		"name": "LookAt",
+		"desc": "Character maintains eye contact with an entity. In order to make the character stop looking, start this action and do not provide an argument.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to look at target"
+		}, {
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "null",
+			"desc": "Name of the target"
+		}]
+	},
+	{
+		"name": "MoveAway",
+		"desc": "Orders all characters close to the entity to slightly move away. This helps preventing the failure of actions that have a character interact with the furniture blocked by other characters.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to move away from"
+		}]
+	},
+	{
+		"name": "OpenFurniture",
+		"desc": "Character walks to a furniture and opens it.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to open the furniture"
+		}, {
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "REQUIRED",
+			"desc": "Name of the furniture to be opened"
+		}]
+	},
+	{
+		"name": "Pickup",
+		"desc": "Character picks an item from the ground with their left hand.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to pickup the item"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item to pickup"
+		}, {
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "null",
+			"desc": "Name of the furniture, if any, to pick the item from"
+		}]
+	},
+	{
+		"name": "PlaySound",
+		"desc": "Plays a sound effect. If an entity or place is specified, the sound effect can only be heard within the range of that entity or place.",
+		"param": [{
+			"name": "Sound Effect Name",
+			"type": "Sound Effect",
+			"default": "REQUIRED",
+			"desc": "Name of the sound effect to play"
+		}, {
+			"name": "Name of Entity or Place",
+			"type": "Entity or Place",
+			"default": "null",
+			"desc": "Name of the entity or place to confine the sound effect"
+		}, {
+			"name": "loop",
+			"type": "Boolean",
+			"default": "FALSE",
+			"desc": "Whether the sound effect loops until stopped"
+		}]
+	},
+	{
+		"name": "Pocket",
+		"desc": "Character puts the item they're holding in their left hand into their pocket. If the character is not holding the specified item in their left hand, the action fails.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item"
+		}]
+	},
+	{
+		"name": "Put",
+		"desc": "Character extends their arm to put an item they're holding in their left hand. If no target is provided, the item disappears. Otherwise, the character first walks up to the target. If the target is a surface position or a furniture with at least one surface position, the item is placed on the surface. If the target is a character, the item will be placed in their left hand.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item"
+		}, {
+			"name": "Name of the Entity or Position",
+			"type": "Entity or Position",
+			"default": "null",
+			"desc": "Name of the target"
+		}]
+	},
+	{
+		"name": "PutDown",
+		"desc": "Character puts an item on the ground with their left hand. This is merely an animation and the item will not be placed on the ground. Instead the item will disappear but will still exist.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to put down the item"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item to be put down"
+		}]
+	},
+	{
+		"name": "Quit",
+		"desc": "The Camelot window is closed. If Camelot is closed by this action, the last generated message is \"succeeded Quit()\". If the Camelot window is manually closed by the user, the last generated message is \"input Quit\".",
+		"param": []
+	},
+	{
+		"name": "RemoveFromList",
+		"desc": "Removes an entity from the list. The list structure keeps track of a set of entities that could be used to represent the contents of a furniture or the possessions of a character. Entities can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an entity can be accessed by right clicking that entity in the list.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to remove from the list"
+		}]
+	},
+	{
+		"name": "Reset",
+		"desc": "The Camelot is reset, it removed all created objects and shows the loading screen. Use this action to reset Camelot without resetting your experience manager.",
+		"param": []
+	},
+	{
+		"name": "Revive",
+		"desc": "If the character was dead, they get up.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to get up"
+		}]
+	},
+	{
+		"name": "SetCameraBlend",
+		"desc": "Sets the duration of camera transitions when using SetCameraMode and SetCameraFocus. Starting this action causes the current camera transition to be finished instantly.",
+		"param": [{
+			"name": "Transition Duration",
+			"type": "Real number",
+			"default": "0,75",
+			"desc": "The duration of all camera transitions"
+		}]
+	},
+	{
+		"name": "SetCameraFocus",
+		"desc": "Set the focus of the main camera to an entity. If that entity is a character and input is enabled, the character can be controlled by the mouse and keyboard. Action succeeds after the camera transition is finished.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity to focus on"
+		}]
+	},
+	{
+		"name": "SetCameraMode",
+		"desc": "Set camera mode to track, follow, or focus. Follow mode is an over-the-shoulder third-person camera that is only available when camera target is a character. Focus mode focuses the camera on a front view of the camera target. Track mode views a top-down view of the place where camera target is located. Action succeeds after the camera transition is finished.",
+		"param": [{
+			"name": "Camera Mode",
+			"type": "follow, focus, track",
+			"default": "REQUIRED",
+			"desc": "The camera mode to display"
+		}]
+	},
+	{
+		"name": "SetClothing",
+		"desc": "Changes the clothing of a character.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character"
+		}, {
+			"name": "Outfit Name",
+			"type": "Outfit",
+			"default": "naked",
+			"desc": "Refer to male or female outfits"
+		}]
+	},
+	{
+		"name": "SetCredits",
+		"desc": "Sets the text of the upper section of the credits window. Use ShowCredits to open the credits window.",
+		"param": [{
+			"name": "Credits Text",
+			"type": "String",
+			"default": "\"\"",
+			"desc": "The text to display on the upper section of the credits window"
+		}]
+	},
+	{
+		"name": "SetDay",
+		"desc": "Set the time of the day to daytime. This affects the look and lighting of places.",
+		"param": []
+	},
+	{
+		"name": "SetDialog",
+		"desc": "Appends a new line to the dialog window. A dialog line may contain several dialog options, that are represented by \"[ButtonKey|ButtonText]\" (must include the brackets in the dialog string). This shows that when ButtonText is clicked, Camelot sends a \"input Selected ButtonKey\" message.",
+		"param": [{
+			"name": "Dialog Line",
+			"type": "String",
+			"default": "REQUIRED",
+			"desc": "New dialog line"
+		}]
+	},
+	{
+		"name": "SetExpression",
+		"desc": "Set the expression of a character. The character emotes that expression until the action is started again with \"neutral\" or null as the second argument. The possible expressions include: Neutral, Happy, Sad, Angry, Disgusted, Scared, Surprised, and Asleep",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to emote"
+		}, {
+			"name": "Expression Name",
+			"type": "neutral, happy, sad, angry, disgusted, scared, surprised, asleep",
+			"default": "neutral",
+			"desc": "The expression of the character"
+		}]
+	},
+	{
+		"name": "SetEyeColor",
+		"desc": "Changes the eyecolor of a character to white, black, blue, red, brown or green.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to change"
+		}, {
+			"name": "Eyecolor",
+			"type": "white, black, blue, red, brown, green",
+			"default": "black",
+			"desc": "EyeColor to set"
+		}]
+	},
+	{
+		"name": "SetHairColor",
+		"desc": "Changes the haircolor of a character to gray, black, brown, red, or blonde.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to change"
+		}, {
+			"name": "Haircolor",
+			"type": "gray, black, brown, red, blonde",
+			"default": "black",
+			"desc": "Haircolor to set"
+		}]
+	},
+	{
+		"name": "SetHairStyle",
+		"desc": "Changes the hairstyle of a character. Certain body-types (B, D, F, and H) include facial hair. Use HairStyleName_beard to show facial hair and shaved to remove it. You may also use HairStyleName_full to enable the hairstyle with the corresponding facial hair.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to change"
+		}, {
+			"name": "Hairstyle Name",
+			"type": "Hairstyle",
+			"default": "bald",
+			"desc": "Refer to HairStyles for a list of all hairstyles."
+		}]
+	},
+	{
+		"name": "SetLeft",
+		"desc": "Sets the character that is displayed on the left-side of the dialog window. Use null to hide the character that is displayed on the left.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to display"
+		}]
+	},
+	{
+		"name": "SetNarration",
+		"desc": "Sets the narration text.",
+		"param": [{
+			"name": "Narration Text",
+			"type": "String",
+			"default": "\"\"",
+			"desc": "The text to display when the narration is shown"
+		}]
+	},
+	{
+		"name": "SetNight",
+		"desc": "Set the time of the day to nighttime. This affects the look and lighting of places.",
+		"param": []
+	},
+	{
+		"name": "SetPosition",
+		"desc": "Change the position of a character or item. If the target position is not provided, the entity disappears but will still exist. If the target position is a place, the specified character is placed at its default position (for most places at the center of the place). If an item is specified, the item will disappear but will still exist. If the target position is a furniture, the specified character is placed at its default position. If the target position is a position of furniture marked by (Surface), the specified item is placed on that surface. If the target position is furniture and it is marked by (Surface), the item will be placed on its default position. Otherwise, the item disappears but will still exist. In the last two cases, if the surface is already occupied by another item, this action fails. If the target position is a character, the item is placed in their left hand. If the target position is not set properly, the item or character will disappear but still exist.",
+		"param": [{
+			"name": "Character or Item Name",
+			"type": "Character or Item",
+			"default": "REQUIRED",
+			"desc": "Name of the character or item"
+		}, {
+			"name": "Target Position",
+			"type": "Entity or Position",
+			"default": "null",
+			"desc": "Name of a valid position"
+		}]
+	},
+	{
+		"name": "SetRight",
+		"desc": "Sets the character that is displayed on the right-side of the dialog window. Use null to hide the character that is displayed on the right.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to display"
+		}]
+	},
+	{
+		"name": "SetSkinColor",
+		"desc": "Changes the skin color of a character to an integer between 0 (very pale) to 10 (very dark).",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to change"
+		}, {
+			"name": "Skin Color",
+			"type": "integer",
+			"default": "0",
+			"desc": "Skin color to set"
+		}]
+	},
+	{
+		"name": "SetTitle",
+		"desc": "Sets the title of the menu.",
+		"param": [{
+			"name": "Title Text",
+			"type": "String",
+			"default": "\"\"",
+			"desc": "The text to display on the title section of the menu"
+		}]
+	},
+	{
+		"name": "Sheathe",
+		"desc": "Character sheathes the item they're holding in their right hand. If the character is holding the item or an item with the provided name does not exist, the action fails.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to sheathe"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item to sheathe"
+		}]
+	},
+	{
+		"name": "ShowCredits",
+		"desc": "Opens the credits window. Use SetCredits to set the credits of your experience manager. ShowCredits disables the input and HideCredits enables it. Therefore, if you call ShowCredits() several times, you must call HideCredits() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the credits window is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over the X button to press it.",
+		"param": []
+	},
+	{
+		"name": "ShowDialog",
+		"desc": "Opens the dialog window. ShowDialog disables the input and HideDialog enables it. Therefore, if you call ShowDialog() several times, you must call HideDialog() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the dialog window is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over any dialog option to press it.",
+		"param": []
+	},
+	{
+		"name": "ShowFurniture",
+		"desc": "Shows a furniture that was hidden from a place. Furniture names are specified in format \"[place name].[furniture name]\".",
+		"param": [{
+			"name": "Furniture Name",
+			"type": "Furniture",
+			"default": "REQUIRED",
+			"desc": "Name of the furniture to show"
+		}]
+	},
+	{
+		"name": "ShowList",
+		"desc": "Opens the list window. If the X button on the top right of the narration window is pressed, Camelot sends a \"input Close List\" message. The list structure keeps track of a set of items that could be used to represent the contents of a furniture or the possessions of a character, provided by the argument of this action. A front view of the entity specified by the argument is displayed on the left side of the list. ShowMenu disables the input and HideMenu enables it. Therefore, if you call ShowMenu() several times, you must call HideMenu() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the list is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over the X button to press it.",
+		"param": [{
+			"name": "Entity Name",
+			"type": "Entity",
+			"default": "REQUIRED",
+			"desc": "Name of the entity that the list belongs to"
+		}]
+	},
+	{
+		"name": "ShowMenu",
+		"desc": "Shows the main menu. If the X button on the top right of the menu window is pressed, Camelot sends a \"input Close Menu\" message. Use SetTitle to set the title displayed on the menu. You must use this action to transition from the loading screen to the main menu. After HideMenu is called for the first time, the Start button on the menu is changed to Resume. When pressing the buttons on the menu respectively, Camelot sends: \"input Selected Start/Resume\", \"input Selected Credits\", and \"input Selected Quit\". ShowMenu disables the input and HideMenu enables it. Therefore, if you call ShowMenu() several times, you must call HideMenu() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the menu is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over the X button to press it. Remember that pressing the Escape key disables the input. Therefore, if you show the menu when the player presses Escape and then exit the menu when they click the Resume menu button, the input will still be disabled after the menu is hidden.",
+		"param": []
+	},
+	{
+		"name": "ShowNarration",
+		"desc": "Opens the narration window. If the X button on the top right of the narration window is pressed, Camelot sends a \"input Close Narration\" message.",
+		"param": []
+	},
+	{
+		"name": "Sit",
+		"desc": "Character walk up to and sits on a chair. If the chair is occupied by another character, this action fails. While sitting, the character may fail certain action. Try to make them stand up using WalkTo before starting other actions",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to sit"
+		}, {
+			"name": "Chair Name",
+			"type": "Seat",
+			"default": "REQUIRED",
+			"desc": "Name of the chair to sit on"
+		}]
+	},
+	{
+		"name": "Sleep",
+		"desc": "Character walk up to and lies down on a bed.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to sleep"
+		}, {
+			"name": "Bed Name",
+			"type": "Seat",
+			"default": "REQUIRED",
+			"desc": "Name of the bed to lie down on"
+		}]
+	},
+	{
+		"name": "StopSound",
+		"desc": "Stops a sound effect. StopSound() stops all sounds that were played without specifying an entity or place. StopSound(SoundEffect) stops the sound effect that was played by PlaySound(SoundEffect). StopSound(SoundEffect, EntityOrPlace) stops the sound effect that was played by PlaySound(SoundEffect, EntityOrPlace). StopSound(EntityOrPlace) stops all sound effects previously played by PlaySound(SoundEffect, EntityOrPlace)",
+		"param": [{
+			"name": "Sound Effect Name",
+			"type": "Sound Effect",
+			"default": "null",
+			"desc": "Name of the sound effect to stop"
+		}, {
+			"name": "Name of Entity or Place",
+			"type": "Entity or Place",
+			"default": "null",
+			"desc": "Name of the entity or place to stop the sound effect for"
+		}]
+	},
+	{
+		"name": "Take",
+		"desc": "Character walks to and takes an item from another character or furniture with their left hand. If the item is on a surface and there is no chairs in front of it, the target does not have to be specified. The furniture does not have to be a surface (marked by (Surface)) or opened for this action to succeed.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to take the item"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item"
+		}, {
+			"name": "Target Name",
+			"type": "Entity of Position",
+			"default": "null",
+			"desc": "Name of the target to take the item from"
+		}]
+	},
+	{
+		"name": "Unpocket",
+		"desc": "Character takes an item out of their pocket and hold it in their left hand.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character"
+		}, {
+			"name": "Item Name",
+			"type": "Item",
+			"default": "REQUIRED",
+			"desc": "Name of the item"
+		}]
+	},
+	{
+		"name": "Wait",
+		"desc": "Succeeds after the specified amount of in-game time.",
+		"param": [{
+			"name": "Duration",
+			"type": "real number",
+			"default": "0",
+			"desc": "The duration to wait"
+		}]
+	},
+	{
+		"name": "WalkTo",
+		"desc": "Character walks to a target position. If the target position is furniture, the character walks to its default position. If the target position is another character, the character walks to their position and follows them if they are moving. If the target position is a place, the character walks to its default position (mostly at the center of that place). If the target position is in a different place than the character, the action fails. If the target position is a character and they leave the place after this action is started, the action fails. If the path is blocked and the character cannot reach the target, this action fails. If the target position is furniture and its default position is occupied by another character, the character approaches the furniture but the action will fail. If this action is interrupted by other actions, this action fails.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to walk"
+		}, {
+			"name": "Target Position",
+			"type": "Entity or Position",
+			"default": "REQUIRED",
+			"desc": "A valid position to walk to"
+		}]
+	},
+	{
+		"name": "WalkToSpot",
+		"desc": "Character walks to the specified coordinates. This action can be used to retrace the logged positions that a character visited.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to walk"
+		}, {
+			"name": "Target Coordinate X",
+			"type": "real number",
+			"default": "REQUIRED",
+			"desc": "The x coordinate of the target position"
+		}, {
+			"name": "Target Coordinate Y",
+			"type": "real number",
+			"default": "REQUIRED",
+			"desc": "The y coordinate of the target position"
+		}, {
+			"name": "Target Coordinate Z",
+			"type": "real number",
+			"default": "REQUIRED",
+			"desc": "The z coordinate of the target position"
+		}]
+	},
+	{
+		"name": "Wave",
+		"desc": "Character waves their hand for a few seconds. The action does not include any sound effects.",
+		"param": [{
+			"name": "Character Name",
+			"type": "Character",
+			"default": "REQUIRED",
+			"desc": "Name of the character to wave"
+		}]
+	}
+]
