@@ -1,14 +1,13 @@
-from camelot_communicator import camelot_action
+from camelot_communicator.camelot_action import CamelotAction
 
 def test_action(capsys):
-    a = camelot_action()
-    a.Die("Bob")
+    a = CamelotAction()
+    a.action("Die", ['Bob'], False)
     captured = capsys.readouterr()
     assert captured.out == "start Die(Bob)\n"
 
-# def test_action_wait(capsys):
-#     a = camelot_action()
-#     r = a.Die("Bob")
-#     captured = capsys.readouterr()
-#     assert captured.out == "start Die(Bob)\n"
-#     print("succeeded Die(Bob)")
+def test_action_with_more_paramenters(capsys):
+    a = CamelotAction()
+    a.action("CreateItem", ['item', 'item_type'], False)
+    captured = capsys.readouterr()
+    assert captured.out == "start CreateItem(item, item_type)\n"

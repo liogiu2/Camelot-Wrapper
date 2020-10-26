@@ -1,5 +1,5 @@
 {
-	"Body-type": [{
+	"body_type": [{
 		"name": "A"
 	}, {
 		"name": "B"
@@ -16,7 +16,7 @@
 	}, {
 		"name": "H"
 	}],
-	"Hairstyle": [{
+	"hairstyle": [{
 		"name": "Long",
 		"Compatibility": "all"
 	}, {
@@ -56,7 +56,7 @@
 		"name": "Musketeer_Full",
 		"Compatibility": "A,C,E,G"
 	}],
-	"Outfit": [{
+	"outfit": [{
 		"name": "Bandit",
 		"Compatibility": "all"
 	}, {
