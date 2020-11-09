@@ -11,8 +11,6 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     test_suite='tests',
-    package_data = {
-        'json_data':['*']
-    },
+    include_package_data=True,
     zip_safe=True,
 )

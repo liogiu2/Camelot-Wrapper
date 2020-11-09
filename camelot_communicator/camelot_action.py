@@ -1,17 +1,16 @@
 import json
-import pandas as pd
 import importlib.resources as pkg_resources
 from . import json_data
 """
 Inputs: Json file with the description of each action
 Outputs: 
 """
+#TODO: check if parameters in action are what camelot expects
 class CamelotAction:
 
     def __init__(self):
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
-            self.df = pd.DataFrame(data=self.json_data_r)
 
     
     '''
@@ -42,27 +41,21 @@ class CamelotAction:
     Outputs: True for success, False for failure
     '''
     def action(self, action_name, parameters = [] , wait=True):
-        if(action_name not in self.df.name.values):
+        if(not any(d['name'] == action_name for d in self.json_data_r)):
             raise KeyError("Action name {:} does not exist. The parameter Action Name is case sensitive.".format(action_name))
+        if(type(parameters) == bool):
+            wait = parameters
+            parameters = []
 
-        row = self.df.loc[self.df['name'] == action_name]
-
-        nparam = 0
-        for item in row['param'].iloc[0]:
-            if(item['default'] == 'REQUIRED'):
-                nparam += 1
+        action_data = [d for d in self.json_data_r if d['name'] == action_name][0]
         
-        
-        if(len(parameters) < nparam):
-            raise KeyError("Number of parameters less then REQUIRED ones.")
+        if(len(parameters) > 0):
+            self._check_action_parameters(action_data, parameters)
 
         # Format commands
-        command = action_name + "("
-        for item in parameters:
-            command += item
-            command += ', '
-        command = command[:-2]
-        command += ")"
+        # This method assumes that the parameters are checked and ok to be printed
+        command = self._generate_camelot_string(action_name, parameters, action_data)
+        
 
         print('start ' + command)
         if wait==True:
@@ -70,3 +63,31 @@ class CamelotAction:
             return self.check_for_success(command)
         else:
             return True;
+    
+    def _generate_camelot_string(self, action_name, parameters, action_data):
+        command = action_name + "("
+        index = 0
+        for item in parameters:
+            if(type(item) == str and action_data['param'][index]['type'] == "String"):
+                command += '"' + item + '"'
+            elif(type(item) == bool):
+                command += str(item).lower()
+            else:
+                command += item
+            command += ', '
+            index += 1
+        if(index > 0):
+            command = command[:-2]
+        command += ")"
+        return command
+    
+    def _check_action_parameters(self, action_data, parameters):
+        nparam = 0
+        for item in action_data['param']:
+            if(item['default'] == 'REQUIRED'):
+                nparam += 1
+        
+        if(len(parameters) < nparam):
+            raise KeyError("Number of parameters less then REQUIRED ones.")
+
+
