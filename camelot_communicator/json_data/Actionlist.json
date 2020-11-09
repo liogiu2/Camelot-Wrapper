@@ -11,7 +11,9 @@
 			"type": "String",
 			"default": "",
 			"desc": "Description of the entity to add to the list"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Attack",
@@ -31,7 +33,9 @@
 			"type": "Boolean",
 			"default": "FALSE",
 			"desc": "Whether the attack hits the target or they dodge it."
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Bash",
@@ -46,7 +50,9 @@
 			"type": "Furniture",
 			"default": "REQUIRED",
 			"desc": "Name of the furniture"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Cast",
@@ -66,7 +72,9 @@
 			"type": "red, blue, or purple",
 			"default": "red",
 			"desc": "Color of the projectile to create"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CheckVersion",
@@ -76,7 +84,9 @@
 			"type": "String",
 			"default": "0",
 			"desc": "The version number to compare against."
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Clap",
@@ -86,17 +96,23 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to clap"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ClearDialog",
 		"desc": "Removes all lines from the dialog but does not hide the dialog window.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ClearList",
 		"desc": "Removes all the items from the list. The list structure keeps track of a set of items that could be used to represent the contents of a furniture or the possessions of a character. Items can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an item can be accessed by right clicking that item in the list.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CloseFurniture",
@@ -111,7 +127,9 @@
 			"type": "Furniture",
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to be closed"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CreateCharacter",
@@ -126,7 +144,9 @@
 			"type": "A, B, C, D, E, F, G, or H",
 			"default": "A",
 			"desc": "The body-type of the character to create (refer to Characters to view different body-types)"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CreateEffect",
@@ -141,7 +161,9 @@
 			"type": "Effect",
 			"default": "Diamond",
 			"desc": "Name of the effect to create"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CreateItem",
@@ -156,7 +178,9 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Type of the item to create (refer to Items for a list of all item types)"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "CreatePlace",
@@ -171,7 +195,9 @@
 			"type": "Place",
 			"default": "REQUIRED",
 			"desc": "Type of the item to create (refer to Places for a list of all places)"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Dance",
@@ -181,7 +207,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to dance"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "DanceTogether",
@@ -196,7 +224,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the other character to dance"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Die",
@@ -206,7 +236,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to die"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "DisableEffect",
@@ -221,7 +253,9 @@
 			"type": "Effect",
 			"default": "Hides all enabled effects on the entity",
 			"desc": "Name of the effect to disable"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "DisableIcon",
@@ -236,12 +270,16 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the entity to disable the action for"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "DisableInput",
 		"desc": "Disables mouse and keyboard controls. Disabling the input in Camelot is managed as an integer. It means that each time DisableInput succeeds, it disables the input once, and EnableInput must called as many times as DisableInput was called to actually enable the player input.Pressing the escape button disables the input and pressing it again enables it.Certain actions including ShowList, ShowCredits, ShowNarration, ShowList, and ShowDialog also enable the input since they are normally followed by a corresponding Show action, e.g. HideDialog, and those actions disable the input.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Draw",
@@ -256,7 +294,9 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Name of the item to draw"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Drink",
@@ -266,7 +306,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to drink"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "EnableEffect",
@@ -281,7 +323,9 @@
 			"type": "Effect",
 			"default": "Diamond",
 			"desc": "Name of the effect to enable"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "EnableIcon",
@@ -311,12 +355,16 @@
 			"type": "Boolean",
 			"default": "FALSE",
 			"desc": "Whether this is the default action (performed by left clicking on the target)"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "EnableInput",
 		"desc": "Enables mouse and keybord input for the character that is set to the focus of the camera by SetCameraFocus. Regardless of how many times EnableInput was called in succession, if the player controls are enabled, it is only necessary to call. DisableInput once to disable them.Pressing the escape button disables the input and pressing it again enables it.Certain actions including HideList, HideCredits, HideNarration, HideList, and HideDialog also enable the input since they are normally called after a corresponding Show action, e.g. ShowMenu, and those actions disable the input.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Enter",
@@ -336,7 +384,9 @@
 			"type": "Boolean",
 			"default": "FALSE",
 			"desc": "Whether to fade in as the character is entering through the door"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Exit",
@@ -356,7 +406,9 @@
 			"type": "Boolean",
 			"default": "FALSE",
 			"desc": "Whether to fade out as the character is exiting through the door"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Face",
@@ -371,17 +423,23 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the target to face"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "FadeIn",
 		"desc": "The screen fades in from black.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "FadeOut",
 		"desc": "The screen fades out to black.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Give",
@@ -401,17 +459,23 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character that takes the item"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideCredits",
 		"desc": "Closes the credits window.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideDialog",
 		"desc": "Closes the dialog window. HideDialog also clears the dialog lines.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideFurniture",
@@ -421,22 +485,30 @@
 			"type": "Furniture",
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to hide"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideList",
 		"desc": "Closes the list window. The list structure keeps track of a set of items that could be used to represent the contents of a furniture or the possessions of a character. Items can be added or removed from the list with an optional description which are displayed when the list is shown. Icons that are enabled for an item can be accessed by right clicking that item in the list.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideMenu",
 		"desc": "Closes the menu. After this action succeeds for the first time running Camelot, the Start button on the menu is changed to Resume",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "HideNarration",
 		"desc": "Closes the narration window.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Kneel",
@@ -446,7 +518,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to kneel"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Laugh",
@@ -456,7 +530,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to laugh"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "LookAt",
@@ -471,7 +547,9 @@
 			"type": "Entity",
 			"default": "null",
 			"desc": "Name of the target"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "MoveAway",
@@ -481,7 +559,9 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the entity to move away from"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "OpenFurniture",
@@ -496,7 +576,9 @@
 			"type": "Furniture",
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to be opened"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Pickup",
@@ -516,7 +598,9 @@
 			"type": "Furniture",
 			"default": "null",
 			"desc": "Name of the furniture, if any, to pick the item from"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "PlaySound",
@@ -536,7 +620,9 @@
 			"type": "Boolean",
 			"default": "FALSE",
 			"desc": "Whether the sound effect loops until stopped"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Pocket",
@@ -551,7 +637,9 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Name of the item"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Put",
@@ -571,7 +659,9 @@
 			"type": "Entity or Position",
 			"default": "null",
 			"desc": "Name of the target"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "PutDown",
@@ -586,12 +676,16 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Name of the item to be put down"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Quit",
 		"desc": "The Camelot window is closed. If Camelot is closed by this action, the last generated message is \"succeeded Quit()\". If the Camelot window is manually closed by the user, the last generated message is \"input Quit\".",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "RemoveFromList",
@@ -601,12 +695,16 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the entity to remove from the list"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Reset",
 		"desc": "The Camelot is reset, it removed all created objects and shows the loading screen. Use this action to reset Camelot without resetting your experience manager.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Revive",
@@ -616,7 +714,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to get up"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetCameraBlend",
@@ -626,7 +726,9 @@
 			"type": "Real number",
 			"default": "0,75",
 			"desc": "The duration of all camera transitions"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetCameraFocus",
@@ -636,7 +738,9 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the entity to focus on"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetCameraMode",
@@ -646,7 +750,9 @@
 			"type": "follow, focus, track",
 			"default": "REQUIRED",
 			"desc": "The camera mode to display"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetClothing",
@@ -661,7 +767,9 @@
 			"type": "Outfit",
 			"default": "naked",
 			"desc": "Refer to male or female outfits"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetCredits",
@@ -671,12 +779,16 @@
 			"type": "String",
 			"default": "\"\"",
 			"desc": "The text to display on the upper section of the credits window"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetDay",
 		"desc": "Set the time of the day to daytime. This affects the look and lighting of places.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetDialog",
@@ -686,7 +798,9 @@
 			"type": "String",
 			"default": "REQUIRED",
 			"desc": "New dialog line"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetExpression",
@@ -701,7 +815,9 @@
 			"type": "neutral, happy, sad, angry, disgusted, scared, surprised, asleep",
 			"default": "neutral",
 			"desc": "The expression of the character"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetEyeColor",
@@ -716,7 +832,9 @@
 			"type": "white, black, blue, red, brown, green",
 			"default": "black",
 			"desc": "EyeColor to set"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetHairColor",
@@ -731,7 +849,9 @@
 			"type": "gray, black, brown, red, blonde",
 			"default": "black",
 			"desc": "Haircolor to set"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetHairStyle",
@@ -746,7 +866,9 @@
 			"type": "Hairstyle",
 			"default": "bald",
 			"desc": "Refer to HairStyles for a list of all hairstyles."
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetLeft",
@@ -756,7 +878,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to display"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetNarration",
@@ -766,12 +890,16 @@
 			"type": "String",
 			"default": "\"\"",
 			"desc": "The text to display when the narration is shown"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetNight",
 		"desc": "Set the time of the day to nighttime. This affects the look and lighting of places.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetPosition",
@@ -786,7 +914,9 @@
 			"type": "Entity or Position",
 			"default": "null",
 			"desc": "Name of a valid position"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetRight",
@@ -796,7 +926,9 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to display"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetSkinColor",
@@ -811,7 +943,9 @@
 			"type": "integer",
 			"default": "0",
 			"desc": "Skin color to set"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "SetTitle",
@@ -821,7 +955,9 @@
 			"type": "String",
 			"default": "\"\"",
 			"desc": "The text to display on the title section of the menu"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Sheathe",
@@ -836,17 +972,23 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Name of the item to sheathe"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowCredits",
 		"desc": "Opens the credits window. Use SetCredits to set the credits of your experience manager. ShowCredits disables the input and HideCredits enables it. Therefore, if you call ShowCredits() several times, you must call HideCredits() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the credits window is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over the X button to press it.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowDialog",
 		"desc": "Opens the dialog window. ShowDialog disables the input and HideDialog enables it. Therefore, if you call ShowDialog() several times, you must call HideDialog() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the dialog window is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over any dialog option to press it.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowFurniture",
@@ -856,7 +998,9 @@
 			"type": "Furniture",
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to show"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowList",
@@ -866,17 +1010,23 @@
 			"type": "Entity",
 			"default": "REQUIRED",
 			"desc": "Name of the entity that the list belongs to"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowMenu",
 		"desc": "Shows the main menu. If the X button on the top right of the menu window is pressed, Camelot sends a \"input Close Menu\" message. Use SetTitle to set the title displayed on the menu. You must use this action to transition from the loading screen to the main menu. After HideMenu is called for the first time, the Start button on the menu is changed to Resume. When pressing the buttons on the menu respectively, Camelot sends: \"input Selected Start/Resume\", \"input Selected Credits\", and \"input Selected Quit\". ShowMenu disables the input and HideMenu enables it. Therefore, if you call ShowMenu() several times, you must call HideMenu() or EnableInput() as many times to enable the input. If any action causes the input to be enabled while the menu is open, third-person mouse controls are enabled (mouse cursor locks at the center of the screen), and the player won't be able to move the cursor over the X button to press it. Remember that pressing the Escape key disables the input. Therefore, if you show the menu when the player presses Escape and then exit the menu when they click the Resume menu button, the input will still be disabled after the menu is hidden.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "ShowNarration",
 		"desc": "Opens the narration window. If the X button on the top right of the narration window is pressed, Camelot sends a \"input Close Narration\" message.",
-		"param": []
+		"param": [],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Sit",
@@ -891,7 +1041,9 @@
 			"type": "Seat",
 			"default": "REQUIRED",
 			"desc": "Name of the chair to sit on"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Sleep",
@@ -906,7 +1058,9 @@
 			"type": "Seat",
 			"default": "REQUIRED",
 			"desc": "Name of the bed to lie down on"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "StopSound",
@@ -921,7 +1075,9 @@
 			"type": "Entity or Place",
 			"default": "null",
 			"desc": "Name of the entity or place to stop the sound effect for"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Take",
@@ -941,7 +1097,9 @@
 			"type": "Entity of Position",
 			"default": "null",
 			"desc": "Name of the target to take the item from"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Unpocket",
@@ -956,7 +1114,9 @@
 			"type": "Item",
 			"default": "REQUIRED",
 			"desc": "Name of the item"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Wait",
@@ -966,7 +1126,9 @@
 			"type": "real number",
 			"default": "0",
 			"desc": "The duration to wait"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "WalkTo",
@@ -981,7 +1143,9 @@
 			"type": "Entity or Position",
 			"default": "REQUIRED",
 			"desc": "A valid position to walk to"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "WalkToSpot",
@@ -1006,7 +1170,9 @@
 			"type": "real number",
 			"default": "REQUIRED",
 			"desc": "The z coordinate of the target position"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	},
 	{
 		"name": "Wave",
@@ -1016,6 +1182,8 @@
 			"type": "Character",
 			"default": "REQUIRED",
 			"desc": "Name of the character to wave"
-		}]
+		}],
+		"PDDL" : "",
+		"CEPTRE": ""
 	}
 ]
