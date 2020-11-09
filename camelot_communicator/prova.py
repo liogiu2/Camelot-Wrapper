@@ -1,11 +1,17 @@
-import json
-import pandas as pd
-with open('json_data/Actionlist.json') as json_file:
-    json_data_r = json.load(json_file)
-action_name = 'AddToList'
-row = [d for d in json_data_r if d['name'] == action_name][0]
+import sys
+from  pddlpy import DomainProblem
 
-nparam = 0
-for item in row['param']:
-    if(item['default'] == 'REQUIRED'):
-        nparam += 1
+
+domainfile = ".\\pddl\\example_domain.pddl"
+problemfile = ".\\pddl\\example_problem.pddl"
+domprob = DomainProblem(domainfile, problemfile)
+print()
+print("DOMAIN PROBLEM")
+print("objects")
+print("\t", domprob.worldobjects())
+print("operators")
+print("\t", list( domprob.operators() ))
+print("init",)
+print("\t", domprob.initialstate())
+print("goal",)
+print("\t", domprob.goals())

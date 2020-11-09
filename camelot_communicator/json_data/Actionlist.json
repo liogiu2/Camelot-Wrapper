@@ -34,7 +34,8 @@
 			"default": "FALSE",
 			"desc": "Whether the attack hits the target or they dodge it."
 		}],
-		"PDDL" : "",
+		"PDDL" : "(:action attack-with-hit :parameters (?who ?whom - character ?room - location) :precondition (and (at ?who ?room) (at ?whom ?room)) :effect (and (at ?who ?room) (at ?whom ?room) (bleeding ?whom) ) ) (:action attack-no-hit :parameters (?who ?whom - character ?room - location) :precondition (and (at ?who ?room) (at ?whom ?room)) :effect (and (at ?who ?room) (at ?whom ?room)) )",
+		"PDDLPredicates":"at,bleeding",
 		"CEPTRE": ""
 	},
 	{
