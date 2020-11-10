@@ -1,5 +1,5 @@
 (define (problem example)
-    (:domain domainExample)
+    (:domain CamelotDomain)
     
     (:objects
         alchemyShop - room

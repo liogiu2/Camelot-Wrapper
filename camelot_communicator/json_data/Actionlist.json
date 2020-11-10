@@ -34,8 +34,8 @@
 			"default": "FALSE",
 			"desc": "Whether the attack hits the target or they dodge it."
 		}],
-		"PDDL" : "(:action attack-with-hit :parameters (?who ?whom - character ?room - location) :precondition (and (at ?who ?room) (at ?whom ?room)) :effect (and (at ?who ?room) (at ?whom ?room) (bleeding ?whom) ) ) (:action attack-no-hit :parameters (?who ?whom - character ?room - location) :precondition (and (at ?who ?room) (at ?whom ?room)) :effect (and (at ?who ?room) (at ?whom ?room)) )",
-		"PDDLPredicates":"at,bleeding",
+		"PDDL" : "attack-true-hit|attack-false-hit",
+		"PDDLPredicates":"at|bleeding",
 		"CEPTRE": ""
 	},
 	{
@@ -52,7 +52,8 @@
 			"default": "REQUIRED",
 			"desc": "Name of the furniture"
 		}],
-		"PDDL" : "",
+		"PDDL" : "bash",
+		"PDDLPredicates":"at",
 		"CEPTRE": ""
 	},
 	{
@@ -74,7 +75,8 @@
 			"default": "red",
 			"desc": "Color of the projectile to create"
 		}],
-		"PDDL" : "",
+		"PDDL" : "cast-no-target|cast-with-target",
+		"PDDLPredicates":"at|spell-hit",
 		"CEPTRE": ""
 	},
 	{

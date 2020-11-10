@@ -62,7 +62,7 @@ class CamelotAction:
             # Call function to check for its success
             return self.check_for_success(command)
         else:
-            return True;
+            return True
     
     def _generate_camelot_string(self, action_name, parameters, action_data):
         command = action_name + "("
