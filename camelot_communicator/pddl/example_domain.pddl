@@ -3,9 +3,9 @@
 
 
     (:types
-        character forniture item - object
-        location
-        drink - item
+        general location
+        character forniture item - general
+        ;drink - item
     )
 
     (:constants
@@ -13,9 +13,9 @@
     )
 
     (:predicates
-        (at ?o - object ?l - location)
+        (at ?o - general ?l - location)
         (equip ?i - item ?c - character)
-        (adjacent ?r - room ?r1 - room)
+        (adjacent ?r - location ?r1 - location)
         (bleeding ?character - character)
         (spell-hit ?character - character)
         (open ?forniture)
@@ -85,10 +85,10 @@
 
     (:action die
         :parameters (?c - character)
-        :precondition (and )
+        :precondition (and (not (dead ?c)))
         :effect (and (dead ?c))
     )
-    ;what is the challenge we are chasing?how do you describe the environment formally before camelot can execute the actions
+    
     (:action draw ;TOCHECK
         :parameters (?c - character ?i - item ?l - location)
         :precondition (and (not (dead ?c)) (at ?c ?l) (at ?i ?l) 
@@ -108,12 +108,6 @@
         :parameters (?c - character ?l - location)
         :precondition (and (not (dead ?c)) (not (at ?c ?l)))
         :effect (and (at ?c ?l))
-    )
-    
-    (:action action_name
-        :parameters ()
-        :precondition (and )
-        :effect (and )
     )
     
     
