@@ -144,7 +144,7 @@
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to be closed"
 		}],
-		"PDDLDomain" : "closeFurniture",
+		"PDDLDomain" : "closefurniture",
 		"PDDLPredicates":"at|open|dead",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
@@ -347,8 +347,8 @@
 			"default": "REQUIRED",
 			"desc": "Name of the character to drink"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "drink",
+		"PDDLPredicates" : "dead|at",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
@@ -433,8 +433,8 @@
 			"default": "FALSE",
 			"desc": "Whether to fade in as the character is entering through the door"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "enter",
+		"PDDLPredicates" : "at|dead",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
@@ -457,8 +457,8 @@
 			"default": "FALSE",
 			"desc": "Whether to fade out as the character is exiting through the door"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "exit",
+		"PDDLPredicates" : "at|dead",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
@@ -518,8 +518,8 @@
 			"default": "REQUIRED",
 			"desc": "Name of the character that takes the item"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "give",
+		"PDDLPredicates" : "dead|at|equip",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
@@ -591,8 +591,8 @@
 			"default": "REQUIRED",
 			"desc": "Name of the character to kneel"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "kneel",
+		"PDDLPredicates" : "kneeling|dead",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
@@ -657,8 +657,8 @@
 			"default": "REQUIRED",
 			"desc": "Name of the furniture to be opened"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "openfurniture",
+		"PDDLPredicates" : "at|dead|open|can_open",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},
