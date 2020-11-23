@@ -7,7 +7,7 @@ setup(
     description='My first Python library',
     author='Giulio Mori',
     license='MIT',
-    install_requires=['pandas'],
+    install_requires=[''],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     test_suite='tests',

@@ -681,8 +681,8 @@
 			"default": "null",
 			"desc": "Name of the furniture, if any, to pick the item from"
 		}],
-		"PDDLDomain" : "",
-		"PDDLPredicates" : "",
+		"PDDLDomain" : "pickup",
+		"PDDLPredicates" : "dead|at|stored|equip|has_surface|can_open|is_open",
 		"PDDLProblem" : "",
 		"CEPTRE": ""
 	},

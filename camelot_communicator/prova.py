@@ -1,17 +1,11 @@
-import sys
-from  pddlpy import DomainProblem
+from pddl.PDDL import PDDL_Parser
 
+parser = PDDL_Parser()
 
-domainfile = ".\\pddl\\example_domain.pddl"
-problemfile = ".\\pddl\\example_problem.pddl"
-domprob = DomainProblem(domainfile, problemfile)
-print()
-print("DOMAIN PROBLEM")
-print("objects")
-print("\t", domprob.worldobjects())
-print("operators")
-print("\t", list( domprob.operators() ))
-print("init",)
-print("\t", domprob.initialstate())
-print("goal",)
-print("\t", domprob.goals())
+domain = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\camelot_domain.pddl"
+problem = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\example_problem.pddl"
+
+domain_parsed = parser.parse_domain(domain)
+problem_parsed = parser.parse_problem(problem)
+
+parser.objects

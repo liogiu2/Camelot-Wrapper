@@ -4,23 +4,22 @@
 
     (:types
         general location
-        character forniture item - general
+        character furniture item - general
     )
 
-    (:constants
-
-    )
-    ;TODO: include the fact that a forniture needs to be inside a place and items can be in a forniture. migth need to change some actions effects and preconditions (draw)
+    ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)
     (:predicates
         (at ?o - general ?l - location)
         (equip ?i - item ?c - character)
         (adjacent ?r - location ?r1 - location)
         (bleeding ?character - character)
         (spell-hit ?character - character)
-        (open ?forniture)
+        (is_open ?furniture)
         (dead ?character - character)
         (kneeling ?character)
-        (can_open ?forniture) ;needs to be setted in places.json
+        (can_open ?furniture) ;needs to be setted in places.json
+        (has_surface ?furniture)
+        (stored ?item ?furniture)
     )
 
     ; Camelot Action:
@@ -41,13 +40,13 @@
     
     ; Camelot Action: Attack with hit parameter true
     ; Parameters:
-    ;               ?who ?whom character involved in the action
-    ;               ?room location where the character have to be
+    ;               who whom character involved in the action
+    ;               room location where the character have to be
     ; Preconditions:
-    ;               ?who ?whom at the same location
-    ;               ?who ?whom NOT dead
+    ;               who whom at the same location
+    ;               who whom NOT dead
     ; Effects: 
-    ;               ?whom is bleeding
+    ;               whom is bleeding
     (:action attack-true-hit
         :parameters (?who ?whom - character ?room - location)
         :precondition (and (at ?who ?room) 
@@ -62,11 +61,11 @@
     
     ; Camelot Action: Attack with hit parameter false
     ; Parameters:
-    ;               ?who ?whom character involved in the action
-    ;               ?room location where the character have to be
+    ;               who whom character involved in the action
+    ;               room location where the character have to be
     ; Preconditions:
-    ;               ?who ?whom at the same location
-    ;               ?who ?whom NOT dead
+    ;               who whom at the same location
+    ;               who whom NOT dead
     ; Effects: 
     ;               None
     (:action attack-false-hit
@@ -82,18 +81,18 @@
     ; Camelot Action: Bash
     ; Note: example of action that doesn't make sense to represent
     ; Parameters:
-    ;               ?who character involved in the action
-    ;               ?where location of the action
-    ;               ?forniture forniture involved in the action
+    ;               who character involved in the action
+    ;               where location of the action
+    ;               furniture furniture involved in the action
     ; Preconditions:
-    ;               ?who ?forniture are in the same location
-    ;               ?who is NOT dead
+    ;               who furniture are in the same location
+    ;               who is NOT dead
     ; Effects: 
     ;               None
     (:action bash 
-        :parameters (?who - character ?where - location ?forniture - forniture)
+        :parameters (?who - character ?where - location ?furniture - furniture)
         :precondition (and (at ?who ?where) 
-            (at ?forniture ?where) 
+            (at ?furniture ?where) 
             (not (dead ?who))
         )
         :effect (and )
@@ -101,9 +100,9 @@
 
     ; Camelot Action: Cast without any target
     ; Parameters:
-    ;               ?caster character involved in the action
+    ;               caster character involved in the action
     ; Preconditions:
-    ;               ?caster is NOT dead
+    ;               caster is NOT dead
     ; Effects: 
     ;               None
     (:action cast-no-target
@@ -114,11 +113,11 @@
 
     ; Camelot Action: Cast with target
     ; Parameters:
-    ;               ?caster ?target characters involved in the action
-    ;               ?location location of the action
+    ;               caster target characters involved in the action
+    ;               location location of the action
     ; Preconditions:
-    ;               ?caster ?target are NOT dead
-    ;               ?caster ?target are at the same location
+    ;               caster target are NOT dead
+    ;               caster target are at the same location
     ; Effects: 
     ;               None
     (:action cast-with-target
@@ -137,9 +136,9 @@
     		
     ; Camelot Action: Clap
     ; Parameters:
-    ;               ?clapper character involved in the action
+    ;               clapper character involved in the action
     ; Preconditions:
-    ;               ?clapper is NOT dead
+    ;               clapper is NOT dead
     ; Effects:
     ;               None
     (:action clap
@@ -150,30 +149,30 @@
 
     ; Camelot Action: CloseFurniture
     ; Parameters:
-    ;               ?c character involved in the action
-    ;               ?f forniture to close
-    ;               ?l location of forniture and character
+    ;               c character involved in the action
+    ;               f furniture to close
+    ;               l location of furniture and character
     ; Preconditions:
-    ;               ?c ?f at the same location
-    ;               ?c is NOT dead
-    ;               ?f is open
+    ;               c f at the same location
+    ;               c is NOT dead
+    ;              f is is_open
     ; Effects: 
-    ;               ?f is NOT open
+    ;               f is NOT is_open
     (:action closefurniture
-        :parameters (?c - character ?f - forniture ?r - location)
+        :parameters (?c - character ?f - furniture ?r - location)
         :precondition (and (at ?c ?r) 
             (at ?f ?r) 
             (not (dead ?c)) 
-            (open ?f)
+            (is_open ?f)
         )
-        :effect (and (not (open ?f)))
+        :effect (and (not (is_open ?f)))
     )
 	
     ; Camelot Action: Dance
     ; Parameters:
-    ;               ?dancer character involved in the action
+    ;               dancer character involved in the action
     ; Preconditions:
-    ;               ?dancer is NOT dead
+    ;               dancer is NOT dead
     ; Effects:
     ;               None
     (:action dance
@@ -184,11 +183,11 @@
 
     ; Camelot Action: DanceTogether
     ; Parameters:
-    ;               ?d ?d1 characters involved in the action
-    ;               ?l location of the action
+    ;               d d1 characters involved in the action
+    ;               l location of the action
     ; Preconditions:
-    ;               ?d ?d1 at the same location
-    ;               ?d ?d1 are NOT dead
+    ;               d d1 at the same location
+    ;              d d1 are NOT dead
     ; Effects:
     ;               None
     (:action dancetogether
@@ -203,11 +202,11 @@
 		
     ; Camelot Action: Die
     ; Parameters:
-    ;               ?c character involved in the action
+    ;               c character involved in the action
     ; Preconditions:
-    ;               ?c is NOT dead
+    ;               c is NOT dead
     ; Effects:
-    ;               ?c is dead
+    ;               c is dead
     (:action die
         :parameters (?c - character)
         :precondition (and (not (dead ?c)))
@@ -215,22 +214,21 @@
     )
     		
     ; Camelot Action: Draw
+    ; Note: Camelot allow the action Draw even if the object is not in the current location. The animation looks like che character is drawing a sward, but it can be used for any objects.
     ; Parameters:
-    ;               ?c character involved in the action
-    ;               ?i item involved in the action
-    ;               ?l location involved in the action
+    ;               c character involved in the action
+    ;               i item involved in the action
+    ;               l location involved in the action
     ; Preconditions:
-    ;               ?c is NOT dead
-    ;               ?c ?i are at the same location
-    ;               ?i is NOT equipped to any other character
+    ;               c is NOT dead
+    ;               i is NOT equipped to any other character
     ; Effects:
-    ;               ?c has equipped ?i
-    ;               ?i is NOT at ?l MIGTH NEED TO BE CHANGED
+    ;               c has equipped i
+    ;               i is NOT at l MIGTH NEED TO BE CHANGED
     (:action draw
         :parameters (?c - character ?i - item ?l - location)
         :precondition (and (not (dead ?c)) 
             (at ?c ?l) 
-            (at ?i ?l) 
             (forall (?character - character) 
                 (not(equip ?i ?character))
             )
@@ -240,12 +238,12 @@
     		
     ; Camelot Action: Drink
     ; Parameters:
-    ;               ?c character involved in the action
-    ;               ?i item involved in the action
-    ;               ?l location involved in the action
+    ;               c character involved in the action
+    ;               i item involved in the action
+    ;               l location involved in the action
     ; Preconditions:
-    ;               ?c is NOT dead
-    ;               ?c ?i are at the same location
+    ;               c is NOT dead
+    ;               c i are at the same location
     ; Effects:
     ;               None
     (:action drink
@@ -259,13 +257,13 @@
     		
     ; Camelot Action: Enter
     ; Parameters:
-    ;               ?c character involved in the action
-    ;               ?l location involved in the action
+    ;               c character involved in the action
+    ;               l location involved in the action
     ; Preconditions:
-    ;               ?c is NOT dead
-    ;               ?c is NOT at location
+    ;               c is NOT dead
+    ;               c is NOT at location
     ; Effects:
-    ;               ?c is at location
+    ;               c is at location
     (:action enter
         :parameters (?c - character ?l - location)
         :precondition (and (not (dead ?c)) 
@@ -276,13 +274,13 @@
     
     ; Camelot Action: Exit
     ; Parameters:
-    ;               ?character is the character involved in the action.
-    ;               ?location location to exit
+    ;               character is the character involved in the action.
+    ;              location location to exit
     ; Preconditions:
-    ;               ?character is NOT dead
-    ;               ?character is at location to exit
+    ;               character is NOT dead
+    ;               character is at location to exit
     ; Effects: 
-    ;               ?character is NOT in the location it previously was
+    ;               character is NOT in the location it previously was
     (:action exit
         :parameters (?c - character ?l - location)
         :precondition (and (not (dead ?c)) 
@@ -293,35 +291,35 @@
 
     ; Camelot Action: Give
     ; Parameters: 
-    ;               ?giver ?receiver are the characters involved in the action.
-    ;               ?item is the item that is exchanged.
-    ;               ?location is used to check that the characters are in the same location.
+    ;               giver receiver are the characters involved in the action.
+    ;               item is the item that is exchanged.
+    ;               location is used to check that the characters are in the same location.
     ; Preconditions:
-    ;               ?giver ?receiver are NOT dead.
-    ;               ?giver is equipped with the item.
-    ;               ?giver ?receiver are in the same location
+    ;               giver ?receiver are NOT dead.
+    ;               giver is equipped with the item.
+    ;               giver ?receiver are in the same location
     ; Effects: 
-    ;               ?giver does NOT have the item equipped anymore
-    ;               ?receiver equips the item
+    ;               giver does NOT have the item equipped anymore
+    ;               receiver equips the item
     (:action give
         :parameters (?giver ?receiver - character ?item - item ?l - location)
-        :precondition (and (not (dead ?giver) 
+        :precondition (and (not (dead ?giver)) 
             (not (dead ?receiver)) 
             (equip ?item ?giver) 
             (at ?giver ?l) 
-            (at ?receiver ?l))
+            (at ?receiver ?l)
         )
         :effect (and (not (equip ?item ?giver)) (equip ?item ?receiver))
     )
     		
     ; Camelot Action: Kneel
     ; Parameters:
-    ;               ?character is the character involved in the action.
+    ;               character is the character involved in the action.
     ; Preconditions:
-    ;               ?character is NOT kneeling
-    ;               ?character is NOT dead
+    ;               character is NOT kneeling
+    ;               character is NOT dead
     ; Effects:
-    ;               ?character is kneeling
+    ;               character is kneeling
     (:action kneel
         :parameters (?character - character)
         :precondition (and (not (kneeling ?character)) 
@@ -333,52 +331,83 @@
     		
     ; Camelot Action: OpenFurniture
     ; Parameters:
-    ;               ?character is the character involved in the action.
-    ;               ?forniture is the forniture to be opened
-    ;               ?location location of character and forniture
+    ;               character is the character involved in the action.
+    ;               furniture is the furniture to be opened
+    ;               location location of character and furniture
     ; Preconditions:
-    ;               ?character is NOT dead
-    ;               ?character ?forniture at the same location
-    ;               ?forniture is NOT open
-    ;               ?forniture can be opened
+    ;               character is NOT dead
+    ;               character furniture at the same location
+    ;               furniture is NOT is_open
+    ;               furniture can be opened
     ; Effects:
-    ;               ?forniture is open
+    ;               furniture is is_open
     (:action openfurniture
-        :parameters (?character - character ?forniture - forniture ?location - location)
+        :parameters (?character - character ?furniture - furniture ?location - location)
         :precondition (and (not(dead ?character))
-            (at ?forniture ?location) 
+            (at ?furniture ?location) 
             (at ?character ?location) 
-            (not(open ?forniture)) 
-            (can_open ?forniture)
+            (not(is_open ?furniture)) 
+            (can_open ?furniture)
         )
-        :effect (and (open ?forniture))
+        :effect (and (is_open ?furniture))
     )
     
     		
     ; Camelot Action: Pickup
     ; Parameters:
-    ;               ?character character involved in the action
-    ;               ?forniture forniture involved in the action
-    ;               ?location location involved in the action
-    ;               ?item item involved in the action
+    ;               character character involved in the action
+    ;               furniture furniture involved in the action
+    ;               location location involved in the action
+    ;               item item involved in the action
     ; Preconditions:
-    ;               ?character is NOT dead
-    ;               ?forniture ?character are at the same location
-    ;               ?forniture is open -- REWORK: what about a table?
+    ;               character is NOT dead
+    ;               furniture character are at the same location
+    ;               item is stored in funiture
+    ;               no other character has the item equipped 
+    ;               if the furniture is a table then it needs to have a surface (and the item is on the surface). 
+    ;               if the forniture doesn't have a surface then the furniture must be open 
+    ;               If an item is on the floor (missing)
+    ; Effects:
+    ;               item is NOT stored in furniture
+    ;               item is equipped by the character
+
+    (:action pickup
+        :parameters (?character - character ?furniture - furniture ?location - location ?item - item)
+        :precondition ( 
+            and 
+                (not(dead ?character)) 
+                (at ?furniture ?location) 
+                (at ?character ?location) 
+                (stored ?item ?furniture)
+                (forall (?characters - character) 
+                    (not(equip ?item ?characters))
+                )
+                (or
+                    (has_surface ?furniture)
+                    (and 
+                        (can_open ?furniture)
+                        (is_open ?furniture)
+                    )
+                )
+            
+        )
+        :effect (and (not (stored ?item ?furniture)) (equip ?item ?character))
+    )
+
+    		
+    ; Camelot Action: Pocket
+    ; Parameters:
+    ;               
+    ; Preconditions:
+    ;               
     ; Effects:
     ;               
-    (:action pickup
-        :parameters (?character - character ?forniture - forniture ?location - location ?item - item)
-        :precondition (and 
-            (not(dead ?character)) 
-            (at ?forniture ?location) 
-            (at ?character ?location) 
-            (open ?forniture) 
-            (forall (?characters - character) 
-                (not(equip ?item ?characters)))
-        )
+    (:action pocket
+        :parameters ()
+        :precondition (and )
         :effect (and )
     )
+    
     
     
 )

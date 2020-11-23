@@ -6,8 +6,8 @@
         blackSmith - location
         bob - character
         luca - character
-        chest - forniture
-        table - forniture
+        chest - furniture
+        table - furniture
         key - item
     )
     
