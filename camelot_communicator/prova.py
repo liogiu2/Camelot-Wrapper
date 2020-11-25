@@ -9,3 +9,4 @@ domain_parsed = parser.parse_domain(domain)
 problem_parsed = parser.parse_problem(problem)
 
 parser.objects
+

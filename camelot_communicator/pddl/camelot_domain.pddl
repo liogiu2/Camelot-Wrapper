@@ -9,17 +9,17 @@
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)
     (:predicates
-        (at ?o - general ?l - location)
+        (at ?o -general ?l- location)
         (equip ?i - item ?c - character)
-        (adjacent ?r - location ?r1 - location)
+        (adjacent ?r ?r1 - location)
         (bleeding ?character - character)
         (spell-hit ?character - character)
-        (is_open ?furniture)
+        (is_open ?furniture - furniture)
         (dead ?character - character)
-        (kneeling ?character)
-        (can_open ?furniture) ;needs to be setted in places.json
-        (has_surface ?furniture)
-        (stored ?item ?furniture)
+        (kneeling ?character - character)
+        (can_open ?furniture - furniture) ;needs to be setted in places.json
+        (has_surface ?furniture - funiture)
+        (stored ?item - item ?furniture - furniture)
     )
 
     ; Camelot Action:

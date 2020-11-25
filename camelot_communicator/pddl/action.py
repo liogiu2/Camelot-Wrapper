@@ -21,3 +21,17 @@ class Action:
 
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__
+
+class ActionParameter:
+
+    def __init__(self, name, type):
+        self.name = name
+        self.__type = type
+    
+    @property
+    def type(self):
+        return self.__type
+
+    @type.setter
+    def type(self, type):
+        pass
