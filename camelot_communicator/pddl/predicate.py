@@ -1,21 +1,22 @@
 class Predicate:
     
-    def __init__(self, name, argument_1, argument_2 = None):
+    def __init__(self, name, arguments):
         self.name = name
-        self.argument_1 = argument_1
-        self.unary = True
-        if argument_2 != None:
-            self.argument_2 = argument_2
-            self.unary = False   
-             
+        self.arguments = arguments             
 
     def __str__(self):
-        return 'Predicate: '+ self.name + \
-        '\n  argument_1: ' + str(self.argument_1) +\
-        '%s' % str('\n  argument_2: ' + self.argument_2 if not self.unary else '') 
+        string = 'Predicate: '+ self.name + '\n'
+        i = 1
+        for item in self.arguments:
+            string += 'Argument %s Type: %s'%(str(i), item)
+            i += 1
+        return string
+
 
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
-        return "Predicate: %s %s %s" % (self.name, str(self.argument_1), str(self.argument_2) if not self.unary else '')
+        string= "Predicate: %s " % (self.name)
+        for item in self.arguments:
+            string += '%s '%(item)

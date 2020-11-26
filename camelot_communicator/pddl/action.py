@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # Four spaces as indentation [no tabs]
 
+from pddl.types import Type
+
+
 class Action:
 
     def __init__(self, name, parameters, positive_preconditions, negative_preconditions, add_effects, del_effects):
@@ -24,14 +27,21 @@ class Action:
 
 class ActionParameter:
 
-    def __init__(self, name, type):
+    def __init__(self, name, type_p):
         self.name = name
-        self.__type = type
-    
-    @property
-    def type(self):
-        return self.__type
+        if type(type_p) is not Type:
+            raise Exception('The type of the AcionParameter needs an object class Type but got %s'%(type(type_p)))
+        self.type = type_p
 
-    @type.setter
-    def type(self, type):
-        pass
+class ActionProposition:
+
+    def __init__(self, name, parameters):
+        self.name = name
+        if type(parameters) is not list:
+            raise Exception ('Parameters must be a list')
+        self.parameters = parameters
+    
+    def add_parameter(self, item):
+        self.parameters.append(item)
+
+

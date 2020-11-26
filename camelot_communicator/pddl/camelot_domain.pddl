@@ -27,7 +27,7 @@
     ; Preconditions:
     ; Effects: 
     (:action move
-        :parameters (?who - character
+        :parameters (?who -character
             ?from ?to - location)
         :precondition (and (at ?who ?from) 
             (not (dead ?who)) 
