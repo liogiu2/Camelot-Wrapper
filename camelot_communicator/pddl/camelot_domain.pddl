@@ -18,7 +18,7 @@
         (dead ?character - character)
         (kneeling ?character - character)
         (can_open ?furniture - furniture) ;needs to be setted in places.json
-        (has_surface ?furniture - funiture)
+        (has_surface ?furniture - furniture)
         (stored ?item - item ?furniture - furniture)
     )
 

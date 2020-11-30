@@ -10,6 +10,7 @@ class PDDL_Parser:
 
     def __init__(self):
         self.domain = Domain()
+        self.supported_keywords = ['and', 'or', 'not', 'forall']
     # ------------------------------------------
     # Tokens
     # ------------------------------------------
@@ -129,6 +130,7 @@ class PDDL_Parser:
         work_list = predicate.copy()
         first = True
         n_arg = 0
+        args = []
         predicate_obj = Predicate('', [])
         while work_list:
             item = work_list.pop(0)
@@ -146,11 +148,17 @@ class PDDL_Parser:
                         item = possible_type
             if '?' not in item and item != '-':
                 t = self.domain.find_type(item)
-                if t is not None:
+                if t is None:
+                    raise Exception('Type "%s" used in predicate %s not found' % (item,predicate_obj.name))
+                for a in args:
                     predicate_obj.arguments.append(t)
                     n_arg += 1
                     if n_arg > 2:
                         raise Exception('A predicate cannot have more then 2 arguments')
+                args = []
+            #Base case of a variable
+            elif '?' in item:
+                args.append(item)
         return predicate_obj
 
     #-----------------------------------------------
@@ -166,44 +174,20 @@ class PDDL_Parser:
                 raise Exception('Action ' + name + ' redefined')
         parameters = []
         action_parameters = []
-        positive_preconditions = []
-        negative_preconditions = []
-        add_effects = []
-        del_effects = []
+        preconditions = []
+        effects = []
         while group:
             t = group.pop(0)
             if t == ':parameters':
                 if not type(group) is list:
                     raise Exception('Error with ' + name + ' parameters')
-                parameters = group.pop(0)
-                name_p = []
-                while parameters:
-                    item = parameters.pop(0)
-                    if '?' in item:
-                        if '-' in item:
-                            raise Exception('Character - attached to the name of the variable in parameter of the action')
-                        name_p.append(item)
-                    elif '-' in item:    
-                        type_p = ''
-                        if item == '-':
-                            type_p = parameters.pop(0)
-                        else:
-                            type_p = item.replace('-', '')
-                        if len(name_p) == 0:
-                            raise Exception('Error while parsing action parameters')
-
-                        type_obj = self.domain.find_type(type_p)
-                        if type_obj is None:
-                            raise Exception ('Name of type "%s" in action parameter does not exist'%(type_p))
-                        for i in name_p:
-                            action_parameters.append(ActionParameter(i, type_obj))
-                        name_p = []
+                action_parameters = self.parse_variable(group.pop(0))
             elif t == ':precondition':
                 self.split_propositions(group.pop(0), name, ':preconditions', action_parameters)
             elif t == ':effect':
-                self.split_propositions(group.pop(0), add_effects, del_effects, name, ':effects')
+                self.split_propositions(group.pop(0),  name, ':effects', action_parameters)
             else: print(str(t) + ' is not recognized in action')
-        self.actions.append(Action(name, parameters, positive_preconditions, negative_preconditions, add_effects, del_effects))
+        self.actions.append(Action(name, parameters, preconditions, effects))
 
     #-----------------------------------------------
     # Parse problem
@@ -242,22 +226,10 @@ class PDDL_Parser:
     #-----------------------------------------------
     #TODO: check on predicates, manage the proposition OR, forall
     def split_propositions(self, group, name, part, action_parameters):
-        pos = []
-        neg = []
-        self._split_proposition(group, action_parameters)
-        # if not type(group) is list:
-        #     raise Exception('Error with ' + name + part)
-        # if group[0] == 'and':
-        #     group.pop(0)
-        # else:
-        #     group = [group]
-        # for proposition in group:
-        #     if proposition[0] == 'not':
-        #         if len(proposition) != 2:
-        #             raise Exception('Unexpected not in ' + name + part)
-        #         neg.append(proposition[-1])
-        #     else:
-        #         pos.append(proposition)
+        if not type(group) is list:
+            raise Exception('Error with ' + name + part)
+        return self._split_proposition(group, action_parameters)
+
     
     def _split_proposition(self, group, action_parameters):      
         prop = group.pop(0)
@@ -278,9 +250,40 @@ class PDDL_Parser:
                 self._evaluate_proposition(item, action_parameters, action_prop)
             return action_prop
         elif prop == 'forall':
-            pass
+            param = self.parse_variable(group[0])[0]
+            forall_action_paramenters = action_parameters.copy()
+            forall_action_paramenters.append(param)
+            action_prop = ActionProposition('forall', [], argument=param)
+            self._evaluate_proposition(group[1], forall_action_paramenters, action_prop)
+            return action_prop
         else:
             raise Exception('Proposition not supported.')
+
+    def parse_variable(self, parameters):
+        name_p = []
+        action_parameters = []
+        while parameters:
+            item = parameters.pop(0)
+            if '?' in item:
+                if '-' in item:
+                    raise Exception('Character "-" attached to the name of the variable')
+                name_p.append(item)
+            elif '-' in item:    
+                type_p = ''
+                if item == '-':
+                    type_p = parameters.pop(0)
+                else:
+                    type_p = item.replace('-', '')
+                if len(name_p) == 0:
+                    raise Exception('Error while parsing action parameters')
+
+                type_obj = self.domain.find_type(type_p)
+                if type_obj is None:
+                    raise Exception ('Name of type "%s" in action parameter does not exist'%(type_p))
+                for i in name_p:
+                    action_parameters.append(ActionParameter(i, type_obj))
+                name_p = []
+        return action_parameters
     
     def _find_actionparameter(self, name, action_parameters):
         for item in action_parameters:
@@ -289,20 +292,22 @@ class PDDL_Parser:
         return None
     
     def _evaluate_proposition(self, item, action_parameters, action_prop):
-        if item[0] in ['and', 'or', 'forall','not']:
+        if item[0] in self.supported_keywords:
             action_prop.add_parameter(self._split_proposition(item, action_parameters))
-        pred = self.domain.find_predicate(item[0])
-        if pred is None:
-            raise Exception('Predicate is not recognized')
-        if len(item)-1 != len(pred.arguments):
-            raise Exception('Number of elements in proposition different to number or predicate variables')
-        i = 1
-        for arg in pred.arguments:
-            ap1 = self._find_actionparameter(item[i], action_parameters)
-            if ap1 is None:
-                raise Exception('Action Parameter is not recognized')
+        else:
+            pred = self.domain.find_predicate(item[0])
+            if pred is None:
+                raise Exception('Predicate is not recognized')
+            if len(item)-1 != len(pred.arguments):
+                raise Exception('Number of elements in proposition different to number or predicate variables')
+            i = 1
+            for arg in pred.arguments:
+                ap1 = self._find_actionparameter(item[i], action_parameters)
+                if ap1 is None:
+                    raise Exception('Action Parameter is not recognized')
+                i += 1
+                #TODO: check if predicates arguments are fulfilled
             action_prop.add_parameter(pred)
-            i += 1
 
     #-----------------------------------------------
     # Split objects
