@@ -2,12 +2,6 @@ from pddl.predicate import Predicate
 from pddl.action import Action
 from pddl.types import Type
 
-# self.domain_name = 'unknown'
-# self.requirements = []
-# self.actions = []
-# self.types = []
-# self.predicates = []
-
 class Domain:
 
     def __init__(self, name = ''):
@@ -149,6 +143,19 @@ class Domain:
             raise Exception('Predicate with name %s already exists'%(predicate.name))
 
         self.__predicates.append(predicate)
+    
+    def __str__(self) -> str:
+        string = "Domain Name: %s" %(self.domain_name) + '\n' 
+        string += 'Types: \n'
+        for item in self.types:
+            string +='\t'+ str(item) + '\n'
+        string += 'Predicates: \n'
+        for item in self.predicates:
+            string += '\t' + str(item) + '\n'
+        string += 'Actions: \n'
+        for item in self.actions:
+            string += '\t' + str(item) + '\n'
+        return string
     
     
     

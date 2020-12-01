@@ -13,10 +13,13 @@ class Action:
         self.effects = effects
 
     def __str__(self):
-        return 'action: ' + self.name + \
-        '\n  parameters: ' + str(self.parameters) + \
-        '\n  preconditions: ' + str(self.preconditions) + \
-        '\n  effects: ' + str(self.effects) + '\n'
+        string = 'action: ' + self.name 
+        string +='\n\t  parameters: '
+        for item in self.parameters:
+            string += str(item)
+        string +='\n\t  preconditions: ' + str(self.preconditions)
+        string +='\n\t  effects: ' + str(self.effects) + '\n'
+        return string
 
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__
@@ -28,6 +31,10 @@ class ActionParameter:
         if type(type_p) is not Type:
             raise Exception('The type of the ActionParameter needs an object class Type but got %s'%(type(type_p)))
         self.type = type_p
+
+    def __str__(self) -> str:
+        return ' %s (%s) '%(self.name, str(self.type.name))
+    
 
 class ActionProposition:
 
@@ -49,7 +56,10 @@ class ActionProposition:
         string = self.name + '('
         for item in self.parameters:
             string += str(item) + ', '
+        string = string[:-2]
         string += ')'
         return string
+    
+
 
 

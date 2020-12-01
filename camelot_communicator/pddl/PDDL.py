@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # Four spaces as indentation [no tabs]
+from pddl.relation_value import RelationValue
+from pddl.relation import Relation
+from pddl.entity import Entity
 from pddl.predicate import Predicate
 import re
 from pddl.action import Action, ActionParameter, ActionProposition
 from pddl.types import Type
 from pddl.domain import Domain
+from pddl.problem import Problem
 
 class PDDL_Parser:
 
@@ -42,7 +46,7 @@ class PDDL_Parser:
                 if not all(p == '' for p in words):
                     tmod = t.replace('\n', '')
                     list.append(tmod)
-                    if current == ':types' and tmod != ":types" and '\n' in t:
+                    if ((current == ':types' and tmod != ":types") or (current == ':objects' and tmod != ":objects")) and '\n' in t:
                         list.append('\n')
 
 
@@ -73,19 +77,20 @@ class PDDL_Parser:
                 elif t == ':predicates':
                     self.parse_predicates(group)
                 elif t == ':types':
-                    self.parse_types(group)
+                    self.parse_types_and_objects(group, 'types')
                 elif t == ':action':
                     self.parse_action(group)
                     self.domain.actions = self.actions
                 else: print(str(t) + ' is not recognized in domain')
         else:
             raise 'File ' + domain_filename + ' does not match domain pattern'
+        return self.domain
     #-----------------------------------------------
     # Parse types
     #-----------------------------------------------
-    def parse_types(self, group):
+    def parse_types_and_objects(self, group, target):
         """
-        Method to parse the Types and adding them to the domain. 
+        Method to parse the Types and objects and adding them to the domain/problem. 
         """
         if not type(group) is list:
             raise Exception('No types defined')
@@ -100,15 +105,20 @@ class PDDL_Parser:
                     name = group.pop(0)
                     if name != 'object':
                         extend = self.domain.find_type(name)
+                        if extend is None:
+                            raise Exception('Type not found in %s'%(target))
                 elif '-' in item:
                     raise Exception ('Found "-" attached to a name of a type, please put spaces between types. Error: %s'%(str(item)))
                 else:
                     if item in list_extend:
-                        raise Exception ('Cannot create Type twice')
+                        raise Exception ('Cannot create %s twice'%(target))
                     list_extend.append(item)
             else:
                 for i in list_extend:
-                    self.domain.add_type(Type(i, extend))
+                    if target == 'types':
+                        self.domain.add_type(Type(i, extend))
+                    else:
+                        self.objects.append(Entity(i, extend))
                 list_extend = []
 
     #-----------------------------------------------
@@ -172,7 +182,6 @@ class PDDL_Parser:
         for act in self.actions:
             if act.name == name:
                 raise Exception('Action ' + name + ' redefined')
-        parameters = []
         action_parameters = []
         preconditions = []
         effects = []
@@ -183,11 +192,11 @@ class PDDL_Parser:
                     raise Exception('Error with ' + name + ' parameters')
                 action_parameters = self.parse_variable(group.pop(0))
             elif t == ':precondition':
-                self.split_propositions(group.pop(0), name, ':preconditions', action_parameters)
+                preconditions = self.split_propositions(group.pop(0), name, ':preconditions', action_parameters)
             elif t == ':effect':
-                self.split_propositions(group.pop(0),  name, ':effects', action_parameters)
+                effects = self.split_propositions(group.pop(0),  name, ':effects', action_parameters)
             else: print(str(t) + ' is not recognized in action')
-        self.actions.append(Action(name, parameters, preconditions, effects))
+        self.actions.append(Action(name, action_parameters, preconditions, effects))
 
     #-----------------------------------------------
     # Parse problem
@@ -198,33 +207,43 @@ class PDDL_Parser:
         if type(tokens) is list and tokens.pop(0) == 'define':
             self.problem_name = 'unknown'
             self.objects = []
-            self.state = []
-            self.positive_goals = []
-            self.negative_goals = []
+            self.starting_state = []
             while tokens:
                 group = tokens.pop(0)
                 t = group[0]
                 if   t == 'problem':
                     self.problem_name = group[-1]
                 elif t == ':domain':
-                    if self.domain_name != group[-1]:
+                    if self.domain.domain_name != group[-1]:
                         raise Exception('Different domain specified in problem file')
+                    self.problem = Problem(self.problem_name, self.domain)
                 elif t == ':requirements':
                     pass # Ignore requirements in problem, parse them in the domain
                 elif t == ':objects':
                     group.pop(0)
-                    self.objects = group
+                    self.parse_types_and_objects(group, 'objects')
+                    self.problem.objects = self.objects
                 elif t == ':init':
                     group.pop(0)
-                    self.state = group
+                    self.parse_relations(group)
+                    self.problem.initial_state = self.starting_state
                 elif t == ':goal':
-                    self.split_propositions(group[1], self.positive_goals, self.negative_goals, '', 'goals')
+                    #We don't need the goal yet
+                    pass
                 else: print(str(t) + ' is not recognized in problem')
+            return self.problem
 
+    def parse_relations(self, group):
+        while group:
+            item = group.pop(0)
+            pred = self.domain.find_predicate(item.pop(0))
+            entities = []
+            while item:
+                entities.append(self.problem.find_objects(item.pop(0)))
+            self.starting_state.append(Relation(pred, entities, RelationValue.TRUE, self.domain, self.problem))
     #-----------------------------------------------
     # Split propositions
     #-----------------------------------------------
-    #TODO: check on predicates, manage the proposition OR, forall
     def split_propositions(self, group, name, part, action_parameters):
         if not type(group) is list:
             raise Exception('Error with ' + name + part)
@@ -309,16 +328,7 @@ class PDDL_Parser:
                 #TODO: check if predicates arguments are fulfilled
             action_prop.add_parameter(pred)
 
-    #-----------------------------------------------
-    # Split objects
-    #-----------------------------------------------
 
-    def split_objects(self, group):
-        if not type(group) is list:
-            raise Exception('Error with objects parsing')
-        for item in group:
-            #TODO: parse objects in problem
-            pass
 
 # ==========================================
 # Main

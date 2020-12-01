@@ -5,11 +5,13 @@ class Predicate:
         self.arguments = arguments             
 
     def __str__(self):
-        string = 'Predicate: '+ self.name + '\n'
+        string = ' '+ self.name  +'('
         i = 1
         for item in self.arguments:
-            string += 'Argument %s Type: %s'%(str(i), item)
+            string += item.name +','
             i += 1
+        string = string[:-1]
+        string += ')'
         return string
 
 
