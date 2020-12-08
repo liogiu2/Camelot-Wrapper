@@ -1,6 +1,6 @@
 import json
 import importlib.resources as pkg_resources
-from . import json_data
+import json_data
 """
 Inputs: Json file with the description of each action
 Outputs: 

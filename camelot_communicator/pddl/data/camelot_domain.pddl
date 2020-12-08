@@ -5,11 +5,12 @@
     (:types
         general location
         character furniture item - general
+        
     )
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)
     (:predicates
-        (at ?o -general ?l- location)
+        (at ?o - general ?l - location)
         (equip ?i - item ?c - character)
         (adjacent ?r ?r1 - location)
         (bleeding ?character - character)

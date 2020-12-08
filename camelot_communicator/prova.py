@@ -1,3 +1,4 @@
+from world_state import WorldState
 from pddl.PDDL import PDDL_Parser
 
 parser = PDDL_Parser()
@@ -8,6 +9,9 @@ problem = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\c
 domain_parsed = parser.parse_domain(domain)
 problem_parsed = parser.parse_problem(problem)
 
-print(domain_parsed)
+#print(domain_parsed)
+#print(problem_parsed)
+
+initial_state = WorldState(domain_parsed).create_wordstate_from_problem(problem_parsed)
 
 

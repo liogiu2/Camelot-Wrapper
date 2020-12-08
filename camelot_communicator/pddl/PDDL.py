@@ -239,7 +239,11 @@ class PDDL_Parser:
             pred = self.domain.find_predicate(item.pop(0))
             entities = []
             while item:
-                entities.append(self.problem.find_objects(item.pop(0)))
+                i = item.pop(0)
+                ent = self.problem.find_objects(i)
+                if ent is None:
+                    raise Exception('Couldn\'t find object %s'%(i))
+                entities.append(ent)
             self.starting_state.append(Relation(pred, entities, RelationValue.TRUE, self.domain, self.problem))
     #-----------------------------------------------
     # Split propositions
@@ -268,7 +272,7 @@ class PDDL_Parser:
             for item in group:
                 self._evaluate_proposition(item, action_parameters, action_prop)
             return action_prop
-        elif prop == 'forall':
+        elif prop == 'forall': #TODO: double check parameters forall
             param = self.parse_variable(group[0])[0]
             forall_action_paramenters = action_parameters.copy()
             forall_action_paramenters.append(param)

@@ -6,24 +6,25 @@
         blackSmith - location
         bob - character
         luca - character
-        chest - furniture
-        table - furniture
-        key - item
+        alchemyShop.chest - furniture
+        blackSmith.table - furniture
+        RedKey - item
     )
     
     (:init
         (at bob alchemyShop)
         (at luca alchemyShop)
-        (at chest alchemyShop)
-        (at table blackSmith)
+        (at alchemyShop.chest alchemyShop)
+        (at blackSmith.table blackSmith)
         (adjacent alchemyShop blackSmith) 
         (adjacent blackSmith alchemyShop)
-        (at key alchemyShop)
-        (equip key luca)
+        (at RedKey alchemyShop)
+        (equip RedKey luca)
+        
     )
     
     (:goal
-        (and(equip key bob)
+        (and(equip RedKey bob)
         (at bob blackSmith))
         
     )

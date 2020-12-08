@@ -48,6 +48,12 @@ class Relation:
             if type in extension:
                 return item
         return None
-
+    
+    def __str__(self) -> str:
+        string = self.predicate.name + '('
+        for item in self.entities:
+            string += item.name + ', '
+        string = string[:-2] +')'
+        return string
 
 

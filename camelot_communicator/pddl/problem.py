@@ -50,3 +50,21 @@ class Problem:
         Setter for initial_state
         """
         self.__initial_state = initial_state
+    
+    def __str__(self) -> str:
+        string = "Problem name: %s "%(self.problem_name)
+        string += "Associated Domain name: %s\n"%(self.domain.domain_name)
+        string += "Objects: \n\t"
+        for item in self.objects:
+            string += "%s, "%(str(item))
+        string += "\nInitial State: \n"
+        for item in self.initial_state:
+            string += "\t%s\n "%(str(item))
+        return string
+    
+    def find_objects_with_type(self, type_e):
+        return_list = []
+        for item in self.objects:
+            if item.type == type_e:
+                return_list.append(item)
+        return return_list

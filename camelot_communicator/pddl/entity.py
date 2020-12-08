@@ -9,3 +9,5 @@ class Entity:
             raise Exception('Expected Type got %s'%(type(type_e)))
         self.type = type_e
 
+    def __str__(self) -> str:
+        return "%s (%s)"%(self.name, self.type.name)
