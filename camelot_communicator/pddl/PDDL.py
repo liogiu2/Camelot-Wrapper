@@ -106,7 +106,7 @@ class PDDL_Parser:
                     if name != 'object':
                         extend = self.domain.find_type(name)
                         if extend is None:
-                            raise Exception('Type not found in %s'%(target))
+                            raise Exception('Type %s not found in %s'%(name, target))
                 elif '-' in item:
                     raise Exception ('Found "-" attached to a name of a type, please put spaces between types. Error: %s'%(str(item)))
                 else:
@@ -118,7 +118,7 @@ class PDDL_Parser:
                     if target == 'types':
                         self.domain.add_type(Type(i, extend))
                     else:
-                        self.objects.append(Entity(i, extend))
+                        self.objects.append(Entity(i, extend, self.problem))
                 list_extend = []
 
     #-----------------------------------------------
@@ -272,8 +272,11 @@ class PDDL_Parser:
             for item in group:
                 self._evaluate_proposition(item, action_parameters, action_prop)
             return action_prop
-        elif prop == 'forall': #TODO: double check parameters forall
+        elif prop == 'forall': 
             param = self.parse_variable(group[0])[0]
+            # adding parameter to list of action-paramenters that the evaluate proposition is checking 
+            # because we need to have the parameter used in the forall to be checked. 
+            # TODO(priority low): be sure that the parameter is used
             forall_action_paramenters = action_parameters.copy()
             forall_action_paramenters.append(param)
             action_prop = ActionProposition('forall', [], argument=param)

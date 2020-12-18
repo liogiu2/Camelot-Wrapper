@@ -4,8 +4,8 @@
 
     (:types
         general location
-        character furniture item - general
-        
+        character position item - general
+        furniture - position
     )
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)

@@ -32,6 +32,9 @@ class Problem:
         self.__objects.append(obj)
     
     def find_objects(self, obj_name):
+        if '.' in obj_name:
+            obj_name = '.'.join(map(lambda s: s.strip().capitalize(), obj_name.split('.')))
+            obj_name = obj_name[0].lower() + obj_name[1:]
         for item in self.__objects:
             if item.name == obj_name:
                 return item

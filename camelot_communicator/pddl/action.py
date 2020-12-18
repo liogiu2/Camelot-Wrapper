@@ -53,7 +53,12 @@ class ActionProposition:
         self.parameters.append(item)
 
     def __str__(self):
-        string = self.name + '('
+        string = ""
+        if self.name == 'forall':
+            string = self.name + '('
+            string += self.argument.name + '): ('
+        else:
+            string = self.name + '('
         for item in self.parameters:
             string += str(item) + ', '
         string = string[:-2]
