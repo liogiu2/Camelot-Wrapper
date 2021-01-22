@@ -29,6 +29,8 @@ class Problem:
         self.__objects = objects
     
     def add_object(self, obj):
+        if self.find_objects(obj.name) is not None:
+            raise Exception('Object %s in the problem already exists'%(obj.name))
         self.__objects.append(obj)
     
     def find_objects(self, obj_name):
@@ -54,6 +56,15 @@ class Problem:
         """
         self.__initial_state = initial_state
     
+    def add_relation_to_initial_state(self, relation):
+        """A method that is used to add a relation to the initial state
+        
+        Parameters
+        ----------
+        relation : Relation
+        """
+        self.initial_state.append(relation)
+    
     def __str__(self) -> str:
         string = "Problem name: %s "%(self.problem_name)
         string += "Associated Domain name: %s\n"%(self.domain.domain_name)
@@ -68,6 +79,14 @@ class Problem:
     def find_objects_with_type(self, type_e):
         return_list = []
         for item in self.objects:
-            if item.type == type_e:
+            if type_e in item.type.get_list_extensions():
                 return_list.append(item)
         return return_list
+    
+    def __eq__(self, other):
+        return (self.__class__ == other.__class__ and
+            self.problem_name == other.problem_name and 
+            all(map(lambda x, y: x == y, self.__objects, other.objects)) and 
+            all(map(lambda x, y: x == y, self.__initial_state, other.initial_state)) and 
+            self.domain == other.domain
+            )

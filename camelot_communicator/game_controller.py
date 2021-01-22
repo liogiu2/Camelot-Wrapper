@@ -11,11 +11,13 @@ class GameController:
         self._domain_parsed = self._parser.parse_domain(self._domain_path)
         self._problem_parsed = self._parser.parse_problem(self._problem_path)
         self._camelot_action = CamelotAction()
+        self._player = ''
         
     
     def start_game(self, game_loop = True):
         initial_state = WorldState(self._domain_parsed, self._problem_parsed, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
+        self._player = initial_state.find_player(self._problem_parsed)
         while game_loop:
             received = input()
 
@@ -23,11 +25,12 @@ class GameController:
                 self._camelot_action.action("HideMenu")
                 self._camelot_action.action('EnableInput')
                 self._main_game_controller(game_loop)
-                break
                 
 
     def _main_game_controller(self, game_loop = True):
         exit = game_loop
+        if self._player != '':
+            self._camelot_action.action("SetCameraFocus",[self._player.name])
         while exit:
 
             received = input()

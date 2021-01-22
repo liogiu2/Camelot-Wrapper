@@ -9,7 +9,9 @@ class Type:
         ' extends: ' + str(self.extend)
 
     def __eq__(self, other): 
-        return self.__dict__ == other.__dict__
+        if self.name == other:
+            return True
+        return False
 
     def __repr__(self):
         return "Type: %s" % (self.name)

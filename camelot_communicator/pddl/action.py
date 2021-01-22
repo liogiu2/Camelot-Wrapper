@@ -22,7 +22,13 @@ class Action:
         return string
 
     def __eq__(self, other): 
-        return self.__dict__ == other.__dict__
+        return (
+            self.__class__ == other.__class__ and 
+            self.name == other.name and 
+            all(map(lambda x, y: x == y, self.parameters, other.parameters)) and 
+            all(map(lambda x, y: x == y, self.preconditions, other.preconditions)) and 
+            all(map(lambda x, y: x == y, self.effects, other.effects))
+        )
 
 class ActionParameter:
 
@@ -34,6 +40,13 @@ class ActionParameter:
 
     def __str__(self) -> str:
         return ' %s (%s) '%(self.name, str(self.type.name))
+    
+    def __eq__(self, other):
+        return (
+            self.__class__ == other.__class__ and 
+            self.name == other.name and 
+            self.type == other.type
+        )
     
 
 class ActionProposition:
@@ -64,6 +77,14 @@ class ActionProposition:
         string = string[:-2]
         string += ')'
         return string
+    
+    def __eq__(self, other):
+        return (
+            self.__class__ == other.__class__ and 
+            self.name == other.name and 
+            self.argument == other.argument and 
+            all(map(lambda x, y: x == y, self.parameters, other.parameters))
+        )
     
 
 

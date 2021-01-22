@@ -4,7 +4,7 @@
     (:objects
         alchemyShop - location
         blackSmith - location
-        bob - character
+        bob - player
         luca - character
         AlchemyShop.Chest - furniture
         blackSmith.table - furniture

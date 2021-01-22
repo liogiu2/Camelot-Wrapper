@@ -16,7 +16,11 @@ class Predicate:
 
 
     def __eq__(self, other): 
-        return self.__dict__ == other.__dict__
+        return (
+            self.__class__ == other.__class__ and 
+            self.name == other.name and 
+            all(map(lambda x, y: x == y, self.arguments, other.arguments))
+        )
 
     def __repr__(self):
         string= "Predicate: %s " % (self.name)

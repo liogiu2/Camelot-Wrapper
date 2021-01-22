@@ -8,6 +8,7 @@ class Domain:
         self.__domain_name = name
         self.__types = []
         self.__predicates = []
+        self.__actions = []
 
     #-----------------------------------
     #       Name methods
@@ -156,6 +157,14 @@ class Domain:
         for item in self.actions:
             string += '\t' + str(item) + '\n'
         return string
+    
+    def __eq__(self, other):
+        return(
+            self.__domain_name == other.domain_name and 
+            all(map(lambda x, y: x == y, self.types, other.types))and 
+            all(map(lambda x, y: x == y, self.predicates, other.predicates))and 
+            all(map(lambda x, y: x == y, self.actions, other.actions))
+        )
     
     
     

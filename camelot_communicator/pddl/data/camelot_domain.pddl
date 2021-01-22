@@ -6,6 +6,7 @@
         general location
         character position item - general
         furniture - position
+        player - character
     )
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)

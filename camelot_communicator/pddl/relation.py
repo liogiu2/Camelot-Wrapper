@@ -26,7 +26,7 @@ class Relation:
         #check if entities exist
         for item in entities:
             if problem.find_objects(item.name) is None:
-                raise Exception('Object %s not found in the list of Objects in the Problem file'%(item.name))
+                raise Exception('Object %s not found in the list of Objects in the Problem'%(item.name))
         #check if predicate exist
         if domain.find_predicate(predicate.name) is None:
             raise Exception('Cannot find predicate %s in domain %s'%(predicate.name, domain.domain_name))
@@ -55,5 +55,15 @@ class Relation:
             string += item.name + ', '
         string = string[:-2] +')'
         return string
+    
+    def __eq__(self, other):
+        return(
+            self.__class__ == other.__class__ and 
+            self.value == other.value and 
+            self.domain == other.domain and 
+            self.problem == other.problem and 
+            self.predicate == other.predicate and 
+            all(map(lambda x, y: x == y, self.entities, other.entities))
+        )
 
 

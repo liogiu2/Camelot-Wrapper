@@ -31,3 +31,9 @@ class Entity:
                 
                 
         return (name, type_e)
+    
+    def __eq__(self, other):
+        return (self.__class__ == other.__class__ and 
+            self.name == other.name and 
+            self.type == other.type
+        )
