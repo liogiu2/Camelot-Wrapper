@@ -30,15 +30,15 @@ class Problem:
     
     def add_object(self, obj):
         if self.find_objects(obj.name) is not None:
-            raise Exception('Object %s in the problem already exists'%(obj.name))
+            raise AttributeError('Object %s in the problem already exists'%(obj.name))
         self.__objects.append(obj)
     
     def find_objects(self, obj_name):
-        if '.' in obj_name:
-            obj_name = '.'.join(map(lambda s: s.strip().capitalize(), obj_name.split('.')))
-            obj_name = obj_name[0].lower() + obj_name[1:]
+        # if '.' in obj_name:
+        #     obj_name = '.'.join(map(lambda s: s.strip().capitalize(), obj_name.split('.')))
+        #     obj_name = obj_name[0].lower() + obj_name[1:]
         for item in self.__objects:
-            if item.name == obj_name:
+            if item.name.lower() == obj_name.lower():
                 return item
         return None
     
@@ -63,6 +63,8 @@ class Problem:
         ----------
         relation : Relation
         """
+        if relation in self.__initial_state:
+            raise AttributeError('Relation already exists in current problem.')
         self.initial_state.append(relation)
     
     def __str__(self) -> str:

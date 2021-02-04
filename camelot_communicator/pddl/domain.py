@@ -162,8 +162,8 @@ class Domain:
         return(
             self.__domain_name == other.domain_name and 
             all(map(lambda x, y: x == y, self.types, other.types))and 
-            all(map(lambda x, y: x == y, self.predicates, other.predicates))and 
-            all(map(lambda x, y: x == y, self.actions, other.actions))
+            self.predicates == other.predicates and 
+            self.actions == other.actions
         )
     
     

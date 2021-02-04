@@ -1,6 +1,8 @@
 from camelot_action import CamelotAction
 from world_state import WorldState
 from pddl.PDDL import PDDL_Parser
+import logging
+from utilities import parse_json, replace_all
 
 class GameController:
 
@@ -8,16 +10,26 @@ class GameController:
         self._domain_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\camelot_domain.pddl"
         self._problem_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\example_problem.pddl"
         self._parser = PDDL_Parser()
-        self._domain_parsed = self._parser.parse_domain(self._domain_path)
-        self._problem_parsed = self._parser.parse_problem(self._problem_path)
+        self._domain = self._parser.parse_domain(self._domain_path)
+        self._problem = self._parser.parse_problem(self._problem_path)
         self._camelot_action = CamelotAction()
         self._player = ''
+        self.input_dict = {}
         
     
     def start_game(self, game_loop = True):
-        initial_state = WorldState(self._domain_parsed, self._problem_parsed, wait_for_actions= game_loop)
+        """A method that is used to start the game loop
+        
+        Parameters
+        ----------
+        game_loop : default: True
+            Variable used for debugging purposes.
+        """
+        initial_state = WorldState(self._domain, self._problem, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
-        self._player = initial_state.find_player(self._problem_parsed)
+        self._player = initial_state.find_player(self._problem)
+        self._location_management(game_loop)
+        self._camelot_action.action("ShowMenu", wait=game_loop)
         while game_loop:
             received = input()
 
@@ -25,12 +37,63 @@ class GameController:
                 self._camelot_action.action("HideMenu")
                 self._camelot_action.action('EnableInput')
                 self._main_game_controller(game_loop)
+    
+    # if relation.predicate.name == self.__supported_predicates['adjacent'].name:
+    #     #a.action('EnableIcon',["Exit", "Exit", "AlchemyShop.Door", "Enter the Black Smith", True])
+    #     self._camelot_action.action('EnableIcon', ['Exit', 'Exit', relation.entities[0].name, 'Description', True], self._wait_for_actions)
+    #     self.input_dict['input Exit '+relation.entities[0].name] = ""
+    # else:
+
+    def _location_management(self, game_loop = True):
+        """A method that is used to manage the places declared on the domain
+
+        It declares the input function that is used from Camelot to enable an action to happen. In this case the action is the exit action. 
+        It also creates the responce to the action, so when camelot triggers the input command the systems knows the responce.
+        
+        Parameters
+        ----------
+        game_loop : boolen, default - True
+            boolean used for debugging porpuses.
+        """
+        json_p = parse_json("pddl_actions_to_camelot")
+        for item in self._problem.initial_state:
+            if item.predicate.name == self._domain.find_predicate('adjacent').name:
+                sub_dict = {
+                    '$param1$' : item.entities[0].name,
+                    '$param2$' : self._player.name,
+                    '$param3$' : item.entities[1].name,
+                    '$wait$' : str(game_loop)
+                }
+                for istr in json_p['adjacent']['declaration']:
+                    istr_with_param = replace_all(istr, sub_dict)
+                    exec(istr_with_param)
+                loc, entry = item.entities[0].name.split('.')
+                if 'end' in entry.lower():
+                    input_key = replace_all(json_p['adjacent']['input']['end'], sub_dict)
+                    self.input_dict[input_key] = ""
+                else:
+                    input_key = replace_all(json_p['adjacent']['input']['door'], sub_dict)
+                    self.input_dict[input_key] = ""
+                    
+                for istr in json_p['adjacent']['response']:
+                    self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
+                
                 
 
     def _main_game_controller(self, game_loop = True):
+        """A method that is used as main game controller
+        
+        Parameters
+        ----------
+        game_loop : boolen, default - True
+            boolean used for debugging porpuses.
+        """
         exit = game_loop
         if self._player != '':
             self._camelot_action.action("SetCameraFocus",[self._player.name])
         while exit:
 
             received = input()
+            
+            if received in self.input_dict.keys():
+                exec(self.input_dict[received])

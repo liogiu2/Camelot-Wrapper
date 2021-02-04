@@ -3,7 +3,7 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -13,7 +13,7 @@
 		"position": ["Behind", "Left", "Center", "Right"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "RightBookcase",
 		"attribute": [""]
@@ -44,7 +44,7 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Target",
 		"attribute": [""]
@@ -60,20 +60,20 @@
 		"attribute": ["Open", "Close"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}]
 }, {
 	"name": "Bridge",
 	"type": ["outside", "connection"],
 	"room_components": [{
 		"name": "NorthEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "WestEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "SouthEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "SouthSign",
 		"attribute": ["Furniture"]
@@ -97,7 +97,7 @@
 	"type": ["outside", "place"],
 	"room_components": [{
 		"name": "Exit",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Plant",
 		"attribute": [""]
@@ -137,7 +137,7 @@
 	"type": ["room", "fancy"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -174,7 +174,7 @@
 	"type": ["outside", "connection"],
 	"room_components": [{
 		"name": "WestEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Right",
 		"attribute": [""],
@@ -185,7 +185,7 @@
 		"position": ["Left"]
 	}, {
 		"name": "EastEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Gate",
 		"attribute": ["Open", "Close"]
@@ -201,10 +201,10 @@
 	"type": ["outside", "place"],
 	"room_components": [{
 		"name": "NorthEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "GreenHouseDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Beanch",
 		"attribute": ["Seat"],
@@ -214,16 +214,16 @@
 		"attribute": [""]
 	}, {
 		"name": "EastEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "BrownHouseDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Plant",
 		"attribute": [""]
 	}, {
 		"name": "RedHouseDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Alley",
 		"attribute": [""],
@@ -234,7 +234,7 @@
 		"position": ["Alley2"]
 	}, {
 		"name": "blueHouseDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Barrel",
 		"attribute": ["Surface"]
@@ -243,14 +243,14 @@
 		"attribute": [""]
 	}, {
 		"name": "WestEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}]
 }, {
 	"name": "Cottage",
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Bed",
 		"attribute": ["Seat"]
@@ -280,7 +280,7 @@
 	"type": ["room", "fancy"],
 	"room_components": [{
 		"name": "Gate",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Fountain",
 		"attribute": [""]
@@ -293,7 +293,7 @@
 		"position": ["Left", "Right"]
 	}, {
 		"name": "Exit",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Horse",
 		"attribute": [""]
@@ -314,10 +314,10 @@
 	"type": ["room", "fancy"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Fireplace",
 		"attribute": [""]
@@ -368,7 +368,7 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -402,7 +402,7 @@
 	"type": ["outside", "place"],
 	"room_components": [{
 		"name": "Exit",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "HayPiles",
 		"attribute": [""],
@@ -415,7 +415,7 @@
 		"attribute": ["Surface"]
 	}, {
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Well",
 		"attribute": [""]
@@ -425,7 +425,7 @@
 	"type": ["outside", "connection"],
 	"room_components": [{
 		"name": "EastEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Well",
 		"attribute": [""]
@@ -441,14 +441,14 @@
 		"position": ["Pathblock"]
 	}, {
 		"name": "WestEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}]
 }, {
 	"name": "GreatHall",
 	"type": ["room", "fancy", "connection"],
 	"room_components": [{
 		"name": "Gate",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Leftfoyer",
 		"attribute": [""],
@@ -459,7 +459,7 @@
 		"position": ["Rightfoyer"]
 	}, {
 		"name": "BasementDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "LeftSupplicant",
 		"attribute": [""],
@@ -491,7 +491,10 @@
 		"attribute": ["Seat"]
 	}, {
 		"name": "LeftDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
+	}, {
+		"name": "RightDoor",
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "LeftBalcony",
 		"attribute": [""],
@@ -509,14 +512,14 @@
 	"type": ["room", "fancy", "connection"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Center",
 		"attribute": [""],
 		"position": ["Center"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Stairs",
 		"attribute": [""]
@@ -526,7 +529,7 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Bookcase",
 		"attribute": [""]
@@ -571,7 +574,7 @@
 	"type": ["outside", "connection"],
 	"room_components": [{
 		"name": "Exit",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "Barrel",
 		"attribute": ["Surface"]
@@ -587,17 +590,17 @@
 		"position": ["Left", "Right"]
 	}, {
 		"name": "SmallShip",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "BigShip",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}]
 }, {
 	"name": "Ruins",
 	"type": ["outside", "place"],
 	"room_components": [{
 		"name": "Exit",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "DirtPile",
 		"attribute": [""]
@@ -623,7 +626,7 @@
 	"type": ["outside", "connection"],
 	"room_components": [{
 		"name": "WestEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}, {
 		"name": "DirtPile",
 		"attribute": [""]
@@ -639,14 +642,14 @@
 		"position": ["Pathblock"]
 	}, {
 		"name": "EastEnd",
-		"attribute": [""]
+		"attribute": ["EntryPoint"]
 	}]
 }, {
 	"name": "Storage",
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "Barrel",
 		"attribute": ["Surface"]
@@ -663,7 +666,7 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
 		"name": "FrontLeftStool",
 		"attribute": ["Seat"]
@@ -702,6 +705,6 @@
 		"position": ["Left", "Right"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close"]
+		"attribute": ["Open", "Close", "EntryPoint"]
 	}]
 }]

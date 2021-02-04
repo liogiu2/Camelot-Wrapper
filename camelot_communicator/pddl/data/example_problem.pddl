@@ -2,29 +2,29 @@
     (:domain CamelotDomain)
     
     (:objects
-        alchemyShop - location
-        blackSmith - location
+        AlchemyShop - location
+        Bridge - location
         bob - player
         luca - character
         AlchemyShop.Chest - furniture
-        blackSmith.table - furniture
+        AlchemyShop.Door - entrypoint
+        Bridge.SouthEnd - entrypoint
         RedKey - item
     )
     
     (:init
-        (at bob alchemyShop)
-        (at luca alchemyShop)
-        (at AlchemyShop.Chest alchemyShop)
-        (at blackSmith.table blackSmith)
-        (adjacent alchemyShop blackSmith) 
-        (adjacent blackSmith alchemyShop)
+        (at bob AlchemyShop)
+        (at luca AlchemyShop)
+        (at AlchemyShop.Chest AlchemyShop)
+        (adjacent AlchemyShop.Door Bridge.SouthEnd) 
+        (adjacent Bridge.SouthEnd AlchemyShop.Door)
         (stored RedKey AlchemyShop.Chest)
         (can_open AlchemyShop.Chest)
     )
     
     (:goal
         (and(equip RedKey bob)
-        (at bob blackSmith))
+        (at bob Bridge))
         
     )
         

@@ -61,7 +61,6 @@ class Relation:
             self.__class__ == other.__class__ and 
             self.value == other.value and 
             self.domain == other.domain and 
-            self.problem == other.problem and 
             self.predicate == other.predicate and 
             all(map(lambda x, y: x == y, self.entities, other.entities))
         )

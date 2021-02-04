@@ -5,7 +5,7 @@
     (:types
         general location
         character position item - general
-        furniture - position
+        furniture entrypoint - position
         player - character
     )
 
@@ -13,7 +13,7 @@
     (:predicates
         (at ?o - general ?l - location)
         (equip ?i - item ?c - character)
-        (adjacent ?r ?r1 - location)
+        (adjacent ?r ?r1 - entrypoint)
         (bleeding ?character - character)
         (spell-hit ?character - character)
         (is_open ?furniture - furniture)
@@ -30,7 +30,7 @@
     ; Effects: 
     (:action move
         :parameters (?who -character
-            ?from ?to - location)
+            ?from ?to - entrypoint)
         :precondition (and (at ?who ?from) 
             (not (dead ?who)) 
             (adjacent ?from ?to)

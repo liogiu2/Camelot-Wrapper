@@ -26,8 +26,8 @@ class Action:
             self.__class__ == other.__class__ and 
             self.name == other.name and 
             all(map(lambda x, y: x == y, self.parameters, other.parameters)) and 
-            all(map(lambda x, y: x == y, self.preconditions, other.preconditions)) and 
-            all(map(lambda x, y: x == y, self.effects, other.effects))
+            self.preconditions == other.preconditions and 
+            self.effects == other.effects
         )
 
 class ActionParameter:
