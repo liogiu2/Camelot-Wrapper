@@ -1,5 +1,5 @@
 from pddl.predicate import Predicate
-from pddl.action import Action
+from pddl.action_definition import ActionDefinition
 from pddl.types import Type
 
 class Domain:

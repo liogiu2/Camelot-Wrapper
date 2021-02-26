@@ -5,22 +5,24 @@ from pddl.relation_value import RelationValue
 
 class Relation:
 
-    def __init__(self, predicate, entities, value, domain, problem):
+    def __init__(self, predicate, entities, value, domain = None, problem = None):
         if type(value) is not RelationValue:
             raise Exception('Value must be enum RelationValue')
         if type(predicate) is not Predicate:
             raise Exception('predicate must be class Predicate')
-        if type(domain) is not Domain:
-            raise Exception('Domain must be class Domain')
-        if type(problem) is not Problem:
-            raise Exception('Problem must be class Problem')
-        if not self.is_valid_relation(predicate, entities, domain, problem):
-            raise Exception('Relation is not valid')
-        self.domain = domain
+        if domain is not None and problem is not None:
+            if type(domain) is not Domain:
+                raise Exception('Domain must be class Domain')
+            if type(problem) is not Problem:
+                raise Exception('Problem must be class Problem')
+            if not self.is_valid_relation(predicate, entities, domain, problem):
+                raise Exception('Relation is not valid')
+            self.domain = domain
+            self.problem = problem
         self.predicate = predicate
         self.entities = entities
         self.value = value
-        self.problem = problem
+        
 
     def is_valid_relation(self, predicate, entities, domain, problem):
         #check if entities exist

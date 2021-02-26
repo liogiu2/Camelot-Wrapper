@@ -1,8 +1,10 @@
+from pddl.action import Action
 from camelot_action import CamelotAction
-from world_state import WorldState
+from camelot_world_state import CamelotWorldState
 from pddl.PDDL import PDDL_Parser
 import logging
 from utilities import parse_json, replace_all
+import random
 
 class GameController:
 
@@ -25,11 +27,22 @@ class GameController:
         game_loop : default: True
             Variable used for debugging purposes.
         """
-        initial_state = WorldState(self._domain, self._problem, wait_for_actions= game_loop)
+        initial_state = CamelotWorldState(self._domain, self._problem, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
         self._player = initial_state.find_player(self._problem)
         self._location_management(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
+        for item in self._domain.actions:
+            a = None
+            while a == None:
+                d = item.get_dict_parameters()
+                for i in d.keys():
+                    entity = self._problem.find_objects_with_type(self._domain.find_type(d[i].name))
+                    d[i] = random.choice(entity)
+                try:
+                    a = Action(item, d)
+                except ValueError:
+                    continue
         while game_loop:
             received = input()
 
@@ -38,11 +51,6 @@ class GameController:
                 self._camelot_action.action('EnableInput')
                 self._main_game_controller(game_loop)
     
-    # if relation.predicate.name == self.__supported_predicates['adjacent'].name:
-    #     #a.action('EnableIcon',["Exit", "Exit", "AlchemyShop.Door", "Enter the Black Smith", True])
-    #     self._camelot_action.action('EnableIcon', ['Exit', 'Exit', relation.entities[0].name, 'Description', True], self._wait_for_actions)
-    #     self.input_dict['input Exit '+relation.entities[0].name] = ""
-    # else:
 
     def _location_management(self, game_loop = True):
         """A method that is used to manage the places declared on the domain
@@ -77,7 +85,6 @@ class GameController:
                     
                 for istr in json_p['adjacent']['response']:
                     self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
-                
                 
 
     def _main_game_controller(self, game_loop = True):

@@ -5,7 +5,7 @@ from pddl.relation import Relation
 from pddl.entity import Entity
 from pddl.predicate import Predicate
 import re
-from pddl.action import Action, ActionParameter, ActionProposition
+from pddl.action_definition import ActionDefinition, ActionParameter, ActionProposition
 from pddl.types import Type
 from pddl.domain import Domain
 from pddl.problem import Problem
@@ -196,7 +196,7 @@ class PDDL_Parser:
             elif t == ':effect':
                 effects = self.split_propositions(group.pop(0),  name, ':effects', action_parameters)
             else: print(str(t) + ' is not recognized in action')
-        self.actions.append(Action(name, action_parameters, preconditions, effects))
+        self.actions.append(ActionDefinition(name, action_parameters, preconditions, effects))
 
     #-----------------------------------------------
     # Parse problem
@@ -327,13 +327,19 @@ class PDDL_Parser:
             if len(item)-1 != len(pred.arguments):
                 raise Exception('Number of elements in proposition different to number or predicate variables')
             i = 1
+            list_action_paramenter = []
             for arg in pred.arguments:
-                ap1 = self._find_actionparameter(item[i], action_parameters)
-                if ap1 is None:
+                found_action_parameter = self._find_actionparameter(item[i], action_parameters)
+                if found_action_parameter is None:
                     raise Exception('Action Parameter is not recognized')
                 i += 1
-                #TODO: check if predicates arguments are fulfilled
-            action_prop.add_parameter(pred)
+                #check if predicates arguments are fulfilled
+                if arg in found_action_parameter.type.get_list_extensions():
+                    list_action_paramenter.append(found_action_parameter)
+                else:
+                    raise ValueError("Action predicate don't correspond")
+            action_parameter_predicate = Predicate(pred.name, list_action_paramenter)
+            action_prop.add_parameter(action_parameter_predicate)
 
 
 

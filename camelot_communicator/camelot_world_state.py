@@ -4,12 +4,13 @@ from pddl.entity import Entity
 from camelot_action import CamelotAction
 from utilities import parse_json
 from pddl.domain import Domain
+from pddl.world_state import WorldState
 import random
 import logging
 
 
 
-class WorldState:
+class CamelotWorldState:
     """
     A Class used to represent a WordState
     
@@ -62,7 +63,19 @@ class WorldState:
         self._camelot_action = CamelotAction()
         self._wait_for_actions = wait_for_actions
         self.problem = problem
+        self.world_state = self._create_world_state()
         #logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    
+        
+    def _create_world_state(self) -> WorldState:
+        """A method that is used to create the WorldState from the initial state of the problem
+        
+        """
+        world = WorldState(self.domain)
+        for item in self.problem.initial_state:
+            world.add_relation(item)
+        return world
+
 
     def create_camelot_env_from_problem(self):
         """A method that is used to create the camelot environmen from the problem linked to the WorldState class

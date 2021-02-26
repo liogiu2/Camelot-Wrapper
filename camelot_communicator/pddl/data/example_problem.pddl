@@ -2,8 +2,8 @@
     (:domain CamelotDomain)
     
     (:objects
-        AlchemyShop - location
-        Bridge - location
+        AlchemyShop - position
+        Bridge - position
         bob - player
         luca - character
         AlchemyShop.Chest - furniture

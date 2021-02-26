@@ -1,8 +1,8 @@
 #import pandas as pd
 import json
 import importlib.resources as pkg_resources
-from camelot_communicator.camelot_action import CamelotAction
-from camelot_communicator.world_state import WorldState
+from camelot_action import CamelotAction
+from camelot_world_state import CamelotWorldState
 from . import json_data
 
 class Character:
@@ -22,5 +22,5 @@ class Character:
         self.body_type = body_type
 
         if(self.c_action.action("CreateCharacter", [name, body_type], False)):
-            WorldState.character_list.append(self)
+            CamelotWorldState.character_list.append(self)
         
