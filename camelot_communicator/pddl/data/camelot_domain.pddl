@@ -5,35 +5,53 @@
     (:types
         general other
         character position item - general
-        furniture entrypoint - position
+        furniture entrypoint location - position
         player - character
     )
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)
     (:predicates
         (at ?o - general ?l - position)
+        (in ?o - general ?l - location)
         (equip ?i - item ?c - character)
         (adjacent ?r ?r1 - entrypoint)
         (bleeding ?character - character)
         (spell-hit ?character - character)
         (is_open ?furniture - furniture)
-        (dead ?character - character)
+        (alive ?character - character)
         (kneeling ?character - character)
-        (can_open ?furniture - furniture) ;needs to be setted in places.json
+        (can_open ?furniture - furniture) 
         (has_surface ?furniture - furniture)
         (stored ?item - item ?furniture - furniture)
     )
 
-    ; Camelot Action:
+    ; Camelot Action: 
     ; Parameters:
     ; Preconditions:
     ; Effects: 
-    (:action move
+    (:action move-between-location
+        :parameters (?who - character ?from ?to - location ?entryfrom ?entryto - entrypoint)
+        :precondition (and (in ?who ?from) 
+            (alive ?who)
+            (adjacent ?entryfrom ?entryto)
+            (at ?who ?entryfrom)
+        )
+        :effect (and (in ?who ?to)
+            (not (in ?who ?from))
+            (not (at ?who ?entryfrom))
+            (at ?who ?entryto)
+        )
+    )
+
+    ; Camelot Action: 
+    ; Parameters:
+    ; Preconditions:
+    ; Effects: 
+    (:action move-within-location
         :parameters (?who -character
-            ?from ?to - entrypoint)
+            ?from ?to - position)
         :precondition (and (at ?who ?from) 
-            (not (dead ?who)) 
-            (adjacent ?from ?to)
+            (alive ?who)
         )
         :effect (and (at ?who ?to)
             (not (at ?who ?from))
@@ -53,8 +71,8 @@
         :parameters (?who ?whom - character ?room - position)
         :precondition (and (at ?who ?room) 
             (at ?whom ?room) 
-            (not (dead ?who)) 
-            (not (dead ?whom))
+            (alive ?who) 
+            (not (alive ?whom))
         )
         :effect (and 
             (bleeding ?whom) 
@@ -74,8 +92,8 @@
         :parameters (?who ?whom - character ?room - position)
         :precondition (and (at ?who ?room) 
             (at ?whom ?room) 
-            (not (dead ?who)) 
-            (not (dead ?whom))
+            (alive ?who) 
+            (alive ?whom)
         )
         :effect (and ) 
     )
@@ -95,7 +113,7 @@
         :parameters (?who - character ?where - position ?furniture - furniture)
         :precondition (and (at ?who ?where) 
             (at ?furniture ?where) 
-            (not (dead ?who))
+            (alive ?who)
         )
         :effect (and )
     )
@@ -109,7 +127,7 @@
     ;               None
     (:action cast-no-target
         :parameters (?caster - character)
-        :precondition (and (not (dead ?caster)))
+        :precondition (and (alive ?caster))
         :effect (and )
     )
 
@@ -126,8 +144,8 @@
         :parameters (?caster ?target - character ?position - position)
         :precondition (and (at ?caster ?position) 
             (at ?target ?position) 
-            (not (dead ?caster)) 
-            (not (dead ?target))
+            (alive ?caster) 
+            (alive ?target)
         )
         :effect (and (at ?caster ?position) 
             (at ?target ?position) 
@@ -145,7 +163,7 @@
     ;               None
     (:action clap
         :parameters (?clapper - character)
-        :precondition (and (not (dead ?clapper)))
+        :precondition (and (alive ?clapper))
         :effect (and )
     )
 
@@ -164,7 +182,7 @@
         :parameters (?c - character ?f - furniture ?r - position)
         :precondition (and (at ?c ?r) 
             (at ?f ?r) 
-            (not (dead ?c)) 
+            (alive ?c)
             (is_open ?f)
         )
         :effect (and (not (is_open ?f)))
@@ -179,7 +197,7 @@
     ;               None
     (:action dance
         :parameters (?dancer - character)
-        :precondition (and (not (dead ?dancer)))
+        :precondition (and (alive ?dancer))
         :effect (and )
     )
 
@@ -196,8 +214,8 @@
         :parameters (?d ?d1 - character ?l - position)
         :precondition (and (at ?d ?l) 
             (at ?d1 ?l) 
-            (not (dead ?d)) 
-            (not (dead ?d1))
+            (alive ?d)
+            (alive ?d1)
         )
         :effect (and )
     )
@@ -211,8 +229,8 @@
     ;               c is dead
     (:action die
         :parameters (?c - character)
-        :precondition (and (not (dead ?c)))
-        :effect (and (dead ?c))
+        :precondition (and (alive ?c))
+        :effect (and (not(alive ?c)))
     )
     		
     ; Camelot Action: Draw
@@ -229,7 +247,7 @@
     ;               i is NOT at l MIGTH NEED TO BE CHANGED
     (:action draw
         :parameters (?c - character ?i - item ?l - position)
-        :precondition (and (not (dead ?c)) 
+        :precondition (and (alive ?c)
             (at ?c ?l) 
             (forall (?character - character) 
                 (not(equip ?i ?character))
@@ -250,7 +268,7 @@
     ;               None
     (:action drink
         :parameters (?c - character ?i - item ?l - position)
-        :precondition (and (not (dead ?c)) 
+        :precondition (and (alive ?c) 
             (at ?c ?l) 
             (at ?i ?l) 
         )
@@ -268,7 +286,7 @@
     ;               c is at position
     (:action enter
         :parameters (?c - character ?l - position)
-        :precondition (and (not (dead ?c)) 
+        :precondition (and (alive ?c)
             (not (at ?c ?l))
         )
         :effect (and (at ?c ?l))
@@ -285,7 +303,7 @@
     ;               character is NOT in the position it previously was
     (:action exit
         :parameters (?c - character ?l - position)
-        :precondition (and (not (dead ?c)) 
+        :precondition (and (alive ?c)
             (at ?c ?l)
         )
         :effect (and (not (at ?c ?l)))
@@ -305,8 +323,8 @@
     ;               receiver equips the item
     (:action give
         :parameters (?giver ?receiver - character ?item - item ?l - position)
-        :precondition (and (not (dead ?giver)) 
-            (not (dead ?receiver)) 
+        :precondition (and (alive ?giver) 
+            (alive ?receiver)
             (equip ?item ?giver) 
             (at ?giver ?l) 
             (at ?receiver ?l)
@@ -325,7 +343,7 @@
     (:action kneel
         :parameters (?character - character)
         :precondition (and (not (kneeling ?character)) 
-            (not(dead ?character))
+            (alive ?character)
         )
         :effect (and (kneeling ?character))
     )
@@ -345,7 +363,7 @@
     ;               furniture is is_open
     (:action openfurniture
         :parameters (?character - character ?furniture - furniture ?position - position)
-        :precondition (and (not(dead ?character))
+        :precondition (and (alive ?character)
             (at ?furniture ?position) 
             (at ?character ?position) 
             (not(is_open ?furniture)) 
@@ -377,7 +395,7 @@
         :parameters (?character - character ?furniture - furniture ?position - position ?item - item)
         :precondition ( 
             and 
-                (not(dead ?character)) 
+                (alive ?character)
                 (at ?furniture ?position) 
                 (at ?character ?position) 
                 (stored ?item ?furniture)

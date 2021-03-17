@@ -1,11 +1,16 @@
-from pddl.relation import Relation
+from pddl.domain import Domain
 from pddl.action_definition import ActionDefinition
+from pddl.predicate import Predicate
+from pddl.action_definition import ActionProposition
+from pddl.action import Action
+from pddl.relation import Relation
+from pddl.relation_value import RelationValue
 from pddl.entity import Entity
 import logging
 
 class WorldState:
 
-    def __init__(self, domain):
+    def __init__(self, domain: Domain):
         self.__domain = domain
         self.__relations = []
         self.__entities = []
@@ -15,7 +20,7 @@ class WorldState:
         """Getter for entities
 
         """
-        return self.__relations
+        return self.__entities
     
     @entities.setter
     def entities(self, entities):
@@ -54,7 +59,7 @@ class WorldState:
             logging.info("wolrdstate.add_relation(%s) -> The relation already exists. Skipping."%relation.predicate.name)
 
 
-    def find_relation(self, relation) -> Relation:
+    def find_relation(self, relation: Relation, exclude_value = False) -> Relation:
         """A method that is used to find a relation in the current WorldState
         
         Returns the relation or None.
@@ -63,13 +68,18 @@ class WorldState:
         ----------
         relation : type Relation
             relation that needs to be found
+        exclude_value : bool, optional, default False
+            if True, it will find the relation without evaluating the relation_value.
         """
-        if type(relation) != Relation:
-            raise TypeError("find_relation type must be Relation")
         for item in self.__relations:
-            if item == relation:
-                return item
+            if exclude_value:
+                if item.equals_exclude_value(relation):
+                    return item
+            else:
+                if item == relation:
+                    return item
         return None
+
     
     def add_entity(self, entity):
         """A method that is used to add an entity to the list of entities
@@ -102,8 +112,36 @@ class WorldState:
             if item == entity:
                 return item
         return None
+    
+    def get_dict_predicates(self) -> dict:
+        """A method that is used to return a dict with all the predicates listed inside the domain
+        
+        Parameters
+        ----------
+            none
+        """
+        return_dict = {}
+        for item in self.__domain.predicates:
+            return_dict[item.name] = item
+        return return_dict
+    
+    def find_entity_ignore_case(self, entity: Entity) -> Entity:
+        """A method that is used to find a Entity in the current WorldState without checking for the case in the name
+        
+        Returns the Entity or None.
 
-    def can_action_be_applied(self, action) -> bool:
+        Parameters
+        ----------
+        Entity : type Entity
+            Entity that needs to be found
+        """
+
+        for item in self.__entities:
+            if item.name.lower() == entity.lower():
+                return item
+        return None
+
+    def can_action_be_applied(self, action: Action) -> bool:
         """A method that is used to check if an action can be applied to the current worldstate
         
         This method checks the precondition of the action in the current worldstate and returns True if the action can be applied, False otherwise.
@@ -112,7 +150,78 @@ class WorldState:
         action : type Action
             action to be checked if it can be applied
         """
-        result = False
+        result = self._check_precondition_recursive(action.preconditions)
 
         return result
+    
+    def _check_precondition_recursive(self, action_proposition: ActionProposition):
+        """A method that is used to check if the preconditions of the action can be applied to the worldstate. 
+        Recursive method.
+        
+        Parameters
+        ----------
+        action_proposition : type ActionProposition
+            ActionProposition that needs to be applied.
+        """
+        if action_proposition.name == 'and':
+            for item in action_proposition.parameters:
+                if type(item) == Relation:
+                    if self.find_relation(item) is None:
+                        return False
+                elif type(item) == ActionProposition:
+                    if self._check_precondition_recursive(item) == False:
+                        return False
+            return True
+        elif action_proposition.name == 'or':
+            for item in action_proposition.parameters:
+                if type(item) == Relation:
+                    if self.find_relation(item) is not None:
+                        return True
+                elif type(item) == ActionProposition:
+                    if self._check_precondition_recursive(item) == True:
+                        return True
+            return False
+        elif action_proposition.name == 'forall':
+            #TODO: forall precondition check
+            pass
+        
+
+    
+    def apply_action(self, action: Action):
+        """A method that is used to apply an action to the current worldstate. It returns the new worldstate.
+        
+        Parameters
+        ----------
+        action : Action
+            action that we want to apply to the current worldstate.
+        """
+        if self.can_action_be_applied(action):
+            self._apply_action_effect(action.effects)
+
+    def _apply_action_effect(self, action_definition : ActionDefinition):
+        """A method that is used to apply the effect of an action to the current worldstate.
+        
+        Parameters
+        ----------
+        action_definition : type ActionDefinition
+            effect of the action that we want to apply to the worldstate
+        """
+        for relation in action_definition.parameters:
+            worldstate_relation = self.find_relation(relation, exclude_value=True)
+            
+            if worldstate_relation is None:
+                self.add_relation(relation)
+            else:
+                worldstate_relation.modify_value(relation.value)
+
+
+    
+    def __str__(self) -> str:
+        string = "entities: \n\t"
+        for item in self.__entities:
+            string += "%s, "%(str(item))
+        string += "\nRelations: \n"
+        for item in self.__relations:
+            string += "\t%s\n "%(str(item))
+        return string
 

@@ -1045,7 +1045,7 @@
 		}],
 		"PDDLDomain" : "",
 		"PDDLPredicates" : "",
-		"PDDLProblem" : "at|stored",
+		"PDDLProblem" : "at|stored|in",
 		"CEPTRE": ""
 	},
 	{

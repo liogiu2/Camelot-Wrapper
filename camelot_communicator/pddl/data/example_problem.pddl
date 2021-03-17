@@ -2,8 +2,8 @@
     (:domain CamelotDomain)
     
     (:objects
-        AlchemyShop - position
-        Bridge - position
+        AlchemyShop - location 
+        Bridge - location
         bob - player
         luca - character
         AlchemyShop.Chest - furniture
@@ -13,13 +13,16 @@
     )
     
     (:init
-        (at bob AlchemyShop)
-        (at luca AlchemyShop)
+        (in bob AlchemyShop)
+        (in luca AlchemyShop)
+        (at bob AlchemyShop.Door)
         (at AlchemyShop.Chest AlchemyShop)
         (adjacent AlchemyShop.Door Bridge.SouthEnd) 
         (adjacent Bridge.SouthEnd AlchemyShop.Door)
         (stored RedKey AlchemyShop.Chest)
         (can_open AlchemyShop.Chest)
+        (alive bob)
+        (alive luca)
     )
     
     (:goal

@@ -50,6 +50,10 @@ class Relation:
             if type in extension:
                 return item
         return None
+
+    def modify_value(self, value: RelationValue):
+        if self.value != value: 
+            self.value = value
     
     def __str__(self) -> str:
         string = self.predicate.name + '('
@@ -59,10 +63,16 @@ class Relation:
         return string
     
     def __eq__(self, other):
-        return(
+        return (
             self.__class__ == other.__class__ and 
             self.value == other.value and 
-            self.domain == other.domain and 
+            self.predicate == other.predicate and 
+            all(map(lambda x, y: x == y, self.entities, other.entities))
+        )
+
+    def equals_exclude_value(self, other):
+        return (
+            self.__class__ == other.__class__ and 
             self.predicate == other.predicate and 
             all(map(lambda x, y: x == y, self.entities, other.entities))
         )

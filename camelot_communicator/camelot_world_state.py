@@ -1,3 +1,4 @@
+from pddl.problem import Problem
 from pddl.relation_value import RelationValue
 from pddl.relation import Relation
 from pddl.entity import Entity
@@ -45,7 +46,8 @@ class CamelotWorldState:
             raise Exception('Domain must be type Domain')
         self.domain = domain
         self.__supported_types = {
-            'location': self.domain.find_type('location'), 
+            'position': self.domain.find_type('position'), 
+            'location': self.domain.find_type('location'),
             'entrypoint': self.domain.find_type('entrypoint'),
             'character': self.domain.find_type('character'), 
             'item': self.domain.find_type('item'), 
@@ -54,6 +56,7 @@ class CamelotWorldState:
         }
         self.__supported_predicates = {
             'at': self.domain.find_predicate('at'),
+            'in': self.domain.find_predicate('in'),
             'stored': self.domain.find_predicate('stored'), 
             'can_open': self.domain.find_predicate('can_open'), 
             'is_open': self.domain.find_predicate('is_open'), 
@@ -72,6 +75,8 @@ class CamelotWorldState:
         
         """
         world = WorldState(self.domain)
+        for item in self.problem.objects:
+            world.add_entity(item)
         for item in self.problem.initial_state:
             world.add_relation(item)
         return world
@@ -102,6 +107,16 @@ class CamelotWorldState:
 
 
     def _create_camelot_action_from_relation(self, relation):
+        """A method that is used to create camelot actions from a relation.
+
+        It searches in the Json file "Actionlist" within the key "PDDLProblem" the name of the predicate. 
+        If it finds it, then it means that with that predicate we want to apply that camelot action. 
+        
+        Parameters
+        ----------
+        relation : Relation
+            relation to convert to camelot action
+        """
         if relation.predicate.name in self.__supported_predicates.keys():
             action = self._find_in_json('Actionlist', relation.predicate.name, 'PDDLProblem')
             if action is None:
@@ -137,10 +152,10 @@ class CamelotWorldState:
 
 
     def _create_locations_from_problem(self, problem):
-        list_locations = problem.find_objects_with_type(self.__supported_types['entrypoint'])
+        list_locations = problem.find_objects_with_type(self.__supported_types['location'])
         while list_locations:
             location = list_locations.pop(0)
-            room, entrypoint = location.name.split('.')
+            room = location.name
             loc = self._find_in_json('places', room, 'name')
             if loc is None:
                 raise Exception('location not found in camelot')
@@ -180,7 +195,7 @@ class CamelotWorldState:
             raise Exception('More then one player defined in the problem.')
         return list_char[0]
 
-    def _integrate_wordstate_with_camelot_places(self, problem):
+    def _integrate_wordstate_with_camelot_places(self, problem: Problem):
         """A method that is used to integrate the wordstate with all components of Camelot places
         
         Parameters
@@ -192,7 +207,7 @@ class CamelotWorldState:
         for location in list_loc:
             item = self._find_in_json('places', location.name, 'name')
             if item is None:
-                raise Exception('Cannot find location in places.json')
+                raise Exception('Cannot find location %s in places.json'%(location.name))
             for room_component in item['room_components']:
                 #Create new Relation and new Objects taken from the json and add them to the problem
                 obj = Entity(location.name +'.'+ room_component['name'], self.__supported_types['furniture'], problem)

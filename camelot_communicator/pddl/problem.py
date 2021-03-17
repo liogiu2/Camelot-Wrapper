@@ -78,11 +78,12 @@ class Problem:
             string += "\t%s\n "%(str(item))
         return string
     
-    def find_objects_with_type(self, type_e):
+    def find_objects_with_type(self, type_e, exclude_types = []):
         return_list = []
         for item in self.objects:
             if type_e in item.type.get_list_extensions():
-                return_list.append(item)
+                if item.type not in exclude_types:
+                    return_list.append(item)
         return return_list
     
     def __eq__(self, other):

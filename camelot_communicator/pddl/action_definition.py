@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Four spaces as indentation [no tabs]
 
+from pddl.predicate import Predicate
 from pddl.types import Type
 
 
@@ -35,6 +36,8 @@ class ActionDefinition:
         for item in self.parameters:
             return_dict[item.name] = item.type
         return return_dict
+    
+
 
 class ActionParameter:
 
