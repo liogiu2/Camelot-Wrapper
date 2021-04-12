@@ -1,0 +1,5 @@
+
+
+class CamelotInputHandler:
+
+    pass

@@ -1,6 +1,8 @@
 import json
 import importlib.resources as pkg_resources
 import json_data
+import logging
+from camelot_IO_communication import CamelotIOCommunication
 """
 Inputs: Json file with the description of each action
 Outputs: 
@@ -9,6 +11,7 @@ Outputs:
 class CamelotAction:
 
     def __init__(self):
+        CamelotIOCommunication.start()
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
@@ -25,8 +28,9 @@ class CamelotAction:
         while True:
 
             # Get response from Camelot
-            received = input()
-
+            received = CamelotIOCommunication.get_message()
+            logging.debug("Camelot output: %s" % received)
+            
             # Return True if success response, else false for fail response
             if received == 'succeeded ' + command:
                 return True
@@ -57,7 +61,10 @@ class CamelotAction:
         command = self._generate_camelot_string(action_name, parameters, action_data)
         
 
-        print('start ' + command)
+        CamelotIOCommunication.print_action('start ' + command)
+        # open(0).write('start ' + command)
+        #print('start ' + command)
+
         if wait==True:
             # Call function to check for its success
             return self.check_for_success(command)
