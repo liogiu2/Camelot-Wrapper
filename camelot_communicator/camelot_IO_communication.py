@@ -41,6 +41,7 @@ class CamelotIOCommunication:
             logging.debug("Received: %s"%(data))
             queue_input.put(data.decode("utf-8"))
             logging.debug("added to the queue")
+        s.close()
     
     @classmethod
     def __socket_writing(cls, queue_output : queue.Queue, is_running : bool):
@@ -59,6 +60,7 @@ class CamelotIOCommunication:
             logging.debug("sending: %s"%(data))
             conn.send(bytes(data+"\r\n",'UTF-8'))
             logging.debug("Data Sent")
+        s.close()
 
             
                
@@ -87,6 +89,7 @@ class CamelotIOCommunication:
         logging.debug("Stop Called")
         cls.__running = False
         cls.__input_thread.join()
+        cls.__output_thread.join()
     
 
 
