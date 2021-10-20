@@ -4,6 +4,7 @@ from camelot_world_state import CamelotWorldState
 from pddl.PDDL import PDDL_Parser
 import logging
 from utilities import parse_json, replace_all
+from camelot_input_multiplexer import CamelotInputMultiplexer
 
 class GameController:
 
@@ -49,7 +50,7 @@ class GameController:
         #         except ValueError:
         #             continue
         while game_loop:
-            received = input()
+            received = CamelotInputMultiplexer.get_input_message()
 
             if received == 'input Selected Start': 
                 self._camelot_action.action("HideMenu")
@@ -105,7 +106,7 @@ class GameController:
             self._camelot_action.action("SetCameraFocus",[self._player.name])
         while exit:
 
-            received = input()
+            received = CamelotInputMultiplexer.get_input_message()
             
             if received in self.input_dict.keys():
                 exec(self.input_dict[received])

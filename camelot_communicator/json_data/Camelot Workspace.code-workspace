@@ -11,6 +11,7 @@
 		"pddlPlanner.executionTarget": "Output window",
 		"python.analysis.extraPaths": [
 			"C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator"
-		]
+		],
+		"java.project.sourcePaths": []
 	}
 }

@@ -91,9 +91,9 @@
 		"Compatibility": "A,C,E,G"
 	}, {
 		"name": "King",
-		"Compatibility": "A,C,E,G"
+		"Compatibility": "B,D,F,H"
 	}, {
 		"name": "Warlock",
-		"Compatibility": "A,C,E,G"
+		"Compatibility": "B,D,F,H"
 	}]
 }

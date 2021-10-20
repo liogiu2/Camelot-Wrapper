@@ -14,7 +14,7 @@
     
     (:init
         (in bob AlchemyShop)
-        (in luca AlchemyShop)
+        (in luca Bridge)
         (at bob AlchemyShop.Door)
         (at AlchemyShop.Chest AlchemyShop)
         (adjacent AlchemyShop.Door Bridge.SouthEnd) 

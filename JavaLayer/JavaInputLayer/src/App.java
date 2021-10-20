@@ -12,8 +12,22 @@ public class App {
     static Thread receive;
     static Socket socketIn;
     static Socket socketOut;
+    static Process process;
+    static boolean isRunning = true;
+
+    static class ClosingCommands extends Thread {
+
+        public void run() {
+            isRunning = false;
+            process.destroy();
+        }
+     }
+  
+
+
     public static void main(String[] args) throws Exception {
-        Process process = Runtime.getRuntime().exec("python  C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
+        Runtime.getRuntime().addShutdownHook(new ClosingCommands());
+        process = Runtime.getRuntime().exec("python  C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
 
         ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
         ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
@@ -31,7 +45,7 @@ public class App {
                 }
                 try {
                     BufferedReader stdIn =new BufferedReader(new InputStreamReader(socketIn.getInputStream()));
-                    while(true){
+                    while(isRunning){
                             String in = stdIn.readLine();
                             if(in != null)
                             {
@@ -59,7 +73,7 @@ public class App {
                 }
                 try {
                     PrintWriter out = new PrintWriter(socketOut.getOutputStream(), true);
-                    while(true){
+                    while(isRunning){
                             if(!queueOut.isEmpty())
                             {
                                 String element = queueOut.poll();
@@ -81,7 +95,7 @@ public class App {
             public void run() {
                 //Scanner scanner = new Scanner(System.in);
                 BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-                while(true){
+                while(isRunning){
                     String line;
                     try {
                         line = stdIn.readLine();
@@ -95,7 +109,7 @@ public class App {
         });
         receive.start();
 
-        while(true){
+        while(isRunning){
             if(!queueIn.isEmpty()){
                 System.out.println(queueIn.poll());
             }

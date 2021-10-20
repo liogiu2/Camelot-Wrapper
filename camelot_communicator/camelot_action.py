@@ -3,6 +3,7 @@ import importlib.resources as pkg_resources
 import json_data
 import logging
 from camelot_IO_communication import CamelotIOCommunication
+from camelot_input_multiplexer import CamelotInputMultiplexer
 """
 Inputs: Json file with the description of each action
 Outputs: 
@@ -11,7 +12,7 @@ Outputs:
 class CamelotAction:
 
     def __init__(self):
-        CamelotIOCommunication.start()
+        CamelotInputMultiplexer.start()
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
@@ -28,7 +29,7 @@ class CamelotAction:
         while True:
 
             # Get response from Camelot
-            received = CamelotIOCommunication.get_message()
+            received = CamelotInputMultiplexer.get_success_message()
             logging.debug("Camelot output: %s" % received)
             
             # Return True if success response, else false for fail response

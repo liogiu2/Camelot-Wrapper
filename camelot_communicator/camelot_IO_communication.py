@@ -2,6 +2,7 @@ import threading
 import queue
 import logging
 import socket
+import sys
 
 class CamelotIOCommunication:
 
@@ -57,6 +58,8 @@ class CamelotIOCommunication:
         conn, addr = s.accept()
         while is_running:
             data = queue_output.get()
+            if data == "kill":
+                break
             logging.debug("sending: %s"%(data))
             conn.send(bytes(data+"\r\n",'UTF-8'))
             logging.debug("Data Sent")
@@ -75,12 +78,22 @@ class CamelotIOCommunication:
         message = ""
         while message == "":
             try:
-                logging.debug("Trying getting message from queue")
-                message =  cls.__queue_input.get(timeout= 1)
+                logging.debug("Trying getting message from main input queue")
+                message = cls.__queue_input.get(timeout=10)
                 logging.debug("Giving message to main thread: "+ message)
             except queue.Empty:
-                logging.debug("Timeout")
-            logging.debug("Restarting")
+                if cls.__input_thread.is_alive():
+                    logging.debug("Input thread alive")
+                else:
+                    logging.debug("Input thread not alive")
+                    cls.__queue_output.put("kill")
+                    logging.debug("Adding kill to output queue")
+                if cls.__output_thread.is_alive():
+                    logging.debug("Output thread alive")
+                else:
+                    logging.debug("Output thread not alive")
+                message = "timeout"
+                
 
         return message
 
