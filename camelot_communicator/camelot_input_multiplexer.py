@@ -5,6 +5,10 @@ import logging
 
 class CamelotInputMultiplexer:
 
+    #https://stackoverflow.com/questions/4103773/efficient-way-of-having-a-function-only-execute-once-in-a-loop
+    #https://www.geeksforgeeks.org/python-different-ways-to-kill-a-thread/
+    #
+
     __messages_management = None
     __input_queue = None
     __location_queue = None
