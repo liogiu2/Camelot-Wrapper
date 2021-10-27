@@ -3,11 +3,21 @@ import threading
 from queue import Queue
 import logging
 
+def singleton(self, *args, **kw):
+    instances = {}
+    def _singleton(*args, **kw):
+        if self not in instances:
+            instances[self] = self(*args, **kw)
+        return instances[self]
+    return _singleton
+
+@singleton
 class CamelotInputMultiplexer:
 
     #https://stackoverflow.com/questions/4103773/efficient-way-of-having-a-function-only-execute-once-in-a-loop
     #https://www.geeksforgeeks.org/python-different-ways-to-kill-a-thread/
-    #
+    #https://stackoverflow.com/questions/42237752/single-instance-of-class-in-python
+
 
     __messages_management = None
     __input_queue = None
@@ -15,72 +25,71 @@ class CamelotInputMultiplexer:
     __success_queue = None
     __other_queue = None
     __thread_running = True
+    __started = False
 
-    @classmethod
-    def start(cls):
-        CamelotIOCommunication.start()
-        cls.__input_queue = Queue()
-        cls.__location_queue = Queue()
-        cls.__location_message_prefix = ("input started walking", "input stopped walking", "input arrived", "input exited")
-        cls.__success_queue = Queue()
-        cls.__other_queue = Queue()
-        cls.__messages_management = threading.Thread(target=cls._input_messages_management , args =(), daemon=True)
-        cls.__messages_management.start()
+    def start(self):
+        if not self.__started:
+            self.camelot_IO_communication = CamelotIOCommunication()
+            self.camelot_IO_communication.start()
+            self.__input_queue = Queue()
+            self.__location_queue = Queue()
+            self.__location_message_prefix = ("input started walking", "input stopped walking", "input arrived", "input exited")
+            self.__success_queue = Queue()
+            self.__other_queue = Queue()
+            self.__messages_management = threading.Thread(target=self._input_messages_management , args =(), daemon=True)
+            self.__messages_management.start()
+            self.__started = True
 
-    @classmethod
-    def _input_messages_management(cls):
+    def _input_messages_management(self):
 
-        while cls.__thread_running:
-            message = CamelotIOCommunication.get_message()
+        while self.__thread_running:
+            message = self.camelot_IO_communication.get_message()
             logging.debug("Got message from main queue: %s" % message)
 
             if message == "timeout":
-                cls.stop()
+                self.stop()
                 break
 
             if message.startswith("succeeded"):
                 logging.debug("Adding to success queue...")
-                cls.__success_queue.put(message)
+                self.__success_queue.put(message)
                 logging.debug("Added to success queue")
             elif message.startswith("input"):
-                if message.startswith(cls.__location_message_prefix):
+                if message.startswith(self.__location_message_prefix):
                     logging.debug("Adding to location queue...")
-                    cls.__location_queue.put(message)
+                    self.__location_queue.put(message)
                     logging.debug("Added to location queue")
                 else:
                     logging.debug("Adding to input queue...")
-                    cls.__input_queue.put(message)
+                    self.__input_queue.put(message)
                     logging.debug("Added to input queue")
             else:
                 logging.debug("Adding to other queue...")
-                cls.__other_queue.put(message)
+                self.__other_queue.put(message)
                 logging.debug("Added to other queue")
     
-    @classmethod
-    def get_success_message(cls, text = ""):
+    def get_success_message(self, text = ""):
         logging.debug("Getting success message...")
-        message = cls.__success_queue.get()
+        message = self.__success_queue.get()
         logging.debug("Got success message: %s"%(message))
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
     
-    @classmethod
-    def get_input_message(cls, text = ""):
-        message =  cls.__input_queue.get()
+    def get_input_message(self, text = ""):
+        message =  self.__input_queue.get()
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
     
-    @classmethod
-    def stop(cls):
-        cls.__thread_running = False
-        cls.__messages_management.join()
-        CamelotIOCommunication.stop()
-        cls.__input_queue.put("kill")
-        cls.__location_queue.put("kill")
-        cls.__success_queue.put("kill")
-        cls.__other_queue.put("kill")
+    def stop(self):
+        self.__thread_running = False
+        self.__messages_management.join()
+        self.camelot_IO_communication.stop()
+        self.__input_queue.put("kill")
+        self.__location_queue.put("kill")
+        self.__success_queue.put("kill")
+        self.__other_queue.put("kill")
 
             
 

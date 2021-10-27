@@ -12,7 +12,9 @@ Outputs:
 class CamelotAction:
 
     def __init__(self):
-        CamelotInputMultiplexer.start()
+        self.camelot_input_multiplex = CamelotInputMultiplexer()
+        self.camelot_input_multiplex.start()
+        self.camelot_IO_communication = CamelotIOCommunication()
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
@@ -29,7 +31,7 @@ class CamelotAction:
         while True:
 
             # Get response from Camelot
-            received = CamelotInputMultiplexer.get_success_message()
+            received = self.camelot_input_multiplex.get_success_message()
             logging.debug("Camelot output: %s" % received)
             
             # Return True if success response, else false for fail response
@@ -62,7 +64,7 @@ class CamelotAction:
         command = self._generate_camelot_string(action_name, parameters, action_data)
         
 
-        CamelotIOCommunication.print_action('start ' + command)
+        self.camelot_IO_communication.print_action('start ' + command)
         # open(0).write('start ' + command)
         #print('start ' + command)
 
