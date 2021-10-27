@@ -17,6 +17,7 @@ class GameController:
         self._camelot_action = CamelotAction()
         self._player = ''
         self.input_dict = {}
+        self.camelot_input_multiplex = CamelotInputMultiplexer()
         
     
     def start_game(self, game_loop = True):
@@ -106,7 +107,7 @@ class GameController:
             self._camelot_action.action("SetCameraFocus",[self._player.name])
         while exit:
 
-            received = CamelotInputMultiplexer.get_input_message()
+            received = self.camelot_input_multiplex.get_input_message()
             
             if received in self.input_dict.keys():
                 exec(self.input_dict[received])
