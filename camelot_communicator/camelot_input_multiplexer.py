@@ -1,15 +1,7 @@
-from camelot_IO_communication import CamelotIOCommunication
+from camelot_IO_communication import CamelotIOCommunication, singleton
 import threading
 from queue import Queue
 import logging
-
-def singleton(self, *args, **kw):
-    instances = {}
-    def _singleton(*args, **kw):
-        if self not in instances:
-            instances[self] = self(*args, **kw)
-        return instances[self]
-    return _singleton
 
 @singleton
 class CamelotInputMultiplexer:

@@ -4,7 +4,13 @@ import logging
 import socket
 import sys
 
-from camelot_input_multiplexer import singleton
+def singleton(self, *args, **kw):
+    instances = {}
+    def _singleton(*args, **kw):
+        if self not in instances:
+            instances[self] = self(*args, **kw)
+        return instances[self]
+    return _singleton
 
 @singleton
 class CamelotIOCommunication:
