@@ -51,7 +51,7 @@ class GameController:
         #         except ValueError:
         #             continue
         while game_loop:
-            received = CamelotInputMultiplexer.get_input_message()
+            received = self.camelot_input_multiplex.get_input_message()
 
             if received == 'input Selected Start': 
                 self._camelot_action.action("HideMenu")
