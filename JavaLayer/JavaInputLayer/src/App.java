@@ -1,108 +1,133 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 public class App {
-    static Thread sendToSocket;
-    static Thread receiveFromSocket;
-    static Thread receiveStandardInput;
-    static Thread sendStandardOutput;
+    static Thread sendToPlatformThread;
+    static Thread receiveFromPlatformThread;
+    static Thread receiveFromCamelotThread;
+    static Thread sendToCamelotThread;
     static Process process;
     private static AtomicBoolean isRunning = new AtomicBoolean(true);
-  
-
+    private static Logger logger;
+    private static SendToCamelot sendToCamelot;
+    private static ReceiveFromCamelot receiveFromCamelot;
+    private static SendToPlatform sendToPlatform;
+    private static ReceiveFromPlatform receiveFromPlatform;
 
     public static void main(String[] args) throws Exception {
-        process = Runtime.getRuntime().exec("python  C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
+        // process = Runtime.getRuntime().exec("python
+        // C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
 
+        logger = Logger.getLogger(App.class.getName());
+
+        // Create an instance of FileHandler that write log to a file called
+        // app.log. Each new message will be appended at the at of the log file.
+        FileHandler fileHandler = new FileHandler("app.log", true);
+        logger.addHandler(fileHandler);
+        
+        startPythonProcess();
+        //Queue that receives a message from the platform and sends it to Camelot
         ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
+        //Queue that receives a message from Camelot and sends it to the Platform
         ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
 
-        //Thread for the socket communication
-        SocketInputThread sit = new SocketInputThread(queueOut, isRunning);
-        receiveFromSocket = new Thread(sit);
-        /* = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socketIn = new Socket("localhost",9998);
-                } catch (UnknownHostException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    BufferedReader stdIn =new BufferedReader(new InputStreamReader(socketIn.getInputStream()));
-                    while(isRunning){
-                            String in = stdIn.readLine();
-                            if(in != null)
-                            {
-                                queueIn.add(in);
-                            }                          
-                        }
+        // Thread for the socket communication
+        receiveFromPlatform = new ReceiveFromPlatform(queueIn, isRunning);
+        receiveFromPlatformThread = new Thread(receiveFromPlatform);
+        /*
+         * = new Thread(new Runnable() {
+         * 
+         * @Override public void run() { try { socketIn = new Socket("localhost",9998);
+         * } catch (UnknownHostException e1) { e1.printStackTrace(); } catch
+         * (IOException e1) { e1.printStackTrace(); } try { BufferedReader stdIn =new
+         * BufferedReader(new InputStreamReader(socketIn.getInputStream()));
+         * while(isRunning){ String in = stdIn.readLine(); if(in != null) {
+         * queueIn.add(in); } }
+         * 
+         * } catch (IOException e) { e.printStackTrace(); } } });
+         */
+        receiveFromPlatformThread.start();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        // Thread for the socket communication
+        sendToPlatform = new SendToPlatform(queueOut, isRunning);
+        sendToPlatformThread = new Thread(sendToPlatform);
+        /*
+         * = new Thread(new Runnable() {
+         * 
+         * @Override public void run() { try { socketOut = new Socket("localhost",9999);
+         * } catch (UnknownHostException e1) { e1.printStackTrace(); } catch
+         * (IOException e1) { e1.printStackTrace(); } try { PrintWriter out = new
+         * PrintWriter(socketOut.getOutputStream(), true); while(isRunning.get()){
+         * if(!queueOut.isEmpty()) { String element = queueOut.poll();
+         * out.print(element); out.flush(); } }
+         * 
+         * } catch (IOException e) { e.printStackTrace(); } } });
+         */
+        sendToPlatformThread.start();
+
+        // Thread for standard input reading
+        receiveFromCamelot = new ReceiveFromCamelot(queueOut, isRunning);
+        receiveFromCamelotThread = new Thread(receiveFromCamelot);
+        /*
+         * = new Thread(new Runnable() {
+         * 
+         * @Override public void run() { //Scanner scanner = new Scanner(System.in);
+         * BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+         * while(isRunning.get()){ String line; try { line = stdIn.readLine();
+         * queueOut.add(line); } catch (IOException e) { e.printStackTrace(); }
+         * 
+         * } } });
+         */
+        receiveFromCamelotThread.start();
+
+        sendToCamelot = new SendToCamelot(queueIn, isRunning);
+        sendToCamelotThread = new Thread(sendToCamelot);
+        sendToCamelotThread.start();
+
+
+    }
+
+    private static void startPythonProcess() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            // -- Windows --
+
+            // Run a command
+            processBuilder.command("cmd.exe", "/c",
+                    "python C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
+
+            // Run a bat file
+            // processBuilder.command("C:\\Users\\mkyong\\hello.bat");
+        } else {
+            // -- Linux --
+
+            // Run a shell command
+            // processBuilder.command("bash", "-c", "ls /home/mkyong/");
+
+            // Run a shell script
+            // processBuilder.command("path/to/hello.sh");
+        }
+
+        try {
+
+            process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                logger.info(line);
             }
-        }); */
-        receiveFromSocket.start();
 
-        //Thread for the socket communication
-        SocketOutputThread sot = new SocketOutputThread(queueOut, isRunning);
-        sendToSocket = new Thread(sot);
-        /* = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socketOut = new Socket("localhost",9999);
-                } catch (UnknownHostException e1) {
-                    e1.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                try {
-                    PrintWriter out = new PrintWriter(socketOut.getOutputStream(), true);
-                    while(isRunning.get()){
-                            if(!queueOut.isEmpty())
-                            {
-                                String element = queueOut.poll();
-                                out.print(element);
-                                out.flush();
-                            }                           
-                        }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }); */
-        sendToSocket.start();
-
-        //Thread for standard input reading 
-        StandardInputThread stit = new StandardInputThread(queueOut, isRunning);
-        receiveStandardInput = new Thread(stit);
-        /* = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //Scanner scanner = new Scanner(System.in);
-                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-                while(isRunning.get()){
-                    String line;
-                    try {
-                        line = stdIn.readLine();
-                        queueOut.add(line);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    
-                }
-            }
-        }); */
-        receiveStandardInput.start();
-
-        StandardOutputThread stdot = new StandardOutputThread(queueIn, isRunning);
-        sendStandardOutput = new Thread(stdot);
-        sendStandardOutput.start();
-
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
 }

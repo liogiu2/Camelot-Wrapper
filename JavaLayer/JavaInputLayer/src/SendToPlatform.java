@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SocketOutputThread implements Runnable {
+public class SendToPlatform implements Runnable {
 
     private Thread worker;
     private AtomicBoolean running;
@@ -14,7 +14,7 @@ public class SocketOutputThread implements Runnable {
     private ConcurrentLinkedQueue<String> queueOut;
     private PrintWriter out;
 
-    public SocketOutputThread(ConcurrentLinkedQueue<String> queueOut, AtomicBoolean running) {
+    public SendToPlatform(ConcurrentLinkedQueue<String> queueOut, AtomicBoolean running) {
         this.queueOut = queueOut;
         this.running = running;
     }
@@ -46,7 +46,7 @@ public class SocketOutputThread implements Runnable {
             e.printStackTrace();
         }
         while (running.get()) {
-                socketReceiver();
+            socketReceiver();
         }
         stopped.set(true);
     }

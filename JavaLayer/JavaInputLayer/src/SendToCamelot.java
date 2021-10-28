@@ -1,18 +1,14 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class StandardInputThread implements Runnable {
+public class SendToCamelot implements Runnable {
 
     private Thread worker;
     private AtomicBoolean running;
     private AtomicBoolean stopped = new AtomicBoolean(false);
     private ConcurrentLinkedQueue<String> queueIn;
-    private BufferedReader stdIn;
 
-    public StandardInputThread(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
+    public SendToCamelot(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
         this.queueIn = queueIn;
         this.running = running;
     }
@@ -32,20 +28,12 @@ public class StandardInputThread implements Runnable {
 
     public void run() {
         stopped.set(false);
-        stdIn = new BufferedReader(new InputStreamReader(System.in));
         while (running.get()) {
-            stdInReceiver();
+            if(!queueIn.isEmpty()){
+                System.out.println(queueIn.poll());
+            }
         }
         stopped.set(true);
     }
 
-    private void stdInReceiver() {
-        String line;
-        try {
-            line = stdIn.readLine();
-            queueIn.add(line);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
