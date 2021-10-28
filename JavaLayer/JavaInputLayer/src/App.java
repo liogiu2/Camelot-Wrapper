@@ -1,39 +1,26 @@
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class App {
     static Thread sendToSocket;
     static Thread receiveFromSocket;
-    static Thread receive;
-    static Socket socketIn;
-    static Socket socketOut;
+    static Thread receiveStandardInput;
+    static Thread sendStandardOutput;
     static Process process;
-    static boolean isRunning = true;
-
-    static class ClosingCommands extends Thread {
-
-        public void run() {
-            isRunning = false;
-            process.destroy();
-        }
-     }
+    private static AtomicBoolean isRunning = new AtomicBoolean(true);
   
 
 
     public static void main(String[] args) throws Exception {
-        Runtime.getRuntime().addShutdownHook(new ClosingCommands());
         process = Runtime.getRuntime().exec("python  C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
 
         ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
         ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
 
         //Thread for the socket communication
-        receiveFromSocket = new Thread(new Runnable() {
+        SocketInputThread sit = new SocketInputThread(queueOut, isRunning);
+        receiveFromSocket = new Thread(sit);
+        /* = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -57,11 +44,13 @@ public class App {
                     e.printStackTrace();
                 }
             }
-        });
+        }); */
         receiveFromSocket.start();
 
         //Thread for the socket communication
-        sendToSocket = new Thread(new Runnable() {
+        SocketOutputThread sot = new SocketOutputThread(queueOut, isRunning);
+        sendToSocket = new Thread(sot);
+        /* = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -73,7 +62,7 @@ public class App {
                 }
                 try {
                     PrintWriter out = new PrintWriter(socketOut.getOutputStream(), true);
-                    while(isRunning){
+                    while(isRunning.get()){
                             if(!queueOut.isEmpty())
                             {
                                 String element = queueOut.poll();
@@ -86,16 +75,18 @@ public class App {
                     e.printStackTrace();
                 }
             }
-        });
+        }); */
         sendToSocket.start();
 
         //Thread for standard input reading 
-        receive = new Thread(new Runnable() {
+        StandardInputThread stit = new StandardInputThread(queueOut, isRunning);
+        receiveStandardInput = new Thread(stit);
+        /* = new Thread(new Runnable() {
             @Override
             public void run() {
                 //Scanner scanner = new Scanner(System.in);
                 BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-                while(isRunning){
+                while(isRunning.get()){
                     String line;
                     try {
                         line = stdIn.readLine();
@@ -106,15 +97,12 @@ public class App {
                     
                 }
             }
-        });
-        receive.start();
+        }); */
+        receiveStandardInput.start();
 
-        while(isRunning){
-            if(!queueIn.isEmpty()){
-                System.out.println(queueIn.poll());
-            }
-        }
-
+        StandardOutputThread stdot = new StandardOutputThread(queueIn, isRunning);
+        sendStandardOutput = new Thread(stdot);
+        sendStandardOutput.start();
 
     }
 }
