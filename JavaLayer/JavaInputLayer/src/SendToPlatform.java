@@ -21,12 +21,12 @@ public class SendToPlatform implements Runnable {
 
     public void interrupt() {
         running.set(false);
-        worker.interrupt();
         try {
             socketOut.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        worker.interrupt();
     }
 
     boolean isRunning() {

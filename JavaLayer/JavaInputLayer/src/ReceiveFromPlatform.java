@@ -22,12 +22,12 @@ public class ReceiveFromPlatform implements Runnable {
 
     public void interrupt() {
         running.set(false);
-        worker.interrupt();
         try {
             socketIn.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        worker.interrupt();
     }
 
     boolean isRunning() {

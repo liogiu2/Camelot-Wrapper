@@ -18,6 +18,7 @@ public class App {
     private static ReceiveFromCamelot receiveFromCamelot;
     private static SendToPlatform sendToPlatform;
     private static ReceiveFromPlatform receiveFromPlatform;
+    private static BufferedReader reader;
 
     public static void main(String[] args) throws Exception {
         // process = Runtime.getRuntime().exec("python
@@ -27,13 +28,13 @@ public class App {
 
         // Create an instance of FileHandler that write log to a file called
         // app.log. Each new message will be appended at the at of the log file.
-        FileHandler fileHandler = new FileHandler("app.log", true);
+        FileHandler fileHandler = new FileHandler("appJava.log", true);
         logger.addHandler(fileHandler);
-        
+
         startPythonProcess();
-        //Queue that receives a message from the platform and sends it to Camelot
+        // Queue that receives a message from the platform and sends it to Camelot
         ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
-        //Queue that receives a message from Camelot and sends it to the Platform
+        // Queue that receives a message from Camelot and sends it to the Platform
         ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
 
         // Thread for the socket communication
@@ -89,6 +90,10 @@ public class App {
         sendToCamelotThread = new Thread(sendToCamelot);
         sendToCamelotThread.start();
 
+        /* String line;
+        while ((line = reader.readLine()) != null) {
+            logger.info(line);
+        } */
 
     }
 
@@ -118,16 +123,16 @@ public class App {
 
             process = processBuilder.start();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                logger.info(line);
-            }
-
-
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
+    }
+
+    public static void interruptEverything() {
+        sendToCamelot.interrupt();
+        //receiveFromCamelot.interrupt();
+        sendToPlatform.interrupt();
+        receiveFromPlatform.interrupt();
     }
 }
