@@ -123,7 +123,7 @@ public class App {
 
             process = processBuilder.start();
 
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            //reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }

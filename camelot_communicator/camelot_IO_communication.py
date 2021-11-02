@@ -69,7 +69,12 @@ class CamelotIOCommunication:
             if data == "kill":
                 break
             logging.debug("sending: %s"%(data))
-            conn.send(bytes(data+"\r\n",'UTF-8'))
+            try:
+                conn.send(bytes(data+"\r\n",'UTF-8'))
+            except:
+                logging.debug("Socket closed by Java. Initializing closing utils")
+                is_running = False
+                self.stop()
             logging.debug("Data Sent")
         s.close()
 
@@ -106,7 +111,4 @@ class CamelotIOCommunication:
         self.__running = False
         self.__input_thread.join()
         self.__output_thread.join()
-    
-
-
-
+        sys.exit()
