@@ -1,5 +1,6 @@
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 public class SendToCamelot implements Runnable {
 
@@ -7,10 +8,12 @@ public class SendToCamelot implements Runnable {
     private AtomicBoolean running;
     private AtomicBoolean stopped = new AtomicBoolean(false);
     private ConcurrentLinkedQueue<String> queueIn;
+    private Logger logger;
 
     public SendToCamelot(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
         this.queueIn = queueIn;
         this.running = running;
+        this.logger = App.getLogger();
     }
 
     public void interrupt() {
@@ -30,7 +33,9 @@ public class SendToCamelot implements Runnable {
         stopped.set(false);
         while (running.get()) {
             if(!queueIn.isEmpty()){
-                System.out.println(queueIn.poll());
+                String msg = queueIn.poll();
+                logger.info("SendToCamelot: "+ msg);
+                System.out.println(msg);
             }
         }
         stopped.set(true);

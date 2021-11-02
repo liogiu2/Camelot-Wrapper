@@ -90,10 +90,10 @@ public class App {
         sendToCamelotThread = new Thread(sendToCamelot);
         sendToCamelotThread.start();
 
-        /* String line;
-        while ((line = reader.readLine()) != null) {
-            logger.info(line);
-        } */
+        /*
+         * String line; while ((line = reader.readLine()) != null) { logger.info(line);
+         * }
+         */
 
     }
 
@@ -123,7 +123,7 @@ public class App {
 
             process = processBuilder.start();
 
-            //reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,8 +131,12 @@ public class App {
 
     public static void interruptEverything() {
         sendToCamelot.interrupt();
-        //receiveFromCamelot.interrupt();
+        // receiveFromCamelot.interrupt();
         sendToPlatform.interrupt();
         receiveFromPlatform.interrupt();
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

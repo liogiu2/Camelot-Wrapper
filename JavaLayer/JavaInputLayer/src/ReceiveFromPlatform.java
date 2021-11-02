@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 public class ReceiveFromPlatform implements Runnable {
 
@@ -14,10 +15,12 @@ public class ReceiveFromPlatform implements Runnable {
     private static Socket socketIn;
     private ConcurrentLinkedQueue<String> queueIn;
     private BufferedReader stdIn;
+    private Logger logger;
 
     public ReceiveFromPlatform(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
         this.queueIn = queueIn;
         this.running = running;
+        logger = App.getLogger();
     }
 
     public void interrupt() {
@@ -68,6 +71,8 @@ public class ReceiveFromPlatform implements Runnable {
         String in;
         try {
             in = stdIn.readLine();
+
+            logger.info("ReceiveFromPlatform: "+ in);
 
             if (in != null) {
                 queueIn.add(in);

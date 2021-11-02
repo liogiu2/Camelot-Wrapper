@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 public class SendToPlatform implements Runnable {
 
@@ -13,10 +14,12 @@ public class SendToPlatform implements Runnable {
     private static Socket socketOut;
     private ConcurrentLinkedQueue<String> queueOut;
     private PrintWriter out;
+    private Logger logger;
 
     public SendToPlatform(ConcurrentLinkedQueue<String> queueOut, AtomicBoolean running) {
         this.queueOut = queueOut;
         this.running = running;
+        this.logger = App.getLogger();
     }
 
     public void interrupt() {
@@ -65,6 +68,7 @@ public class SendToPlatform implements Runnable {
 
         if (!queueOut.isEmpty()) {
             String element = queueOut.poll();
+            logger.info("SendToPlatform: " + element);
             out.print(element);
             out.flush();
         }

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 public class ReceiveFromCamelot implements Runnable {
 
@@ -11,10 +12,12 @@ public class ReceiveFromCamelot implements Runnable {
     private AtomicBoolean stopped = new AtomicBoolean(false);
     private ConcurrentLinkedQueue<String> queueIn;
     private BufferedReader stdIn;
+    private Logger logger;
 
     public ReceiveFromCamelot(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
         this.queueIn = queueIn;
         this.running = running;
+        logger = App.getLogger();
     }
 
     public void interrupt() {
@@ -47,6 +50,7 @@ public class ReceiveFromCamelot implements Runnable {
         String line;
         try {
             line = stdIn.readLine();
+            logger.info("ReceiveFromCamelot: "+line);
             queueIn.add(line);
 
             if (line.equals("input Quit")) {
