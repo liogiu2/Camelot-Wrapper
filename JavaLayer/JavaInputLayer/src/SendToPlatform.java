@@ -49,7 +49,7 @@ public class SendToPlatform implements Runnable {
         } catch (IOException e) {
             logger.severe(e.getMessage());
         }
-        logger.info("SendToPlatform: starting receiving");
+        logger.info("SendToPlatform: starting sending");
         while (running.get()) {
             socketReceiver();
         }
@@ -58,7 +58,7 @@ public class SendToPlatform implements Runnable {
 
     private void socketCreation() {
         try {
-            socketOut = new Socket("localhost", 9998);
+            socketOut = new Socket("localhost", 9999);
         } catch (UnknownHostException e1) {
             logger.severe(e1.getMessage());
         } catch (IOException e1) {
