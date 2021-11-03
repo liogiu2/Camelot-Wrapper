@@ -38,14 +38,23 @@ class CamelotIOCommunication:
     def __socket_reading(self, queue_input : queue.Queue, is_running : bool):
         HOST = "localhost"
         PORT = 9999
+        logging.debug("socket_reading: started")
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+        logging.debug("socket_reading: socket created")
         try:
             s.bind((HOST, PORT))
+            logging.debug("socket_reading: socket bind succeded")
         except socket.error as err:
             logging.debug("socket_reading: Error in reading socket connection: %s"%(err))
-        s.listen(10)
-        conn, addr = s.accept()
+        try:
+            s.listen(10)
+            logging.debug("socket_reading: listen")
+
+            conn, addr = s.accept()
+            logging.debug("socket_reading: accept")
+
+        except socket.error as err:
+            logging.debug("socket_reading: error %s"%(err))
         logging.debug("socket_reading: Starting receiving socket messages.")
         while is_running:
             data = conn.recv(1024)
@@ -89,7 +98,7 @@ class CamelotIOCommunication:
         while message == "":
             try:
                 logging.debug("Trying getting message from main input queue")
-                message = self.__queue_input.get(timeout=10)
+                message = self.__queue_input.get()
                 logging.debug("Giving message to main thread: "+ message)
             except queue.Empty:
                 if self.__input_thread.is_alive():
