@@ -43,11 +43,13 @@ public class SendToPlatform implements Runnable {
     public void run() {
         stopped.set(false);
         socketCreation();
+        logger.info("SendToPlatform: socket created");
         try {
             out = new PrintWriter(socketOut.getOutputStream(), true);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
+        logger.info("SendToPlatform: starting receiving");
         while (running.get()) {
             socketReceiver();
         }
@@ -58,9 +60,9 @@ public class SendToPlatform implements Runnable {
         try {
             socketOut = new Socket("localhost", 9998);
         } catch (UnknownHostException e1) {
-            e1.printStackTrace();
+            logger.severe(e1.getMessage());
         } catch (IOException e1) {
-            e1.printStackTrace();
+            logger.severe(e1.getMessage());
         }
     }
 
