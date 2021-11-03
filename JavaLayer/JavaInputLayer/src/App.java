@@ -113,10 +113,10 @@ public class App {
             // -- Linux --
 
             // Run a shell command
-            // processBuilder.command("bash", "-c", "ls /home/mkyong/");
+            processBuilder.command("bash", "-c", "python /Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/prova.py");
 
             // Run a shell script
-            // processBuilder.command("path/to/hello.sh");
+            // processBuilder.command("/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/prova.py");
         }
 
         try {

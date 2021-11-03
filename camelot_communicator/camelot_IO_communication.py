@@ -43,14 +43,15 @@ class CamelotIOCommunication:
         try:
             s.bind((HOST, PORT))
         except socket.error as err:
-            pass
+            logging.debug("socket_reading: Error in reading socket connection: %s"%(err))
         s.listen(10)
         conn, addr = s.accept()
+        logging.debug("socket_reading: Starting receiving socket messages.")
         while is_running:
             data = conn.recv(1024)
-            logging.debug("Received: %s"%(data))
+            logging.debug("socket_reading: Received: %s"%(data))
             queue_input.put(data.decode("utf-8"))
-            logging.debug("added to the queue")
+            logging.debug("socket_reading: added to the queue")
         s.close()
     
     def __socket_writing(self, queue_output : queue.Queue, is_running : bool):
