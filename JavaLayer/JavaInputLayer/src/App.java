@@ -1,4 +1,3 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,8 +19,6 @@ public class App {
     private static ReceiveFromCamelot receiveFromCamelot;
     private static SendToPlatform sendToPlatform;
     private static ReceiveFromPlatform receiveFromPlatform;
-    private static BufferedReader reader;
-
     public static void main(String[] args) throws Exception {
         // process = Runtime.getRuntime().exec("python
         // C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
