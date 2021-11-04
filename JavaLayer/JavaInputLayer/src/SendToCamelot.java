@@ -17,6 +17,7 @@ public class SendToCamelot implements Runnable {
     }
 
     public void interrupt() {
+        logger.info("SendToCamelot: interrupting.");
         running.set(false);
         worker.interrupt();
     }

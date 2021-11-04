@@ -141,6 +141,7 @@ public class App {
     }
 
     public static void interruptEverything() {
+        logger.info("Main: InterruptEverything called, closing all.");
         sendToCamelot.interrupt();
         // receiveFromCamelot.interrupt();
         sendToPlatform.interrupt();

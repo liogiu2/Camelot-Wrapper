@@ -24,6 +24,7 @@ public class ReceiveFromPlatform implements Runnable {
     }
 
     public void interrupt() {
+        logger.info("ReceiveFromPlatform: interrupting.");
         running.set(false);
         try {
             socketIn.close();

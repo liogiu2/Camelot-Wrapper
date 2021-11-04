@@ -54,6 +54,7 @@ public class ReceiveFromCamelot implements Runnable {
             queueIn.add(line);
 
             if (line.equals("input Quit")) {
+                logger.info("ReceiveFromCamelot: Starting closing procedure");
                 App.interruptEverything();
                 interrupt();
                 throw new InterruptedException();

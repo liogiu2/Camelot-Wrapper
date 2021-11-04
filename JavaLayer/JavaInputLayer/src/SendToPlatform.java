@@ -23,6 +23,7 @@ public class SendToPlatform implements Runnable {
     }
 
     public void interrupt() {
+        logger.info("SendToPlatform: interrupting.");
         running.set(false);
         out.print("kill");
         out.flush();
@@ -74,7 +75,9 @@ public class SendToPlatform implements Runnable {
             String element = queueOut.poll();
             logger.info("SendToPlatform: " + element);
             out.print(element);
-            out.flush();
+            if (out.checkError()) {
+                logger.severe("SendToPlatform: error while sending to platform");
+            }
         }
     }
 }
