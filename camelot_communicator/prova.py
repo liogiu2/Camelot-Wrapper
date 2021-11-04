@@ -13,7 +13,7 @@ from game_controller import GameController
 
 gc = GameController()
 
-gc.start_game(True)
+gc.start_game(False)
 
 
 # from camelot_input_manager import CamelotInputManager

@@ -5,12 +5,17 @@ from pddl.PDDL import PDDL_Parser
 import logging
 from utilities import parse_json, replace_all
 from camelot_input_multiplexer import CamelotInputMultiplexer
+import os
 
 class GameController:
 
     def __init__(self):
-        self._domain_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\camelot_domain.pddl"
-        self._problem_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\example_problem.pddl"
+        if os.name == 'nt':
+            self._domain_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\camelot_domain.pddl"
+            self._problem_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\example_problem.pddl"
+        else:
+            self._domain_path = "/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/pddl/data/camelot_domain.pddl"
+            self._problem_path = "/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/pddl/data/example_problem.pddl"
         self._parser = PDDL_Parser()
         self._domain = self._parser.parse_domain(self._domain_path)
         self._problem = self._parser.parse_problem(self._problem_path)
