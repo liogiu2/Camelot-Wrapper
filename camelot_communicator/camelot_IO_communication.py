@@ -3,6 +3,7 @@ import queue
 import logging
 import socket
 import sys
+from pathlib import Path
 from datetime import datetime
 
 def singleton(self, *args, **kw):
@@ -25,8 +26,9 @@ class CamelotIOCommunication:
 
     def start(self):
         if not self.__started:
-            logname = "appPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
-            logging.basicConfig(filename='/logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
+            logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
+            Path("/logs/python/").mkdir(parents=True, exist_ok=True)
+            logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
             self.__queue_input = queue.Queue()
             self.__queue_output = queue.Queue()
             self.__running = True

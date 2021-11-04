@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,7 +33,12 @@ public class App {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime now = LocalDateTime.now();
         String logName = "appJava" + dtf.format(now) + ".log";
-        FileHandler fileHandler = new FileHandler("/logs/Java/"+logName, false);
+        String basePath = new File("").getAbsolutePath()+"/logs/Java/";
+        File directory = new File(basePath);
+        if (! directory.exists()){
+            directory.mkdirs();
+        }
+        FileHandler fileHandler = new FileHandler(basePath+logName, false);
         logger.addHandler(fileHandler);
 
         startPythonProcess();

@@ -1,6 +1,13 @@
 {
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "camelot_communicator_edc720f1"
+        },
+        {
             "name": "Python: Remote Attach",
             "type": "python",
             "request": "attach",
