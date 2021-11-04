@@ -1,10 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class App {
     static Thread sendToPlatformThread;
@@ -28,7 +29,10 @@ public class App {
 
         // Create an instance of FileHandler that write log to a file called
         // app.log. Each new message will be appended at the at of the log file.
-        FileHandler fileHandler = new FileHandler("appJava.log", true);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime now = LocalDateTime.now();
+        String logName = "appJava" + dtf.format(now) + ".log";
+        FileHandler fileHandler = new FileHandler("/logs/Java/"+logName, false);
         logger.addHandler(fileHandler);
 
         startPythonProcess();
@@ -113,7 +117,8 @@ public class App {
             // -- Linux --
 
             // Run a shell command
-            processBuilder.command("bash", "-c", "python /Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/prova.py");
+            processBuilder.command("bash", "-c",
+                    "python /Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/prova.py");
 
             // Run a shell script
             // processBuilder.command("/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/prova.py");
