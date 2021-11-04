@@ -58,9 +58,13 @@ class CamelotIOCommunication:
         logging.debug("socket_reading: Starting receiving socket messages.")
         while is_running:
             data = conn.recv(1024)
-            logging.debug("socket_reading: Received: %s"%(data))
+            logging.debug("socket_reading: Received: %s"%(data.decode("utf-8")))
             queue_input.put(data.decode("utf-8"))
             logging.debug("socket_reading: added to the queue")
+            if data.decode("utf-8") == "kill":
+                logging.debug("Received kill message from Java. Initiating closing procedures.")
+                is_running = False
+                self.stop()
         s.close()
     
     def __socket_writing(self, queue_output : queue.Queue, is_running : bool):
@@ -98,7 +102,7 @@ class CamelotIOCommunication:
         while message == "":
             try:
                 logging.debug("Trying getting message from main input queue")
-                message = self.__queue_input.get()
+                message = self.__queue_input.get(timeout=10)
                 logging.debug("Giving message to main thread: "+ message)
             except queue.Empty:
                 if self.__input_thread.is_alive():
@@ -107,10 +111,13 @@ class CamelotIOCommunication:
                     logging.debug("Input thread not alive")
                     self.__queue_output.put("kill")
                     logging.debug("Adding kill to output queue")
+                    self.stop()
                 if self.__output_thread.is_alive():
                     logging.debug("Output thread alive")
                 else:
+                    self.__queue_output.put("kill")
                     logging.debug("Output thread not alive")
+                    self.stop()
                 message = "timeout"
                 
 

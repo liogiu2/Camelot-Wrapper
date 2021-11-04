@@ -24,6 +24,8 @@ public class SendToPlatform implements Runnable {
 
     public void interrupt() {
         running.set(false);
+        out.print("kill");
+        out.flush();
         try {
             socketOut.close();
         } catch (IOException e) {
@@ -51,7 +53,7 @@ public class SendToPlatform implements Runnable {
         }
         logger.info("SendToPlatform: starting sending");
         while (running.get()) {
-            socketReceiver();
+            socketSender();
         }
         stopped.set(true);
     }
@@ -66,7 +68,7 @@ public class SendToPlatform implements Runnable {
         }
     }
 
-    private void socketReceiver() {
+    private void socketSender() {
 
         if (!queueOut.isEmpty()) {
             String element = queueOut.poll();

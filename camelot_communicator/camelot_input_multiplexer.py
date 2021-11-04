@@ -38,7 +38,7 @@ class CamelotInputMultiplexer:
             message = self.camelot_IO_communication.get_message()
             logging.debug("Got message from main queue: %s" % message)
 
-            if message == "timeout":
+            if message == "timeout" or message == "kill":
                 self.stop()
                 break
 
