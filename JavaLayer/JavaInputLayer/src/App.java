@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -40,9 +42,11 @@ public class App {
 
         startPythonProcess();
         // Queue that receives a message from the platform and sends it to Camelot
-        ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
+        //ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
+        BlockingQueue<String> queueIn = new LinkedBlockingQueue<>();
         // Queue that receives a message from Camelot and sends it to the Platform
-        ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
+        //ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
+        BlockingQueue<String> queueOut = new LinkedBlockingQueue<>();
 
         // Thread for the socket communication
         receiveFromPlatform = new ReceiveFromPlatform(queueIn, isRunning);
@@ -140,7 +144,7 @@ public class App {
     public static void interruptEverything() {
         logger.info("Main: InterruptEverything called, closing all.");
         sendToCamelot.interrupt();
-        // receiveFromCamelot.interrupt();
+        receiveFromCamelot.interrupt();
         sendToPlatform.interrupt();
         receiveFromPlatform.interrupt();
     }

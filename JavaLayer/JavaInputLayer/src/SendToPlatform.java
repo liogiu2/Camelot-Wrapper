@@ -1,8 +1,10 @@
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -11,12 +13,13 @@ public class SendToPlatform implements Runnable {
     private Thread worker;
     private AtomicBoolean running;
     private AtomicBoolean stopped = new AtomicBoolean(false);
-    private static Socket socketOut;
-    private ConcurrentLinkedQueue<String> queueOut;
-    private PrintWriter out;
+    private Socket socketOut;
+    private BlockingQueue<String> queueOut;
+    //private PrintWriter out;
+    private DataOutputStream dos;
     private Logger logger;
 
-    public SendToPlatform(ConcurrentLinkedQueue<String> queueOut, AtomicBoolean running) {
+    public SendToPlatform(BlockingQueue<String> queueOut, AtomicBoolean running) {
         this.queueOut = queueOut;
         this.running = running;
         this.logger = App.getLogger();
@@ -25,14 +28,17 @@ public class SendToPlatform implements Runnable {
     public void interrupt() {
         logger.info("SendToPlatform: interrupting.");
         running.set(false);
-        out.print("kill");
-        out.flush();
+        // out.print("kill");
+        // out.flush();
         try {
+            dos.writeUTF("kill");
+            dos.close();
             socketOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.severe("SendToPlatform: " + e.getMessage());
         }
         worker.interrupt();
+        Thread.currentThread().interrupt();
     }
 
     boolean isRunning() {
@@ -48,7 +54,8 @@ public class SendToPlatform implements Runnable {
         socketCreation();
         logger.info("SendToPlatform: socket created");
         try {
-            out = new PrintWriter(socketOut.getOutputStream(), true);
+            //out = new PrintWriter(socketOut.getOutputStream(), true);
+            dos = new DataOutputStream(socketOut.getOutputStream());
         } catch (IOException e) {
             logger.severe(e.getMessage());
         }
@@ -72,12 +79,29 @@ public class SendToPlatform implements Runnable {
     private void socketSender() {
 
         if (!queueOut.isEmpty()) {
-            String element = queueOut.poll();
-            logger.info("SendToPlatform: " + element);
-            out.print(element);
-            if (out.checkError()) {
-                logger.severe("SendToPlatform: error while sending to platform");
+            String element = null;
+            try {
+                element = queueOut.poll(1000, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                logger.severe("SendToPlatform: InterruptedException: "+ e.getMessage());
+                App.interruptEverything();
             }
+            logger.info("SendToPlatform: " + element);
+            if(element == null) {
+                logger.info("SendToPlatform: element is null");
+            } else {
+                try {
+                    dos.writeUTF(element);
+                } catch (IOException e) {
+                    logger.severe("SendToPlatform: error while sending: "+e.getMessage());
+                }
+                //out.println(element);
+                logger.info("SendToPlatform: Message sent.");
+                // if (out.checkError()) {
+                //     logger.severe("SendToPlatform: error while sending to platform");
+                // }
+            }
+            
         }
     }
 }

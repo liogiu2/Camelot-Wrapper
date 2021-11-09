@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -13,11 +13,11 @@ public class ReceiveFromPlatform implements Runnable {
     private AtomicBoolean running;
     private AtomicBoolean stopped = new AtomicBoolean(false);
     private static Socket socketIn;
-    private ConcurrentLinkedQueue<String> queueIn;
+    private BlockingQueue<String> queueIn;
     private BufferedReader stdIn;
     private Logger logger;
 
-    public ReceiveFromPlatform(ConcurrentLinkedQueue<String> queueIn, AtomicBoolean running) {
+    public ReceiveFromPlatform(BlockingQueue<String> queueIn, AtomicBoolean running) {
         this.queueIn = queueIn;
         this.running = running;
         logger = App.getLogger();
@@ -74,12 +74,15 @@ public class ReceiveFromPlatform implements Runnable {
             in = stdIn.readLine();
 
             logger.info("ReceiveFromPlatform: "+ in);
-
             if (in != null) {
-                queueIn.add(in);
+                queueIn.put(in);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("ReceiveFromPlatform: IOException: "+ e.getMessage());
+        } catch (InterruptedException e) {
+            logger.info("ReceiveFromPlatform: InterruptedException: "+ e.getMessage());
+            logger.info("ReceiveFromPlatform: Stopping everything");
+            App.interruptEverything();
         }
     }
 }

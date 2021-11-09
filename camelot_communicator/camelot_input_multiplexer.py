@@ -38,7 +38,7 @@ class CamelotInputMultiplexer:
             message = self.camelot_IO_communication.get_message()
             logging.debug("Got message from main queue: %s" % message)
 
-            if message == "timeout" or message == "kill":
+            if message == "timeout" or message == "kill" or message == "input Quit":
                 self.stop()
                 break
 
@@ -75,6 +75,7 @@ class CamelotInputMultiplexer:
         return message
     
     def stop(self):
+        logging.debug("Stopping camelot input multiplexer...")
         self.__thread_running = False
         self.__messages_management.join()
         self.camelot_IO_communication.stop()

@@ -5,6 +5,7 @@ import socket
 import sys
 from pathlib import Path
 from datetime import datetime
+import select
 
 def singleton(self, *args, **kw):
     instances = {}
@@ -45,6 +46,7 @@ class CamelotIOCommunication:
         logging.debug("socket_reading: started")
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         logging.debug("socket_reading: socket created")
+
         try:
             s.bind((HOST, PORT))
             logging.debug("socket_reading: socket bind succeded")
@@ -60,12 +62,15 @@ class CamelotIOCommunication:
         except socket.error as err:
             logging.debug("socket_reading: error %s"%(err))
         logging.debug("socket_reading: Starting receiving socket messages.")
+
         while is_running:
             data = conn.recv(1024)
-            logging.debug("socket_reading: Received: %s"%(data.decode("utf-8")))
-            queue_input.put(data.decode("utf-8"))
+            logging.debug("socket_reading: received data: %s"%(data))
+            message = data.decode('UTF-8').strip()[2:]
+            logging.debug("socket_reading: Received: %s"%(message))
+            queue_input.put(message)
             logging.debug("socket_reading: added to the queue")
-            if data.decode("utf-8") == "kill":
+            if message == "kill":
                 logging.debug("Received kill message from Java. Initiating closing procedures.")
                 is_running = False
                 self.stop()
@@ -88,7 +93,7 @@ class CamelotIOCommunication:
                 break
             logging.debug("sending: %s"%(data))
             try:
-                conn.send(bytes(data+"\r\n",'UTF-8'))
+                conn.sendall(bytes(data+"\r\n",'UTF-8'))
             except:
                 logging.debug("Socket closed by Java. Initializing closing utils")
                 is_running = False
@@ -106,10 +111,10 @@ class CamelotIOCommunication:
         while message == "":
             try:
                 logging.debug("Trying getting message from main input queue")
-                message = self.__queue_input.get(timeout=10)
+                message = self.__queue_input.get()
                 logging.debug("Giving message to main thread: "+ message)
             except queue.Empty:
-                if self.__input_thread.is_alive():
+                """ if self.__input_thread.is_alive():
                     logging.debug("Input thread alive")
                 else:
                     logging.debug("Input thread not alive")
@@ -122,7 +127,12 @@ class CamelotIOCommunication:
                     self.__queue_output.put("kill")
                     logging.debug("Output thread not alive")
                     self.stop()
-                message = "timeout"
+                message = "timeout" """
+                logging.debug("Timeout, try sending message")
+                self.__queue_output.put("timeout")
+            if message == "kill" or message == "input Quit":
+                logging.debug("Received kill message from Java. Initiating closing procedures.")
+                self.stop()
                 
 
         return message
