@@ -47,8 +47,9 @@ public class ReceiveFromCamelot implements Runnable {
         String line;
         try {
             line = stdIn.readLine();
-            logger.info("ReceiveFromCamelot: "+line);
+            //logger.info("ReceiveFromCamelot: "+line);
             queueIn.put(line);
+            //logger.info("ReceiveFromCamelot: "+line+" added to queue");
 
             if (line.equalsIgnoreCase("input Quit")) {
                 logger.info("ReceiveFromCamelot: Starting closing procedure");

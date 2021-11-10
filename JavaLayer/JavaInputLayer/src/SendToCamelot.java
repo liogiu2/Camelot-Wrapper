@@ -41,7 +41,7 @@ public class SendToCamelot implements Runnable {
                 logger.severe("SendToCamelot: InterruptedException: "+e.getMessage());
                 App.interruptEverything();
             }
-            logger.info("SendToCamelot: "+ msg);
+            //logger.info("SendToCamelot: "+ msg);
             System.out.println(msg);
         }
         stopped.set(true);
