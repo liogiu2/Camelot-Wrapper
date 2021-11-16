@@ -1,5 +1,4 @@
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -21,6 +20,7 @@ public class ServerSocketConnection {
     private BufferedReader in;
     private OutputStream outputStream;
     private DataOutputStream dataOutputStream;
+    private Object monitor = new Object();
 
     public ServerSocketConnection(int port) {
         this.port = port;
@@ -35,9 +35,9 @@ public class ServerSocketConnection {
             // Socket creation
             socket = serverSocket.accept();
             // Create an output stream
-            outputStream = socket.getOutputStream();
+            //outputStream = socket.getOutputStream();
             // Create a print writer
-            out = new BufferedWriter(new OutputStreamWriter(outputStream));
+            //out = new BufferedWriter(new OutputStreamWriter(outputStream));
             // Create a buffered reader
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class ServerSocketConnection {
             // logger.info("The lenght of the message is " + ptext.length);
             // send(String.valueOf(ptext.length));
             // Sending the message
-            //logger.info("Sending message: " + message);
+            // logger.info("Sending message: " + message);
             send(message);
         } catch (IOException e) {
             logger.severe("Error sending message:" + e.getMessage());
@@ -95,18 +95,22 @@ public class ServerSocketConnection {
         // out.write(new String(ptext));
         // logger.info("Data sent");
         // out.flush();
-        byte[] dts = message.getBytes();
-        dataOutputStream.writeInt(dts.length);
-        dataOutputStream.write(dts);
+        synchronized (monitor) {
+            byte[] dts = message.getBytes();
+            dataOutputStream.writeInt(dts.length);
+            dataOutputStream.write(dts);
+        }
 
     }
 
     public String receiveMessage() {
-        try {
-            return in.readLine();
-        } catch (IOException e) {
-            logger.severe("Error receiving message");
-            return null;
+        synchronized (monitor) {
+            try {
+                return in.readLine();
+            } catch (IOException e) {
+                logger.severe("Error receiving message");
+                return null;
+            }
         }
     }
 

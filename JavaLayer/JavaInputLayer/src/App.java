@@ -24,7 +24,6 @@ public class App {
     public static void main(String[] args) throws IOException {
         // process = Runtime.getRuntime().exec("python
         // C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
-
         logger = Logger.getLogger(App.class.getName());
 
         // Create an instance of FileHandler that write log to a file called
@@ -63,6 +62,7 @@ public class App {
          * 
          * } catch (IOException e) { e.printStackTrace(); } } });
          */
+        receiveFromPlatformThread.setPriority(Thread.NORM_PRIORITY);
         receiveFromPlatformThread.start();
 
         // Thread for the socket communication
@@ -80,6 +80,7 @@ public class App {
          * 
          * } catch (IOException e) { e.printStackTrace(); } } });
          */
+        sendToPlatformThread.setPriority(Thread.NORM_PRIORITY);
         sendToPlatformThread.start();
 
         //Thread for standard input reading
@@ -95,18 +96,26 @@ public class App {
          * 
          * } } });
          */
-        receiveFromCamelotThread.setPriority(Thread.MAX_PRIORITY);
+        receiveFromCamelotThread.setPriority(Thread.NORM_PRIORITY);
         receiveFromCamelotThread.start();
 
         sendToCamelot = new SendToCamelot(queueIn, isRunning);
         sendToCamelotThread = new Thread(sendToCamelot);
-        sendToCamelotThread.setPriority(Thread.MAX_PRIORITY);
+        sendToCamelotThread.setPriority(Thread.NORM_PRIORITY);
         sendToCamelotThread.start();
 
         /*
          * String line; while ((line = reader.readLine()) != null) { logger.info(line);
          * }
          */
+
+         while (isRunning.get()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
