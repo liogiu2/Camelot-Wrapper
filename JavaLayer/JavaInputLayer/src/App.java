@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.FileHandler;
@@ -21,7 +19,9 @@ public class App {
     private static ReceiveFromCamelot receiveFromCamelot;
     private static SendToPlatform sendToPlatform;
     private static ReceiveFromPlatform receiveFromPlatform;
-    public static void main(String[] args) throws Exception {
+    private volatile static LinkedBlockingQueue<String> queueIn, queueOut;
+
+    public static void main(String[] args) throws IOException {
         // process = Runtime.getRuntime().exec("python
         // C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\prova.py");
 
@@ -32,21 +32,21 @@ public class App {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime now = LocalDateTime.now();
         String logName = "appJava" + dtf.format(now) + ".log";
-        String basePath = new File("").getAbsolutePath()+"/logs/Java/";
+        String basePath = new File("").getAbsolutePath() + "/logs/Java/";
         File directory = new File(basePath);
-        if (! directory.exists()){
+        if (!directory.exists()) {
             directory.mkdirs();
         }
-        FileHandler fileHandler = new FileHandler(basePath+logName, false);
+        FileHandler fileHandler = new FileHandler(basePath + logName, false);
         logger.addHandler(fileHandler);
 
         startPythonProcess();
         // Queue that receives a message from the platform and sends it to Camelot
-        //ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
-        BlockingQueue<String> queueIn = new LinkedBlockingQueue<>();
+        // ConcurrentLinkedQueue<String> queueIn = new ConcurrentLinkedQueue<String>();
+        queueIn = new LinkedBlockingQueue<>();
         // Queue that receives a message from Camelot and sends it to the Platform
-        //ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
-        BlockingQueue<String> queueOut = new LinkedBlockingQueue<>();
+        // ConcurrentLinkedQueue<String> queueOut = new ConcurrentLinkedQueue<String>();
+        queueOut = new LinkedBlockingQueue<>();
 
         // Thread for the socket communication
         receiveFromPlatform = new ReceiveFromPlatform(queueIn, isRunning);
@@ -82,7 +82,7 @@ public class App {
          */
         sendToPlatformThread.start();
 
-        // Thread for standard input reading
+        //Thread for standard input reading
         receiveFromCamelot = new ReceiveFromCamelot(queueOut, isRunning);
         receiveFromCamelotThread = new Thread(receiveFromCamelot);
         /*
@@ -95,10 +95,12 @@ public class App {
          * 
          * } } });
          */
+        receiveFromCamelotThread.setPriority(Thread.MAX_PRIORITY);
         receiveFromCamelotThread.start();
 
         sendToCamelot = new SendToCamelot(queueIn, isRunning);
         sendToCamelotThread = new Thread(sendToCamelot);
+        sendToCamelotThread.setPriority(Thread.MAX_PRIORITY);
         sendToCamelotThread.start();
 
         /*
@@ -152,4 +154,5 @@ public class App {
     public static Logger getLogger() {
         return logger;
     }
+
 }

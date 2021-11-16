@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -10,12 +11,12 @@ public class ReceiveFromCamelot implements Runnable {
     private Thread worker;
     private AtomicBoolean running;
     private AtomicBoolean stopped = new AtomicBoolean(false);
-    private BlockingQueue<String> queueIn;
+    private volatile LinkedBlockingQueue<String> queue;
     private BufferedReader stdIn;
     private Logger logger;
 
-    public ReceiveFromCamelot(BlockingQueue<String> queueIn, AtomicBoolean running) {
-        this.queueIn = queueIn;
+    public ReceiveFromCamelot(LinkedBlockingQueue<String> queue, AtomicBoolean running) {
+        this.queue = queue;
         this.running = running;
         logger = App.getLogger();
     }
@@ -43,23 +44,36 @@ public class ReceiveFromCamelot implements Runnable {
         stopped.set(true);
     }
 
-    private void stdInReceiver(){
+    private void stdInReceiver() {
+        // String line;
+        // try {
+        // line = stdIn.readLine();
+        // logger.info("ReceiveFromCamelot: " + line);
+        // queueIn.add(line);
+        // logger.info("ReceiveFromCamelot: " + line + " added to queue");
+
+        // if (line.equalsIgnoreCase("input Quit")) {
+        // logger.info("ReceiveFromCamelot: Starting closing procedure");
+        // App.interruptEverything();
+        // }
+        // } catch (IOException e) {
+        // logger.severe("ReceiveFromCamelot: IOException: " + e.getMessage());
+        // }
         String line;
         try {
             line = stdIn.readLine();
-            //logger.info("ReceiveFromCamelot: "+line);
-            queueIn.put(line);
-            //logger.info("ReceiveFromCamelot: "+line+" added to queue");
+            logger.info("ReceiveFromCamelot: " + line);
+
+            queue.put(line);
+
+            logger.info("ReceiveFromCamelot: " + line + " added to queue");
 
             if (line.equalsIgnoreCase("input Quit")) {
                 logger.info("ReceiveFromCamelot: Starting closing procedure");
                 App.interruptEverything();
             }
-        } catch (IOException e) {
-            logger.severe("ReceiveFromCamelot: IOException: " + e.getMessage());
-        } catch (InterruptedException e) {
-            logger.severe("ReceiveFromCamelot: InterruptedException: "+e.getMessage());
-            App.interruptEverything();
+        } catch (IOException | InterruptedException e) {
+            logger.severe("ReceiveFromCamelot: Exception: " + e.getMessage());
         }
     }
 }

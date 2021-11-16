@@ -2,13 +2,14 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.logging.Logger;
+
 import java.net.ServerSocket;
-import static java.nio.charset.StandardCharsets.*;
 
 public class ServerSocketConnection {
 
@@ -18,6 +19,8 @@ public class ServerSocketConnection {
     private Logger logger;
     private BufferedWriter out;
     private BufferedReader in;
+    private OutputStream outputStream;
+    private DataOutputStream dataOutputStream;
 
     public ServerSocketConnection(int port) {
         this.port = port;
@@ -31,10 +34,22 @@ public class ServerSocketConnection {
             serverSocket = new ServerSocket(port);
             // Socket creation
             socket = serverSocket.accept();
+            // Create an output stream
+            outputStream = socket.getOutputStream();
             // Create a print writer
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(outputStream));
             // Create a buffered reader
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (IOException e) {
+            logger.severe("Error creating server socket");
+        }
+    }
+
+    public void createServerNew() {
+        try {
+            socket = new Socket("localhost", port);
+            dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
         } catch (IOException e) {
             logger.severe("Error creating server socket");
         }
@@ -56,14 +71,34 @@ public class ServerSocketConnection {
 
     public void sendMessage(String message) {
         try {
-            byte[] ptext = message.getBytes(ISO_8859_1);
-            String value = new String(ptext, UTF_8);
-            out.write(value+ "\r\n");
-            out.newLine();
-            out.flush();
+            // Sending the byte lenght of the message
+            // byte[] ptext = message.getBytes("UTF-16");
+            // logger.info("The lenght of the message is " + ptext.length);
+            // send(String.valueOf(ptext.length));
+            // Sending the message
+            //logger.info("Sending message: " + message);
+            send(message);
         } catch (IOException e) {
             logger.severe("Error sending message:" + e.getMessage());
         }
+    }
+
+    private void send(String message) throws IOException {
+        // message += "\r\n";
+        // byte[] ptext = message.getBytes("UTF-8");
+        // logger.info("The lenght of the message is " + ptext.length);
+        // out.write(String.format("%2d",ptext.length));
+        // logger.info("Lenght sent");
+        // out.write("\r\n");
+        // out.flush();
+
+        // out.write(new String(ptext));
+        // logger.info("Data sent");
+        // out.flush();
+        byte[] dts = message.getBytes();
+        dataOutputStream.writeInt(dts.length);
+        dataOutputStream.write(dts);
+
     }
 
     public String receiveMessage() {

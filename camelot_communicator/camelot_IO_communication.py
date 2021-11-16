@@ -5,8 +5,7 @@ import socket
 import sys
 from pathlib import Path
 from datetime import datetime
-import select
-import time
+from multiprocessing.connection import Listener
 
 def singleton(self, *args, **kw):
     instances = {}
@@ -34,7 +33,7 @@ class CamelotIOCommunication:
             self.__queue_input = queue.Queue()
             self.__queue_output = queue.Queue()
             self.__running = True
-            self.__input_thread = threading.Thread(target=self.__socket_reading_no_server , args =(self.__queue_input, self.__running, ), daemon=True)
+            self.__input_thread = threading.Thread(target=self.__socket_reading_multi , args =(self.__queue_input, self.__running, ), daemon=True)
             self.__input_thread.start()
             self.__output_thread = threading.Thread(target=self.__socket_writing_no_server , args =(self.__queue_output, self.__running, ), daemon=True)
             self.__output_thread.start()
@@ -79,26 +78,42 @@ class CamelotIOCommunication:
 
     def __socket_reading_no_server(self, queue_input : queue.Queue, is_running : bool):
         HOST = "localhost"
-        PORT = 12345
+        PORT = 9999
         logging.debug("socket_reading: started")
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         logging.debug("socket_reading: socket created")
         s.connect((HOST, PORT))
 
         while is_running:
-            data = s.recv(1024)
-            logging.debug("socket_reading: received data: %s"%(data))
+            data = s.recv(16)
+            logging.debug("socket_reading: received data: %s"%(data.decode()))
+            message_size = int(data.decode())
+            logging.debug("socket_reading: message size: %i"%(message_size))
+            data = s.recv(min((message_size if message_size % 2 == 0 else message_size+1), 1024))
+            # logging.debug("socket_reading: received data: %s"%(data))
             message = data.decode('UTF-8').strip()#[2:]
             logging.debug("socket_reading: Received: %s"%(message))
             queue_input.put(message)
             logging.debug("socket_reading: added to the queue")
-            s.sendall(bytes("ok\r\n",'UTF-8'))
-            logging.debug("socket_reading: sent ok")
             if message == "kill":
                 logging.debug("Received kill message from Java. Initiating closing procedures.")
                 is_running = False
                 self.stop()
         s.close()
+    
+    def __socket_reading_multi(self, queue_input : queue.Queue, is_running : bool):
+        PORT = 9999
+        listener = Listener(address=('0.0.0.0', PORT), family='AF_INET', authkey=None)
+        with listener.accept() as conn:
+            while is_running:
+                data = conn.recv_bytes().decode().strip()
+                logging.debug("socket_reading: Received: %s"%(data))
+                queue_input.put(data)
+                logging.debug("socket_reading: added to the queue")
+                if data == "kill":
+                    logging.debug("Received kill message from Java. Initiating closing procedures.")
+                    is_running = False
+                    self.stop()
     
     def __socket_writing(self, queue_output : queue.Queue, is_running : bool):
         HOST = "localhost"
