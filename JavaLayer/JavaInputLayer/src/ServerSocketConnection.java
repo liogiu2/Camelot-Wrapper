@@ -1,11 +1,8 @@
 import java.net.Socket;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.logging.Logger;
 
 import java.net.ServerSocket;
@@ -16,9 +13,9 @@ public class ServerSocketConnection {
     private Socket socket;
     private ServerSocket serverSocket;
     private Logger logger;
-    private BufferedWriter out;
+    //private BufferedWriter out;
     private BufferedReader in;
-    private OutputStream outputStream;
+    //private OutputStream outputStream;
     private DataOutputStream dataOutputStream;
     private Object monitor = new Object();
 

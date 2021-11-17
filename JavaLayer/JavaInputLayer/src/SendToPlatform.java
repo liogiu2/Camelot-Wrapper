@@ -1,10 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
@@ -17,7 +11,7 @@ public class SendToPlatform implements Runnable {
     private volatile LinkedBlockingQueue<String> queue;
     private Logger logger;
     private ServerSocketConnection serverSocketConnection;
-    private BufferedReader stdIn;
+    // private BufferedReader stdIn;
 
     public SendToPlatform(LinkedBlockingQueue<String> queue, AtomicBoolean running) {
         this.queue = queue;
@@ -47,7 +41,7 @@ public class SendToPlatform implements Runnable {
     public void run() {
         stopped.set(false);
         serverSocketConnection.createServerNew();
-        stdIn = new BufferedReader(new InputStreamReader(System.in));
+        // stdIn = new BufferedReader(new InputStreamReader(System.in));
         while (running.get()) {
             socketSender();
         }
