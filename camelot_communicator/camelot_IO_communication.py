@@ -4,9 +4,12 @@ import logging
 import socket
 import sys
 from pathlib import Path
-from datetime import datetime, time
+from datetime import datetime
 from multiprocessing.connection import Listener
 from inputimeout import inputimeout, TimeoutOccurred
+import debugpy
+import time
+import select
 
 
 def singleton(self, *args, **kw):
@@ -31,6 +34,8 @@ class CamelotIOCommunication:
 
     def start(self):
         if not self.__started:
+            #import debugpy
+            # debugpy.breakpoint()
             logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
             Path("logs/python/").mkdir(parents=True, exist_ok=True)
             logging.basicConfig(filename='logs/python/'+logname, filemode='w',
@@ -39,29 +44,36 @@ class CamelotIOCommunication:
             self.__queue_output = queue.Queue()
             self.__running = True
             lock = threading.Lock()
+            event_obj = threading.Event()
             # self.__input_thread = threading.Thread(target=self.__socket_reading_multi , args =(self.__queue_input, self.__running, ), daemon=True)
             self.__input_thread = threading.Thread(target=self.__camelot_sender_thread, args=(
-                self.__queue_output, self.__running, lock), daemon=True)
+                self.__queue_output, self.__running, lock, event_obj), daemon=True)
             self.__input_thread.start()
             # self.__output_thread = threading.Thread(target=self.__socket_writing_no_server , args =(self.__queue_output, self.__running, ), daemon=True)
             self.__output_thread = threading.Thread(target=self.__camelot_receiver_thread, args=(
-                self.__queue_input, self.__running, lock), daemon=True)
+                self.__queue_input, self.__running, lock, event_obj), daemon=True)
             self.__output_thread.start()
             self.__started = True
 
-    def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock):
+    def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
+        logging.debug("__camelot_sender_thread: Starting")
         while(is_running):
+            logging.debug("__camelot_sender_thread: Trying to get message from queue")
             message = queue.get()
             logging.debug(
                 "__camelot_sender_thread: Received from queue: %s" % (message))
-            self.__standard_IO_operations(message, 1, lock)
+            self.__standard_IO_operations(message, 0, lock)
             logging.debug("__camelot_sender_thread: sent to standard output")
 
-    def __camelot_receiver_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock):
+    def __camelot_receiver_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
+        logging.debug("__camelot_receiver_thread: Starting")
+        #time.sleep(10)
         while(is_running):
-            message = self.__standard_IO_operations(None, 0, lock)
+            logging.debug("__camelot_receiver_thread: Trying to get message from standard input")
+            message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
-                time.sleep(0.5)
+                logging.debug("__camelot_receiver_thread: No message received")
+                time.sleep(1)
                 continue
             logging.debug(
                 "__camelot_receiver_thread: Received from standard input: %s" % (message))
@@ -78,19 +90,30 @@ class CamelotIOCommunication:
         if the message was sent to the standard output correctly.
         """
         lock.acquire()
+        logging.debug("__standard_IO_operations: Lock acquired by %s" % ("Input" if mode == 0 else "Output"))
         return_message = None
         if mode == 0:
             if message == None:
                 return None
             print(message)
+            logging.debug("__standard_IO_operations: Printing message: " + message)
             return_message = "OK"
         elif mode == 1:
+            # if select.select([sys.stdin,],[],[],0.0)[0]:
             try:
+                logging.debug("__standard_IO_operations: Trying to read from standard input")
                 return_message = inputimeout(timeout = 1)
+                logging.debug("__standard_IO_operations: Received message: " + return_message)
             except TimeoutOccurred:
                 return_message = None
-                logging.debug("Timeout occurred")
+                logging.debug("__standard_IO_operations: Timeout occurred")
+                # return_message = input()
+            logging.debug("__standard_IO_operations: Received message: " + return_message)
+            # else:
+            #     logging.debug("__standard_IO_operations: No message in stdin")
+            #     return_message = None
         lock.release()
+        logging.debug("__standard_IO_operations: Lock released")
         return return_message
 
     # def __socket_reading(self, queue_input : queue.Queue, is_running : bool):
