@@ -58,17 +58,23 @@ class CamelotIOCommunication:
     def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
         logging.debug("__camelot_sender_thread: Starting")
         while(is_running):
+            event_obj.clear()
+
             logging.debug("__camelot_sender_thread: Trying to get message from queue")
             message = queue.get()
             logging.debug(
                 "__camelot_sender_thread: Received from queue: %s" % (message))
-            self.__standard_IO_operations(message, 0, lock)
-            logging.debug("__camelot_sender_thread: sent to standard output")
+            if message != "%PASS%":
+                self.__standard_IO_operations(message, 0, lock)
+                logging.debug("__camelot_sender_thread: sent to standard output")
+
+            event_obj.set()
 
     def __camelot_receiver_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
         logging.debug("__camelot_receiver_thread: Starting")
         #time.sleep(10)
         while(is_running):
+            event_obj.wait(timeout= 0.5)
             logging.debug("__camelot_receiver_thread: Trying to get message from standard input")
             message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
@@ -100,14 +106,14 @@ class CamelotIOCommunication:
             return_message = "OK"
         elif mode == 1:
             # if select.select([sys.stdin,],[],[],0.0)[0]:
-            try:
-                logging.debug("__standard_IO_operations: Trying to read from standard input")
-                return_message = inputimeout(timeout = 1)
-                logging.debug("__standard_IO_operations: Received message: " + return_message)
-            except TimeoutOccurred:
-                return_message = None
-                logging.debug("__standard_IO_operations: Timeout occurred")
-                # return_message = input()
+            # try:
+            #     logging.debug("__standard_IO_operations: Trying to read from standard input")
+            #     return_message = inputimeout(timeout = 1)
+            #     logging.debug("__standard_IO_operations: Received message: " + return_message)
+            # except TimeoutOccurred:
+            #     return_message = None
+            #     logging.debug("__standard_IO_operations: Timeout occurred")
+            return_message = input()
             logging.debug("__standard_IO_operations: Received message: " + return_message)
             # else:
             #     logging.debug("__standard_IO_operations: No message in stdin")

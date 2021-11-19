@@ -55,6 +55,9 @@ class CamelotInputMultiplexer:
                     logging.debug("Adding to input queue...")
                     self.__input_queue.put(message)
                     logging.debug("Added to input queue")
+            elif message.startswith("started"):
+                logging.debug("Received started so I pass next print to realease the event")
+                self.camelot_IO_communication.print_action("%PASS%")
             else:
                 logging.debug("Adding to other queue...")
                 self.__other_queue.put(message)
