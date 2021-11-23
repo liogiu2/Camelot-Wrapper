@@ -38,23 +38,6 @@ class GameController:
         self._player = initial_state.find_player(self._problem)
         self._location_management(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
-        # for item in self._domain.actions:
-        #     a = None
-        #     while a == None:
-        #         d = item.get_dict_parameters()
-        #         # for i in d.keys():
-        #         #     entity = self._problem.find_objects_with_type(self._domain.find_type(d[i].name))
-        #         #     d[i] = random.choice(entity)
-        #         d['?who'] = initial_state.world_state.find_entity_ignore_case("bob")
-        #         d['?from'] = initial_state.world_state.find_entity_ignore_case("AlchemyShop")
-        #         d['?to'] = initial_state.world_state.find_entity_ignore_case("Bridge")
-        #         d['?entryfrom'] = initial_state.world_state.find_entity_ignore_case("AlchemyShop.Door")
-        #         d['?entryto'] = initial_state.world_state.find_entity_ignore_case("Bridge.SouthEnd")
-        #         try:
-        #             a = Action(item, d, initial_state.world_state.get_dict_predicates())
-        #             initial_state.world_state.apply_action(a)
-        #         except ValueError:
-        #             continue
         while game_loop:
             received = self.camelot_input_multiplex.get_input_message()
 

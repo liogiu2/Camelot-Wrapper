@@ -6,11 +6,6 @@ import logging
 @singleton
 class CamelotInputMultiplexer:
 
-    #https://stackoverflow.com/questions/4103773/efficient-way-of-having-a-function-only-execute-once-in-a-loop
-    #https://www.geeksforgeeks.org/python-different-ways-to-kill-a-thread/
-    #https://stackoverflow.com/questions/42237752/single-instance-of-class-in-python
-
-
     __messages_management = None
     __input_queue = None
     __location_queue = None
@@ -33,52 +28,62 @@ class CamelotInputMultiplexer:
             self.__started = True
 
     def _input_messages_management(self):
+        """
+        This thread is used to manage the input messages received from the camelot_IO_communication.
+        It gets the messages from the camelot_IO_communication and put them in the right queue that is used from the main thread.
+        """
 
         while self.__thread_running:
             message = self.camelot_IO_communication.get_message()
-            logging.debug("Got message from main queue: %s" % message)
+            logging.debug("CamelotInputMultiplexer: Got message from main queue: %s" % message)
 
-            if message == "timeout" or message == "kill" or message == "input Quit":
+            if message == "input Quit":
+                self.__thread_running = False
                 self.stop()
                 break
 
             if message.startswith("succeeded"):
-                logging.debug("Adding to success queue...")
                 self.__success_queue.put(message)
-                logging.debug("Added to success queue")
+                logging.debug("CamelotInputMultiplexer: Added to success queue")
             elif message.startswith("input"):
                 if message.startswith(self.__location_message_prefix):
-                    logging.debug("Adding to location queue...")
                     self.__location_queue.put(message)
-                    logging.debug("Added to location queue")
+                    logging.debug("CamelotInputMultiplexer: Added to location queue")
                 else:
-                    logging.debug("Adding to input queue...")
                     self.__input_queue.put(message)
-                    logging.debug("Added to input queue")
+                    logging.debug("CamelotInputMultiplexer: Added to input queue")
             elif message.startswith("started"):
-                logging.debug("Received started so I pass next print to realease the event")
+                logging.debug("CamelotInputMultiplexer: Received started so I pass next print to realease the event")
                 self.camelot_IO_communication.print_action("%PASS%")
             else:
-                logging.debug("Adding to other queue...")
                 self.__other_queue.put(message)
-                logging.debug("Added to other queue")
+                logging.debug("CamelotInputMultiplexer: Added to other queue")
     
     def get_success_message(self, text = ""):
-        logging.debug("Getting success message...")
+        """
+        This method is used from the main thread to get the success messages that come from Camelot.
+        """
         message = self.__success_queue.get()
-        logging.debug("Got success message: %s"%(message))
+        logging.debug("CamelotInputMultiplexer: Got success message: %s"%(message))
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
     
     def get_input_message(self, text = ""):
+        """
+        This method is used from the main thread to get the input messages that come from Camelot.
+        """
         message =  self.__input_queue.get()
+        logging.debug("CamelotInputMultiplexer: Got input message: %s"%(message))
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
     
     def stop(self):
-        logging.debug("Stopping camelot input multiplexer...")
+        """
+        This method is used to stop the thread.
+        """
+        logging.debug("CamelotInputMultiplexer: Stopping camelot input multiplexer...")
         self.__thread_running = False
         self.__messages_management.join()
         self.camelot_IO_communication.stop()

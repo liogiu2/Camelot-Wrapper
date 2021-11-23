@@ -1,18 +1,16 @@
 import threading
 import queue
 import logging
-import socket
 import sys
 from pathlib import Path
 from datetime import datetime
-from multiprocessing.connection import Listener
-from inputimeout import inputimeout, TimeoutOccurred
-import debugpy
 import time
-import select
 
 
 def singleton(self, *args, **kw):
+    """
+    The decorator is used to make sure that only one instance of the class is created in the program.
+    """
     instances = {}
 
     def _singleton(*args, **kw):
@@ -34,8 +32,6 @@ class CamelotIOCommunication:
 
     def start(self):
         if not self.__started:
-            #import debugpy
-            # debugpy.breakpoint()
             logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
             Path("logs/python/").mkdir(parents=True, exist_ok=True)
             logging.basicConfig(filename='logs/python/'+logname, filemode='w',
@@ -45,25 +41,37 @@ class CamelotIOCommunication:
             self.__running = True
             lock = threading.Lock()
             event_obj = threading.Event()
-            # self.__input_thread = threading.Thread(target=self.__socket_reading_multi , args =(self.__queue_input, self.__running, ), daemon=True)
             self.__input_thread = threading.Thread(target=self.__camelot_sender_thread, args=(
                 self.__queue_output, self.__running, lock, event_obj), daemon=True)
             self.__input_thread.start()
-            # self.__output_thread = threading.Thread(target=self.__socket_writing_no_server , args =(self.__queue_output, self.__running, ), daemon=True)
             self.__output_thread = threading.Thread(target=self.__camelot_receiver_thread, args=(
                 self.__queue_input, self.__running, lock, event_obj), daemon=True)
             self.__output_thread.start()
             self.__started = True
 
     def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
+        """
+        Thread method that controls the sending of messages to the standard input where Camelot is listening for inputs.
+        It uses locks to ensure that the standard input / output is not used by two threads at the same time.
+        It uses an event to notify the thread that a message has been received from the standard input so the operation on the standard output can be performed.
+
+        Parameters
+        ----------
+        queue : queue.Queue; the queue used to get the messages to sent over the standard input
+        is_running : bool; the flag used to stop the thread
+        lock : threading.Lock; the lock used to ensure that the standard input / output is not used by two threads at the same time
+        event_obj : threading.Event; the event used to notify the thread that a message has been received from the standard input so the operation on the standard output can be performed.
+        """
         logging.debug("__camelot_sender_thread: Starting")
         while(is_running):
             event_obj.clear()
 
             logging.debug("__camelot_sender_thread: Trying to get message from queue")
             message = queue.get()
-            logging.debug(
-                "__camelot_sender_thread: Received from queue: %s" % (message))
+            logging.debug("__camelot_sender_thread: Received from queue: %s" % (message))
+            if message == "kill":
+                is_running = False
+                break
             if message != "%PASS%":
                 self.__standard_IO_operations(message, 0, lock)
                 logging.debug("__camelot_sender_thread: sent to standard output")
@@ -71,20 +79,34 @@ class CamelotIOCommunication:
             event_obj.set()
 
     def __camelot_receiver_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
+        """
+        Thread method that controls the receiving of messages from the standard output where Camelot is sending messages.
+        It uses locks to ensure that the standard input / output is not used by two threads at the same time.
+        It uses an event to notify the thread that a message has been sent to the standard output so the operation on the standard input can be performed.
+        The event is used to ensure that the thread is not blocking the standard output when waiting for a message from Camelot. It has a timeout of 0.1 seconds.
+
+        Parameters
+        ----------
+        queue : queue.Queue; the queue used to put the messages received from the standard output
+        is_running : bool; the flag used to stop the thread
+        lock : threading.Lock; the lock used to ensure that the standard input / output is not used by two threads at the same time
+        event_obj : threading.Event; the event used to notify the thread that a message has been sent to the standard output so the operation on the standard input can be performed.
+        """
         logging.debug("__camelot_receiver_thread: Starting")
-        #time.sleep(10)
         while(is_running):
-            event_obj.wait(timeout= 0.5)
+            event_obj.wait(timeout=0.1)
             logging.debug("__camelot_receiver_thread: Trying to get message from standard input")
             message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
                 logging.debug("__camelot_receiver_thread: No message received")
                 time.sleep(1)
                 continue
-            logging.debug(
-                "__camelot_receiver_thread: Received from standard input: %s" % (message))
+            message = message.strip()
+            logging.debug("__camelot_receiver_thread: Received from standard input: %s" % (message))
             queue.put(message)
             logging.debug("__camelot_receiver_thread: added to the queue")
+            if message == "input Quit":
+                is_running = False
 
     def __standard_IO_operations(self, message: str, mode: int, lock: threading.Lock) -> str:
         """
@@ -105,19 +127,8 @@ class CamelotIOCommunication:
             logging.debug("__standard_IO_operations: Printing message: " + message)
             return_message = "OK"
         elif mode == 1:
-            # if select.select([sys.stdin,],[],[],0.0)[0]:
-            # try:
-            #     logging.debug("__standard_IO_operations: Trying to read from standard input")
-            #     return_message = inputimeout(timeout = 1)
-            #     logging.debug("__standard_IO_operations: Received message: " + return_message)
-            # except TimeoutOccurred:
-            #     return_message = None
-            #     logging.debug("__standard_IO_operations: Timeout occurred")
             return_message = input()
             logging.debug("__standard_IO_operations: Received message: " + return_message)
-            # else:
-            #     logging.debug("__standard_IO_operations: No message in stdin")
-            #     return_message = None
         lock.release()
         logging.debug("__standard_IO_operations: Lock released")
         return return_message
@@ -242,9 +253,19 @@ class CamelotIOCommunication:
     #     s.close()
 
     def print_action(self, text):
+        """
+        This method is called to add a new message to the queue to be printed over the standard output.
+
+        Parameters
+        ----------
+        text : str; the message to be printed.
+        """
         self.__queue_output.put(text)
 
     def get_message(self) -> str:
+        """
+        This method is called to get a message from the input queue.
+        """
         message = ""
         while message == "":
             try:
@@ -252,30 +273,19 @@ class CamelotIOCommunication:
                 message = self.__queue_input.get()
                 logging.debug("Giving message to main thread: " + message)
             except queue.Empty:
-                """ if self.__input_thread.is_alive():
-                    logging.debug("Input thread alive")
-                else:
-                    logging.debug("Input thread not alive")
-                    self.__queue_output.put("kill")
-                    logging.debug("Adding kill to output queue")
-                    self.stop()
-                if self.__output_thread.is_alive():
-                    logging.debug("Output thread alive")
-                else:
-                    self.__queue_output.put("kill")
-                    logging.debug("Output thread not alive")
-                    self.stop()
-                message = "timeout" """
                 logging.debug("Timeout, try sending message")
                 self.__queue_output.put("timeout")
             if message == "kill" or message == "input Quit":
                 logging.debug(
-                    "Received kill message from Java. Initiating closing procedures.")
+                    "Initiating closing procedures.")
                 self.stop()
 
         return message
 
     def stop(self):
+        """
+        This method is called to stop the threads.
+        """
         logging.debug("Stop Called")
         self.__running = False
         self.__input_thread.join()
