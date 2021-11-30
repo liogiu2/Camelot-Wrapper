@@ -2,6 +2,7 @@ from camelot_IO_communication import CamelotIOCommunication, singleton
 import threading
 from queue import Queue
 import logging
+import shared_variables
 
 @singleton
 class CamelotInputMultiplexer:
@@ -20,7 +21,6 @@ class CamelotInputMultiplexer:
             self.camelot_IO_communication.start()
             self.__input_queue = Queue()
             self.__location_queue = Queue()
-            self.__location_message_prefix = ("input started walking", "input stopped walking", "input arrived", "input exited")
             self.__success_queue = Queue()
             self.__other_queue = Queue()
             self.__messages_management = threading.Thread(target=self._input_messages_management , args =(), daemon=True)
@@ -46,7 +46,7 @@ class CamelotInputMultiplexer:
                 self.__success_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to success queue")
             elif message.startswith("input"):
-                if message.startswith(self.__location_message_prefix):
+                if message.startswith(shared_variables.location_message_prefix):
                     self.__location_queue.put(message)
                     logging.debug("CamelotInputMultiplexer: Added to location queue")
                 else:
@@ -59,22 +59,41 @@ class CamelotInputMultiplexer:
                 self.__other_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to other queue")
     
-    def get_success_message(self, text = ""):
+    def get_success_message(self, no_wait = False):
         """
         This method is used from the main thread to get the success messages that come from Camelot.
         """
-        message = self.__success_queue.get()
+        if no_wait:
+            message = self.__success_queue.get_nowait()
+        else:
+            message = self.__success_queue.get()
         logging.debug("CamelotInputMultiplexer: Got success message: %s"%(message))
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
     
-    def get_input_message(self, text = ""):
+    def get_input_message(self, no_wait = False):
         """
         This method is used from the main thread to get the input messages that come from Camelot.
         """
-        message =  self.__input_queue.get()
+        if no_wait:
+            message = self.__input_queue.get_nowait()
+        else:
+            message =  self.__input_queue.get()
         logging.debug("CamelotInputMultiplexer: Got input message: %s"%(message))
+        if message == "kill":
+            raise Exception("Kill called - End program")
+        return message
+    
+    def get_location_message(self, no_wait = False):
+        """
+        This method is used from the main thread to get the location messages that come from Camelot.
+        """
+        if no_wait:
+            message = self.__location_queue.get_nowait()
+        else:
+            message =  self.__location_queue.get()
+        logging.debug("CamelotInputMultiplexer: Got location message: %s"%(message))
         if message == "kill":
             raise Exception("Kill called - End program")
         return message

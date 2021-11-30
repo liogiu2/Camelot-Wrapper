@@ -101,7 +101,6 @@ class CamelotIOCommunication:
                 logging.debug("__camelot_receiver_thread: No message received")
                 time.sleep(1)
                 continue
-            message = message.strip()
             logging.debug("__camelot_receiver_thread: Received from standard input: %s" % (message))
             queue.put(message)
             logging.debug("__camelot_receiver_thread: added to the queue")
@@ -128,6 +127,7 @@ class CamelotIOCommunication:
             return_message = "OK"
         elif mode == 1:
             return_message = input()
+            return_message = return_message.strip()
             logging.debug("__standard_IO_operations: Received message: " + return_message)
         lock.release()
         logging.debug("__standard_IO_operations: Lock released")
@@ -150,7 +150,6 @@ class CamelotIOCommunication:
         message = ""
         while message == "":
             try:
-                logging.debug("Trying getting message from main input queue")
                 message = self.__queue_input.get()
                 logging.debug("Giving message to main thread: " + message)
             except queue.Empty:

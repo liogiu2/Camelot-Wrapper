@@ -1,3 +1,5 @@
+from queue import Queue
+import queue
 from pddl.action import Action
 from camelot_action import CamelotAction
 from camelot_world_state import CamelotWorldState
@@ -5,17 +7,13 @@ from pddl.PDDL import PDDL_Parser
 import logging
 from utilities import parse_json, replace_all
 from camelot_input_multiplexer import CamelotInputMultiplexer
-import os
+import shared_variables
+import debugpy
 
 class GameController:
 
     def __init__(self):
-        if os.name == 'nt':
-            self._domain_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\camelot_domain.pddl"
-            self._problem_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\camelot_communicator\\camelot_communicator\\pddl\\data\\example_problem.pddl"
-        else:
-            self._domain_path = "/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/pddl/data/camelot_domain.pddl"
-            self._problem_path = "/Users/giuliomori/Documents/GitHub/camelot_communicator/camelot_communicator/pddl/data/example_problem.pddl"
+        self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
         self._parser = PDDL_Parser()
         self._domain = self._parser.parse_domain(self._domain_path)
         self._problem = self._parser.parse_problem(self._problem_path)
@@ -23,6 +21,7 @@ class GameController:
         self._player = ''
         self.input_dict = {}
         self.camelot_input_multiplex = CamelotInputMultiplexer()
+        self.current_state = None
         
     
     def start_game(self, game_loop = True):
@@ -38,6 +37,7 @@ class GameController:
         self._player = initial_state.find_player(self._problem)
         self._location_management(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
+        self.current_state = initial_state
         while game_loop:
             received = self.camelot_input_multiplex.get_input_message()
 
@@ -93,9 +93,53 @@ class GameController:
         exit = game_loop
         if self._player != '':
             self._camelot_action.action("SetCameraFocus",[self._player.name])
+        debugpy.breakpoint()
         while exit:
 
-            received = self.camelot_input_multiplex.get_input_message()
+            self._input_handler()
+
+            self._location_handler()
+
             
+    
+    def _input_handler(self) -> bool:
+        """
+        A method that is used to handle the input from Camelot.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        bool -> True if received message from input queue and responded to it; False if not.
+        """
+        try:
+            received = self.camelot_input_multiplex.get_input_message(no_wait=True)
+            logging.info("GameController: got input message \"%s\"" %( received ))
+        
             if received in self.input_dict.keys():
                 exec(self.input_dict[received])
+        except queue.Empty:
+            return False
+        return True
+    
+    def _location_handler(self):
+        """
+        A method that is used to handle the location inputs from Camelot.
+
+        Parameters
+        ----------
+        None
+        """
+        try:
+            received = self.camelot_input_multiplex.get_location_message(no_wait=True)
+            logging.info("GameController: got location message \"%s\"" %( received ))
+            if received.startswith(shared_variables.location_message_prefix[2:]):
+                self.current_state.apply_camelot_message(received)
+        except queue.Empty:
+            return False
+        except Exception as inst:
+            logging.exception("GameController: Exception in location handler: %s" %( inst ))
+            return False
+        return True

@@ -4,6 +4,18 @@ from pddl.predicate import Predicate
 from pddl.relation_value import RelationValue
 
 class Relation:
+    """
+    A class that is used to represent a relation between entities.
+
+    Attributes:
+    ------------
+    predicate: Predicate
+        The predicate of the relation.
+    entities: list of Entity
+        The list of entities that compose the relation.
+    value: RelationValue
+        The value of the relation.
+    """
 
     def __init__(self, predicate, entities, value, domain = None, problem = None):
         if type(value) is not RelationValue:
@@ -24,7 +36,21 @@ class Relation:
         self.value = value
         
 
-    def is_valid_relation(self, predicate, entities, domain, problem):
+    def is_valid_relation(self, predicate, entities, domain, problem) -> bool:
+        """
+        Method that is used to check if a relation is valid.
+
+        Parameters:
+        ------------
+        predicate: Predicate
+            The predicate of the relation.
+        entities: list of Entity 
+            The list of entities that compose the relation.
+        domain: Domain
+            The domain of the problem.
+        problem: Problem
+            The problem of the domain.
+        """
         #check if entities exist
         for item in entities:
             if problem.find_objects(item.name) is None:
@@ -35,7 +61,7 @@ class Relation:
         #check that type of entities and predicate fit
         check_entity = entities.copy()
         for item in predicate.arguments:
-            entity_found = self._find_entity_with_type(check_entity, item.name)
+            entity_found = self.find_entity_with_type(check_entity, item.name)
             if entity_found is None:
                 raise Exception('Entity %s in relation not found'%(item.name))
             check_entity.remove(entity_found)
@@ -44,7 +70,7 @@ class Relation:
         return True
 
     
-    def _find_entity_with_type(self, entities, type):
+    def find_entity_with_type(self, entities, type):
         for item in entities:
             extension = item.type.get_list_extensions()
             if type in extension:

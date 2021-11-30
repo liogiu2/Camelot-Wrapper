@@ -4,11 +4,11 @@ from game_controller import GameController
 # prolog = Prolog()
 # prolog.assertz("")
 #CamelotInputManager.start()
-# import debugpy
+import debugpy
 
-# debugpy.listen(5678)
-# debugpy.wait_for_client()
-# debugpy.breakpoint()
+debugpy.listen(5678)
+debugpy.wait_for_client()
+#debugpy.breakpoint()
 #import logging
 
 gc = GameController()

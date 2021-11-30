@@ -1,4 +1,14 @@
 class Predicate:
+    """
+    A class that is used to represent a PDDL predicate.
+
+    Attributes:
+    ------------
+    name: str
+        The name of the predicate.
+    arguments: list of Argument
+        The arguments of the predicate.
+    """
     
     def __init__(self, name, arguments):
         self.name = name
