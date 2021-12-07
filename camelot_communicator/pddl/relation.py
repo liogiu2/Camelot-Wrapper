@@ -70,7 +70,11 @@ class Relation:
         return True
 
     
-    def find_entity_with_type(self, entities, type):
+    def find_entity_with_type(self, entities = None, type = None):
+        if entities is None:
+            entities = self.entities
+        if type is None:
+            raise Exception('find_entity_with_type: Type must be specified')
         for item in entities:
             extension = item.type.get_list_extensions()
             if type in extension:
@@ -85,7 +89,8 @@ class Relation:
         string = self.predicate.name + '('
         for item in self.entities:
             string += item.name + ', '
-        string = string[:-2] +')'
+        string = string[:-2] +'):'
+        string += str(self.value)
         return string
     
     def __eq__(self, other):

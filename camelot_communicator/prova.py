@@ -4,16 +4,20 @@ from game_controller import GameController
 # prolog = Prolog()
 # prolog.assertz("")
 #CamelotInputManager.start()
-import debugpy
+# import debugpy
 
-debugpy.listen(5678)
-debugpy.wait_for_client()
+# debugpy.listen(5678)
+# debugpy.wait_for_client()
 #debugpy.breakpoint()
 #import logging
+if __name__ == '__main__':
+    # import debugpy
 
-gc = GameController()
+    # debugpy.listen(5678)
+    # debugpy.wait_for_client()
+    gc = GameController()
 
-gc.start_game(True)
+    gc.start_game(True)
 
 
 # from camelot_input_manager import CamelotInputManager

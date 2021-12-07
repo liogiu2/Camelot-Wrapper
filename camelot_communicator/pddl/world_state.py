@@ -44,7 +44,7 @@ class WorldState:
         """
         self.__relations = relations
 
-    def add_relation(self, relation):
+    def add_relation(self, relation: Relation):
         """A method that is used to add a relation to the current worldstate
 
         Parameters
@@ -221,8 +221,7 @@ class WorldState:
             effect of the action that we want to apply to the worldstate
         """
         for relation in action_definition.parameters:
-            worldstate_relation = self.find_relation(
-                relation, exclude_value=True)
+            worldstate_relation = self.find_relation(relation, exclude_value=True)
 
             if worldstate_relation is None:
                 self.add_relation(relation)

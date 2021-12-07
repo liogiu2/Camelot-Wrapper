@@ -3,7 +3,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -13,7 +14,8 @@
 		"position": ["Behind", "Left", "Center", "Right"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "RightBookcase",
 		"attribute": [""]
@@ -44,7 +46,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Target",
 		"attribute": [""]
@@ -60,7 +63,8 @@
 		"attribute": ["Open", "Close"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}]
 }, {
 	"name": "Bridge",
@@ -137,7 +141,8 @@
 	"type": ["room", "fancy"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -204,7 +209,8 @@
 		"attribute": ["EntryPoint"]
 	}, {
 		"name": "GreenHouseDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Beanch",
 		"attribute": ["Seat"],
@@ -217,13 +223,15 @@
 		"attribute": ["EntryPoint"]
 	}, {
 		"name": "BrownHouseDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Plant",
 		"attribute": [""]
 	}, {
 		"name": "RedHouseDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Alley",
 		"attribute": [""],
@@ -234,7 +242,8 @@
 		"position": ["Alley2"]
 	}, {
 		"name": "blueHouseDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Barrel",
 		"attribute": ["Surface"]
@@ -250,7 +259,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Bed",
 		"attribute": ["Seat"]
@@ -314,10 +324,12 @@
 	"type": ["room", "fancy"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Fireplace",
 		"attribute": [""]
@@ -368,7 +380,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
@@ -415,7 +428,8 @@
 		"attribute": ["Surface"]
 	}, {
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Well",
 		"attribute": [""]
@@ -459,7 +473,8 @@
 		"position": ["Rightfoyer"]
 	}, {
 		"name": "BasementDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "LeftSupplicant",
 		"attribute": [""],
@@ -491,10 +506,12 @@
 		"attribute": ["Seat"]
 	}, {
 		"name": "LeftDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "RightDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "LeftBalcony",
 		"attribute": [""],
@@ -512,14 +529,16 @@
 	"type": ["room", "fancy", "connection"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Center",
 		"attribute": [""],
 		"position": ["Center"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Stairs",
 		"attribute": [""]
@@ -529,7 +548,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Bookcase",
 		"attribute": [""]
@@ -649,7 +669,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "Barrel",
 		"attribute": ["Surface"]
@@ -666,7 +687,8 @@
 	"type": ["room"],
 	"room_components": [{
 		"name": "Door",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}, {
 		"name": "FrontLeftStool",
 		"attribute": ["Seat"]
@@ -705,6 +727,7 @@
 		"position": ["Left", "Right"]
 	}, {
 		"name": "BackDoor",
-		"attribute": ["Open", "Close", "EntryPoint"]
+		"attribute": ["Open", "Close", "EntryPoint"],
+		"position": ["In"]
 	}]
 }]

@@ -3,7 +3,7 @@ import json
 import importlib.resources as pkg_resources
 from camelot_action import CamelotAction
 from camelot_world_state import CamelotWorldState
-from . import json_data
+import json_data
 
 class Character:
 

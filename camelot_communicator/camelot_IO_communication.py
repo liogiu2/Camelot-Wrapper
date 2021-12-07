@@ -32,10 +32,10 @@ class CamelotIOCommunication:
 
     def start(self):
         if not self.__started:
-            logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
-            Path("logs/python/").mkdir(parents=True, exist_ok=True)
-            logging.basicConfig(filename='logs/python/'+logname, filemode='w',
-                                format='%(levelname)s:%(message)s', level=logging.DEBUG)
+            # logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
+            # Path("logs/python/").mkdir(parents=True, exist_ok=True)
+            # logging.basicConfig(filename='logs/python/'+logname, filemode='w',
+            #                     format='%(levelname)s:%(message)s', level=logging.DEBUG)
             self.__queue_input = queue.Queue()
             self.__queue_output = queue.Queue()
             self.__running = True
@@ -99,7 +99,7 @@ class CamelotIOCommunication:
             message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
                 logging.debug("__camelot_receiver_thread: No message received")
-                time.sleep(1)
+                time.sleep(0.1)
                 continue
             logging.debug("__camelot_receiver_thread: Received from standard input: %s" % (message))
             queue.put(message)

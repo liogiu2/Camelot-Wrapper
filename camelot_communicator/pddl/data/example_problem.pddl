@@ -3,22 +3,22 @@
     
     (:objects
         AlchemyShop - location 
-        Bridge - location
+        Blacksmith - location
         bob - player
         luca - character
         AlchemyShop.Chest - furniture
         AlchemyShop.Door - entrypoint
-        Bridge.SouthEnd - entrypoint
+        Blacksmith.Door - entrypoint
         RedKey - item
     )
     
     (:init
         (in bob AlchemyShop)
-        (in luca Bridge)
+        (in luca Blacksmith)
         (at bob AlchemyShop.Door)
         (at AlchemyShop.Chest AlchemyShop)
-        (adjacent AlchemyShop.Door Bridge.SouthEnd) 
-        (adjacent Bridge.SouthEnd AlchemyShop.Door)
+        (adjacent AlchemyShop.Door Blacksmith.Door) 
+        (adjacent Blacksmith.Door AlchemyShop.Door)
         (stored RedKey AlchemyShop.Chest)
         (can_open AlchemyShop.Chest)
         (alive bob)
@@ -27,7 +27,7 @@
     
     (:goal
         (and(equip RedKey bob)
-        (at bob Bridge))
+        (at bob Blacksmith))
         
     )
         
