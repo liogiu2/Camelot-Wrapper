@@ -7,6 +7,7 @@ def GUI(queue : multiprocessing.Queue):
     
     other_list_column = []
 
+    #starting_message = queue.get()
     starting_state = queue.get()
 
     i = 0
@@ -26,8 +27,7 @@ def GUI(queue : multiprocessing.Queue):
             sg.Column(other_list_column, scrollable=True ,vertical_scroll_only=True, size=(400,400), key='-COL2-'),
         ],
         [sg.Button('Exit'), 
-        sg.Button('Update'),
-        sg.Text('', size=(100,1), key='-STATUS-')
+        sg.Button('Update')
         ],
     ]
 
@@ -42,38 +42,40 @@ def GUI(queue : multiprocessing.Queue):
             except Exception:
                 continue
             if new_state is not None:
-                i_n = 0
-                for entity in new_state.entities:
-                    if i_n >= i:
-                        window.extend_layout(window['-COL1-'], [[sg.T(str(entity), key="-ENTITY-"+str(i_n), text_color='red')]])
-                        window['-COL1-'].contents_changed()
-                    else:
-                        if window["-ENTITY-"+str(i_n)].get() == str(entity):
-                            window["-ENTITY-"+str(i_n)].update(value = str(entity), text_color = "black")
+                if type(new_state) is str:
+                    window['-Message-'].update(value = str(new_state))
+                    window.refresh()
+                else:
+                    i_n = 0
+                    for entity in new_state.entities:
+                        if i_n >= i:
+                            window.extend_layout(window['-COL1-'], [[sg.T(str(entity), key="-ENTITY-"+str(i_n), text_color='red')]])
+                            window['-COL1-'].contents_changed()
                         else:
-                            window["-ENTITY-"+str(i_n)].update(value = str(entity), text_color = "red")   
-                    i_n += 1
-                i = i_n
-                window['-COL1-'].contents_changed() 
+                            if window["-ENTITY-"+str(i_n)].get() == str(entity):
+                                window["-ENTITY-"+str(i_n)].update(value = str(entity), text_color = "black")
+                            else:
+                                window["-ENTITY-"+str(i_n)].update(value = str(entity), text_color = "red")   
+                        i_n += 1
+                    i = i_n
+                    window['-COL1-'].contents_changed() 
 
-                j_n = 0
-                for relation in new_state.relations:
-                    if j_n >= j:
-                        window.extend_layout(window['-COL2-'], [[sg.T(str(relation), key="-RELATION-"+str(j_n), text_color='red')]])
-                        window['-COL2-'].contents_changed() 
-                    else:
-                        if window["-RELATION-"+str(j_n)].get() == str(relation):
-                            window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "black")
+                    j_n = 0
+                    for relation in new_state.relations:
+                        if j_n >= j:
+                            window.extend_layout(window['-COL2-'], [[sg.T(str(relation), key="-RELATION-"+str(j_n), text_color='red')]])
+                            window['-COL2-'].contents_changed() 
                         else:
-                            window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "red")
-                    j_n += 1
-                j = j_n
-                window['-COL2-'].contents_changed() 
+                            if window["-RELATION-"+str(j_n)].get() == str(relation):
+                                #window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "black")
+                                pass
+                            else:
+                                window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "red")
+                        j_n += 1
+                    j = j_n
+                    window['-COL2-'].contents_changed() 
 
-                window.refresh()
-                # else:
-                #     window['-Message-'].update(value = str(new_state))
-                #     window.refresh()
+                    window.refresh()
             else:
                 continue
         if event in (sg.WIN_CLOSED, 'Exit'):

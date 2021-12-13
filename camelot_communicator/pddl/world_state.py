@@ -71,6 +71,11 @@ class WorldState:
             relation that needs to be found
         exclude_value : bool, optional, default False
             if True, it will find the relation without evaluating the relation_value.
+        
+        Returns
+        -------
+        Relation or None
+            relation that was found or None
         """
         for item in self.__relations:
             if exclude_value:

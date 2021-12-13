@@ -151,6 +151,7 @@ class GameController:
             received = self.camelot_input_multiplex.get_location_message(no_wait=True)
             logging.info("GameController: got location message \"%s\"" %( received ))
             if received.startswith(shared_variables.location_message_prefix[2:]):
+                #self.queue_GUI.put(received)
                 changed_relations = self.current_state.apply_camelot_message(received)
                 if len(changed_relations) > 0:
                     self.queue_GUI.put(self.current_state.world_state)

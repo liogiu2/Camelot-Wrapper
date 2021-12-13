@@ -337,6 +337,7 @@ class CamelotWorldState:
         
         changed_relations = []
         message_parts = message.split(' ')
+        # debugpy.breakpoint()
         if message_parts[0] == 'input':
             # example of message to parse: "input arrived bob position alchemyshop.Door"
             # I exclude the messages with "at"
@@ -487,6 +488,7 @@ class CamelotWorldState:
     def _create_and_add_relation_for_location(self, world_state: WorldState, character: Entity, location: str, predicate: Predicate, relation_value = RelationValue.TRUE) -> tuple:
         """
         This method creates a relation for the location of the character and adds it to the world state.
+        If the relation already exists, it will be modified with the new relation_value.
 
         Parameters
         ----------
@@ -502,11 +504,18 @@ class CamelotWorldState:
         tuple
             A tuple with first argument the string "new" to represent what has been done to the relation
             and second argument relations that are added or changed in the world state.
+
         """
+        old_relation_value = RelationValue.FALSE if relation_value == RelationValue.TRUE else RelationValue.TRUE
         location_entity = world_state.find_entity_with_name(location)
         if location_entity is not None:
-            new_relation = Relation(predicate, [character, location_entity], relation_value, self.domain, self.problem)
-            return self._add_relation_to_world_state(new_relation, world_state)
+            #check if the relation already exists in the wordstate but with false value
+            relation = world_state.find_relation(Relation(predicate, [character, location_entity], old_relation_value))
+            if relation is None:
+                new_relation = Relation(predicate, [character, location_entity], relation_value, self.domain, self.problem)
+                return self._add_relation_to_world_state(new_relation, world_state)
+            else:
+                return self._modify_relation_value(relation, relation_value)
         else:
             raise Exception("Location %s not found in the problem" % location)
         
