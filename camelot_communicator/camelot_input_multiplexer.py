@@ -1,3 +1,4 @@
+import debugpy
 from camelot_IO_communication import CamelotIOCommunication, singleton
 import threading
 from queue import Queue
@@ -22,6 +23,7 @@ class CamelotInputMultiplexer:
             self.__input_queue = Queue()
             self.__location_queue = Queue()
             self.__success_queue = Queue()
+            # self.__started_queue = Queue()
             self.__other_queue = Queue()
             self.__messages_management = threading.Thread(target=self._input_messages_management , args =(), daemon=True)
             self.__messages_management.start()
@@ -55,6 +57,8 @@ class CamelotInputMultiplexer:
             elif message.startswith("started"):
                 logging.debug("CamelotInputMultiplexer: Received started so I pass next print to realease the event")
                 self.camelot_IO_communication.print_action("%PASS%")
+                # self.__started_queue.put(message)
+                # logging.debug("CamelotInputMultiplexer: Added to started queue")
             else:
                 self.__other_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to other queue")

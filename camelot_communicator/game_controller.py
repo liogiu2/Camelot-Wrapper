@@ -13,6 +13,7 @@ import debugpy
 import logging
 from pathlib import Path
 from datetime import datetime
+import re
 
 class GameController:
 
@@ -44,7 +45,7 @@ class GameController:
         initial_state.create_camelot_env_from_problem()
 
         self._player = initial_state.find_player(self._problem)
-        self._location_management(game_loop)
+        self._create_ingame_actions(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
         self.current_state = initial_state
         self.GUI_process = multiprocessing.Process(target=GUI, args=(self.queue_GUI,))
@@ -57,8 +58,39 @@ class GameController:
                 self._camelot_action.action('EnableInput')
                 self._main_game_controller(game_loop)
     
+    def _create_ingame_actions(self, game_loop = True):
+        """A method that is used to create the actions that are used in the game.
+        It parses the pddl_actions_to_camelot.json and integrates the content in game.
+        
+        """
+        json_p = parse_json("pddl_actions_to_camelot")
+        for item in self._problem.initial_state:
+            if item.predicate.name in json_p:
+                if item.predicate.name == "adjacent":
+                    self._location_management(item, json_p, game_loop)
+                    continue
+                sub_dict = {
+                    '$param1$' : item.entities[0].name,
+                    '$param2$' : self._player.name,
+                    '$wait$' : str(False)
+                }
+                for istr in json_p[item.predicate.name]['declaration']:
+                    istr_with_param = replace_all(istr, sub_dict)
+                    exec(istr_with_param)
+                # debugpy.breakpoint()
+                input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
+                self.input_dict[input_key] = ""
+                for istr in json_p[item.predicate.name]['response']:
+                    self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
+        
+        for item in self._problem.objects:
+            if "chest" in item.name.lower():
+                self._camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', item.name, 'Open ' + item.name, True], game_loop)
+                self.input_dict["input OpenFurniture "+item.name] = ""
+                self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('OpenFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
+    
 
-    def _location_management(self, game_loop = True):
+    def _location_management(self, item, json_p, game_loop = True):
         """A method that is used to manage the places declared on the domain
 
         It declares the input function that is used from Camelot to enable an action to happen. In this case the action is the exit action. 
@@ -69,28 +101,26 @@ class GameController:
         game_loop : boolen, default - True
             boolean used for debugging porpuses.
         """
-        json_p = parse_json("pddl_actions_to_camelot")
-        for item in self._problem.initial_state:
-            if item.predicate.name == self._domain.find_predicate('adjacent').name:
-                sub_dict = {
-                    '$param1$' : item.entities[0].name,
-                    '$param2$' : self._player.name,
-                    '$param3$' : item.entities[1].name,
-                    '$wait$' : str(game_loop)
-                }
-                for istr in json_p['adjacent']['declaration']:
-                    istr_with_param = replace_all(istr, sub_dict)
-                    exec(istr_with_param)
-                loc, entry = item.entities[0].name.split('.')
-                if 'end' in entry.lower():
-                    input_key = replace_all(json_p['adjacent']['input']['end'], sub_dict)
-                    self.input_dict[input_key] = ""
-                else:
-                    input_key = replace_all(json_p['adjacent']['input']['door'], sub_dict)
-                    self.input_dict[input_key] = ""
-                    
-                for istr in json_p['adjacent']['response']:
-                    self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
+        
+        sub_dict = {
+            '$param1$' : item.entities[0].name,
+            '$param2$' : self._player.name,
+            '$param3$' : item.entities[1].name,
+            '$wait$' : str(game_loop)
+        }
+        for istr in json_p['adjacent']['declaration']:
+            istr_with_param = replace_all(istr, sub_dict)
+            exec(istr_with_param)
+        loc, entry = item.entities[0].name.split('.')
+        if 'end' in entry.lower():
+            input_key = replace_all(json_p['adjacent']['input']['end'], sub_dict)
+            self.input_dict[input_key] = ""
+        else:
+            input_key = replace_all(json_p['adjacent']['input']['door'], sub_dict)
+            self.input_dict[input_key] = ""
+            
+        for istr in json_p['adjacent']['response']:
+            self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
                 
 
     def _main_game_controller(self, game_loop = True):
@@ -104,9 +134,12 @@ class GameController:
         exit = game_loop
         if self._player != '':
             self._camelot_action.action("SetCameraFocus",[self._player.name])
+        self._camelot_action.success_messages = queue.Queue()
         while exit:
 
             self._input_handler()
+
+            self._success_message_handler()
 
             self._location_handler()
         
@@ -115,7 +148,21 @@ class GameController:
         # self.GUI_process.join()
 
 
-            
+    def _success_message_handler(self):
+        """A method that is used to handle the success message and update the world state
+        """
+        try:
+            received = self._camelot_action.success_messages.get_nowait()
+            logging.info("GameController: Success message received: " + received)
+            # debugpy.breakpoint()
+            remove_succedeed = len("succeeded ")
+            message_parts = received[remove_succedeed:].replace("(", "|").replace(")", "").replace(",", "|").replace(" ", "").split("|")
+            action_definition = self._domain.find_action_with_name(message_parts[0])
+            if action_definition is not None:
+                pass
+        except queue.Empty:
+            return False
+        return True       
     
     def _input_handler(self) -> bool:
         """
@@ -132,7 +179,7 @@ class GameController:
         try:
             received = self.camelot_input_multiplex.get_input_message(no_wait=True)
             logging.info("GameController: got input message \"%s\"" %( received ))
-        
+
             if received in self.input_dict.keys():
                 exec(self.input_dict[received])
         except queue.Empty:
@@ -158,6 +205,7 @@ class GameController:
         except queue.Empty:
             return False
         except Exception as inst:
+            debugpy.breakpoint()
             logging.exception("GameController: Exception in location handler: %s" %( inst ))
             return False
         return True

@@ -63,6 +63,15 @@ class Domain:
         """
         self.__actions = actions
     
+    def find_action_with_name(self, name):
+        """
+        Find action with name
+        """
+        for action in self.actions:
+            if action.name.lower() == name.lower():
+                return action
+        return None
+    
     #-----------------------------------
     #       Types methods
     #-----------------------------------

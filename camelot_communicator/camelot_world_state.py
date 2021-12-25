@@ -243,45 +243,47 @@ class CamelotWorldState:
                     logging.info(
                         "Relation %s already exists, so we skip it." % str(rel))
                 # Parameter to set: ['Open', 'Close', 'Surface', 'Furniture', 'Seat', 'EntryPoint']
-                for attribute in room_component['attribute']:
-                    if attribute == '':
-                        continue
-                    elif attribute == 'Open':
-                        rel = Relation(shared_variables.supported_predicates['can_open'], [
-                                       obj], RelationValue.TRUE, self.domain, problem)
-                        try:
-                            problem.add_relation_to_initial_state(rel)
-                            logging.debug(
-                                "Relation %s added to the problem" % str(rel))
-                        except AttributeError:
-                            logging.info(
-                                "Relation %s already exists, so we skip it." % str(rel))
-                    elif attribute == 'Close':
-                        rel = Relation(shared_variables.supported_predicates['is_open'], [
-                                       obj], RelationValue.FALSE, self.domain, problem)
-                        try:
-                            problem.add_relation_to_initial_state(rel)
-                            logging.debug(
-                                "Relation %s added to the problem" % str(rel))
-                        except AttributeError:
-                            logging.info(
-                                "Relation %s already exists, so we skip it." % str(rel))
-                    elif attribute == 'Surface':
-                        rel = Relation(shared_variables.supported_predicates['has_surface'], [
-                                       obj], RelationValue.TRUE, self.domain, problem)
-                        try:
-                            problem.add_relation_to_initial_state(rel)
-                            logging.debug(
-                                "Relation %s added to the problem" % str(rel))
-                        except AttributeError:
-                            logging.info(
-                                "Relation %s already exists, so we skip it." % str(rel))
-                    elif attribute == 'Furniture':
-                        pass
-                    elif attribute == 'Seat':
-                        pass
-                    elif attribute == 'EntryPoint':
-                        pass
+                if  "door" not in room_component['name'].lower():
+                    for attribute in room_component['attribute']:
+                        if attribute == '':
+                            continue
+                        elif attribute == 'Open':
+                            # debugpy.breakpoint()
+                            rel = Relation(shared_variables.supported_predicates['can_open'], [
+                                        obj], RelationValue.TRUE, self.domain, problem)
+                            try:
+                                problem.add_relation_to_initial_state(rel)
+                                logging.debug(
+                                    "Relation %s added to the problem" % str(rel))
+                            except AttributeError:
+                                logging.info(
+                                    "Relation %s already exists, so we skip it." % str(rel))
+                        elif attribute == 'Close':
+                            rel = Relation(shared_variables.supported_predicates['is_open'], [
+                                        obj], RelationValue.FALSE, self.domain, problem)
+                            try:
+                                problem.add_relation_to_initial_state(rel)
+                                logging.debug(
+                                    "Relation %s added to the problem" % str(rel))
+                            except AttributeError:
+                                logging.info(
+                                    "Relation %s already exists, so we skip it." % str(rel))
+                        elif attribute == 'Surface':
+                            rel = Relation(shared_variables.supported_predicates['has_surface'], [
+                                        obj], RelationValue.TRUE, self.domain, problem)
+                            try:
+                                problem.add_relation_to_initial_state(rel)
+                                logging.debug(
+                                    "Relation %s added to the problem" % str(rel))
+                            except AttributeError:
+                                logging.info(
+                                    "Relation %s already exists, so we skip it." % str(rel))
+                        elif attribute == 'Furniture':
+                            pass
+                        elif attribute == 'Seat':
+                            pass
+                        elif attribute == 'EntryPoint':
+                            pass
     
     def _integrate_wordstate_with_camelot_rooms_components(self, room_component, location_name, problem: Problem) -> Entity:
         """
@@ -337,7 +339,7 @@ class CamelotWorldState:
         
         changed_relations = []
         message_parts = message.split(' ')
-        # debugpy.breakpoint()
+        
         if message_parts[0] == 'input':
             # example of message to parse: "input arrived bob position alchemyshop.Door"
             # I exclude the messages with "at"
@@ -412,12 +414,12 @@ class CamelotWorldState:
                 if character is None:
                     logging.error("Character %s not found in the world state" % message_parts[2])
                     raise Exception("Character %s not found in the problem" % message_parts[2])
-
+                    
                 location_entity = new_world_state.find_entity_with_name(message_parts[4])
 
                 relation_at = new_world_state.find_relation(Relation(shared_variables.supported_predicates['at'], [character, location_entity], RelationValue.TRUE))
-
-                changed_relations.append(self._modify_relation_value(relation_at, RelationValue.FALSE))
+                if relation_at is not None:
+                    changed_relations.append(self._modify_relation_value(relation_at, RelationValue.FALSE))
 
                 self.world_state = copy.deepcopy(new_world_state)
         return changed_relations
@@ -508,14 +510,15 @@ class CamelotWorldState:
         """
         old_relation_value = RelationValue.FALSE if relation_value == RelationValue.TRUE else RelationValue.TRUE
         location_entity = world_state.find_entity_with_name(location)
-        if location_entity is not None:
-            #check if the relation already exists in the wordstate but with false value
-            relation = world_state.find_relation(Relation(predicate, [character, location_entity], old_relation_value))
-            if relation is None:
-                new_relation = Relation(predicate, [character, location_entity], relation_value, self.domain, self.problem)
-                return self._add_relation_to_world_state(new_relation, world_state)
-            else:
-                return self._modify_relation_value(relation, relation_value)
+        if location_entity is None:
+            location_entity = Entity(location, shared_variables.supported_types['position'], self.problem)
+            self.problem.add_object(location_entity)
+            world_state.add_entity(location_entity)
+        #check if the relation already exists in the wordstate but with false value
+        relation = world_state.find_relation(Relation(predicate, [character, location_entity], old_relation_value))
+        if relation is None:
+            new_relation = Relation(predicate, [character, location_entity], relation_value, self.domain, self.problem)
+            return self._add_relation_to_world_state(new_relation, world_state)
         else:
-            raise Exception("Location %s not found in the problem" % location)
+            return self._modify_relation_value(relation, relation_value)
         

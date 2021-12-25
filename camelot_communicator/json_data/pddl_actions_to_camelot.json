@@ -1,23 +1,22 @@
 {
-    "adjacent":
-        {
-            "declaration" : [
-                "from camelot_action import CamelotAction",
-                "camelot_action = CamelotAction()",
-                "camelot_action.action('EnableIcon', ['Exit', 'Exit', '$param1$', 'Exit from $param1$', True], $wait$)"
-            ],
-            "input" : {
-                "door" : "input Exit $param1$",
-                "end" : "input arrived $param2$ position $param1$"
-            },
-            "response" : [
-                "from camelot_action import CamelotAction",
-                "camelot_action = CamelotAction()",
-                "camelot_action.action('WalkTo',['$param2$', '$param1$'], $wait$)",
-                "camelot_action.action('FadeOut', [], $wait$)",
-                "camelot_action.action('SetPosition',['$param2$','$param3$'], $wait$)",
-                "camelot_action.action('SetCameraFocus',['$param2$'], $wait$)",
-                "camelot_action.action('FadeIn', $wait$)"
-            ]
-        }
+    "adjacent": {
+        "declaration": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('EnableIcon', ['Exit', 'Exit', '$param1$', 'Exit from $param1$', True], $wait$)"
+        ],
+        "input": {
+            "door": "input Exit $param1$",
+            "end": "input arrived $param2$ position $param1$"
+        },
+        "response": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('WalkTo',['$param2$', '$param1$'], $wait$)",
+            "camelot_action.action('FadeOut', [], $wait$)",
+            "camelot_action.action('SetPosition',['$param2$','$param3$'], $wait$)",
+            "camelot_action.action('SetCameraFocus',['$param2$'], $wait$)",
+            "camelot_action.action('FadeIn', $wait$)"
+        ]
+    }
 }

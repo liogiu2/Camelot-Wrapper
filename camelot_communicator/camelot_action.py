@@ -2,6 +2,7 @@ import json
 import importlib.resources as pkg_resources
 import json_data
 import logging
+import queue
 from camelot_IO_communication import CamelotIOCommunication
 from camelot_input_multiplexer import CamelotInputMultiplexer
 """
@@ -15,6 +16,7 @@ class CamelotAction:
         self.camelot_input_multiplex = CamelotInputMultiplexer()
         self.camelot_input_multiplex.start()
         self.camelot_IO_communication = CamelotIOCommunication()
+        self.success_messages = queue.Queue()
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
@@ -36,6 +38,7 @@ class CamelotAction:
             
             # Return True if success response, else false for fail response
             if received == 'succeeded ' + command:
+                self.success_messages.put(received)
                 return True
             elif received.startswith('failed ' + command):
                 return False

@@ -1,4 +1,5 @@
 from game_controller import GameController
+import logging
 # from pyswip import Prolog
 
 # prolog = Prolog()
@@ -16,8 +17,10 @@ if __name__ == '__main__':
     # debugpy.listen(5678)
     # debugpy.wait_for_client()
     gc = GameController()
-
-    gc.start_game(True)
+    try:
+        gc.start_game(True)
+    except Exception as e:
+        logging.exception("Main: Exception : %s" %( e ))
 
 
 # from camelot_input_manager import CamelotInputManager
