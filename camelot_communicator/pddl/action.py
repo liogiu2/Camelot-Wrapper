@@ -19,13 +19,12 @@ class Action:
 
     """
 
-    def __init__(self, action_definition, parameters, predicates):
+    def __init__(self, action_definition, parameters):
         self._action_definition = action_definition
         self.name = action_definition.name
         self.__parameters = {}
         self.__preconditions = None
         self.__effects = None
-        self.__predicates = predicates
         self.create_action(self._action_definition, parameters)
     
     #-----------------------------------
@@ -76,14 +75,12 @@ class Action:
         ----------
         action_definition : ActionDefinition
             the model of the action
-        parameters : list
+        parameters : dict
             the parameters that need to be sobstituted from the action_definition
         """
         #Cheking action_definition parameters with dict of parameters passed in the method to be sobstitute in the action
         for param in action_definition.parameters:
             if param.name in parameters.keys():
-                if parameters[param.name] in self.__parameters.values():
-                    raise ValueError("%s already esists in the list of parameters"%(parameters[param.name]))
                 self.__parameters[param.name] = parameters[param.name]
             else:
                 raise KeyError("Parameter %s in action %s not found"%(param.name, action_definition.name))
@@ -134,9 +131,9 @@ class Action:
             list_entity.append(self.__parameters[arg.name])
             list_type.append(arg.type)
         if not_value:
-            return Relation(self.__predicates[predicate.name], list_entity, RelationValue.FALSE)
+            return Relation(predicate, list_entity, RelationValue.FALSE)
         else:
-            return Relation(self.__predicates[predicate.name], list_entity, RelationValue.TRUE)
+            return Relation(predicate, list_entity, RelationValue.TRUE)
     
             
         

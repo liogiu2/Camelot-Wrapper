@@ -48,6 +48,14 @@ class CamelotIOCommunication:
                 self.__queue_input, self.__running, lock, event_obj), daemon=True)
             self.__output_thread.start()
             self.__started = True
+            #self._keep_alive()
+    
+    def _keep_alive(self):
+        """
+        This method is called to keep the threads alive.
+        """
+        threading.Timer(3.0, self._keep_alive).start()
+        self.__queue_output.put("%PASS%")
 
     def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
         """

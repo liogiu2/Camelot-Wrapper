@@ -12,10 +12,10 @@ import logging
 #debugpy.breakpoint()
 #import logging
 if __name__ == '__main__':
-    # import debugpy
+    import debugpy
 
-    # debugpy.listen(5678)
-    # debugpy.wait_for_client()
+    debugpy.listen(5678)
+    debugpy.wait_for_client()
     gc = GameController()
     try:
         gc.start_game(True)

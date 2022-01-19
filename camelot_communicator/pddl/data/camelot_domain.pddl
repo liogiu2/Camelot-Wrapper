@@ -4,7 +4,7 @@
 
     (:types
         general other
-        character position item - general
+        position item character - general
         furniture entrypoint location - position
         player - character
     )

@@ -1,3 +1,4 @@
+import debugpy
 from pddl.problem import Problem
 from pddl.domain import Domain
 from pddl.predicate import Predicate
@@ -63,6 +64,7 @@ class Relation:
         for item in predicate.arguments:
             entity_found = self.find_entity_with_type(check_entity, item.name)
             if entity_found is None:
+                debugpy.breakpoint()
                 raise Exception('Entity %s in relation not found'%(item.name))
             check_entity.remove(entity_found)
         if len(check_entity) > 0:
@@ -70,14 +72,14 @@ class Relation:
         return True
 
     
-    def find_entity_with_type(self, entities = None, type = None):
+    def find_entity_with_type(self, entities = None, entity_type = None):
         if entities is None:
             entities = self.entities
-        if type is None:
+        if entity_type is None:
             raise Exception('find_entity_with_type: Type must be specified')
         for item in entities:
             extension = item.type.get_list_extensions()
-            if type in extension:
+            if entity_type in extension:
                 return item
         return None
 

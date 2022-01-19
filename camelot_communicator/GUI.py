@@ -2,13 +2,13 @@ import PySimpleGUI as sg
 import multiprocessing
 
 
-def GUI(queue : multiprocessing.Queue):
+def GUI(queueIn : multiprocessing.Queue, queueOut : multiprocessing.Queue):
     entity_list_column = []
     
     other_list_column = []
 
     #starting_message = queue.get()
-    starting_state = queue.get()
+    starting_state = queueIn.get()
 
     i = 0
     for entity in starting_state.entities:
@@ -26,6 +26,7 @@ def GUI(queue : multiprocessing.Queue):
             sg.VSeperator(),
             sg.Column(other_list_column, scrollable=True ,vertical_scroll_only=True, size=(400,400), key='-COL2-'),
         ],
+        [sg.Input(key='-IN-', size = (200, 1)),sg.Submit()],
         [sg.Button('Exit'), 
         sg.Button('Update')
         ],
@@ -38,7 +39,7 @@ def GUI(queue : multiprocessing.Queue):
         if event == "Update" or event == sg.TIMEOUT_KEY:
             new_state = None
             try:
-                new_state = queue.get_nowait()
+                new_state = queueIn.get_nowait()
             except Exception:
                 continue
             if new_state is not None:

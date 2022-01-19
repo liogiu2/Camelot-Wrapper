@@ -1,3 +1,4 @@
+from os import pathconf_names
 import queue
 from GUI import GUI
 from pddl.action import Action
@@ -30,7 +31,8 @@ class GameController:
         self.input_dict = {}
         self.camelot_input_multiplex = CamelotInputMultiplexer()
         self.current_state = None
-        self.queue_GUI = multiprocessing.Queue()
+        self.queueIn_GUI = multiprocessing.Queue()
+        self.queueOut_GUI = multiprocessing.Queue()
         
     
     def start_game(self, game_loop = True):
@@ -48,7 +50,7 @@ class GameController:
         self._create_ingame_actions(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
         self.current_state = initial_state
-        self.GUI_process = multiprocessing.Process(target=GUI, args=(self.queue_GUI,))
+        self.GUI_process = multiprocessing.Process(target=GUI, args=(self.queueIn_GUI, self.queueOut_GUI))
         self.GUI_process.start()
         while game_loop:
             received = self.camelot_input_multiplex.get_input_message()
@@ -142,6 +144,8 @@ class GameController:
             self._success_message_handler()
 
             self._location_handler()
+
+            self._incoming_messages_handler()
         
         # self.queue_GUI.close()
         # self.queue_GUI.join_thread()
@@ -154,12 +158,7 @@ class GameController:
         try:
             received = self._camelot_action.success_messages.get_nowait()
             logging.info("GameController: Success message received: " + received)
-            # debugpy.breakpoint()
-            remove_succedeed = len("succeeded ")
-            message_parts = received[remove_succedeed:].replace("(", "|").replace(")", "").replace(",", "|").replace(" ", "").split("|")
-            action_definition = self._domain.find_action_with_name(message_parts[0])
-            if action_definition is not None:
-                pass
+            self.current_state.apply_camelot_message(received)
         except queue.Empty:
             return False
         return True       
@@ -201,7 +200,7 @@ class GameController:
                 #self.queue_GUI.put(received)
                 changed_relations = self.current_state.apply_camelot_message(received)
                 if len(changed_relations) > 0:
-                    self.queue_GUI.put(self.current_state.world_state)
+                    self.queueIn_GUI.put(self.current_state.world_state)
         except queue.Empty:
             return False
         except Exception as inst:
@@ -209,3 +208,13 @@ class GameController:
             logging.exception("GameController: Exception in location handler: %s" %( inst ))
             return False
         return True
+
+    def _incoming_messages_handler(self):
+        """
+        A method that is used to handle the incoming messages that can come from the GUI or the evaluation platform.
+
+        Parameters
+        ----------
+        None
+        """
+        pass

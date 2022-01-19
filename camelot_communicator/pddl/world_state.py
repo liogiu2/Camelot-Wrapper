@@ -206,16 +206,26 @@ class WorldState:
             # TODO: forall precondition check
             pass
 
-    def apply_action(self, action: Action):
+    def apply_action(self, action: Action, check_action_can_apply = True):
         """A method that is used to apply an action to the current worldstate. It returns the new worldstate.
 
         Parameters
         ----------
         action : Action
             action that we want to apply to the current worldstate.
+        
+        Returns
+        -------
+        changed_relations : list
+            list of relations that were changed by applying the action
         """
-        if self.can_action_be_applied(action):
-            self._apply_action_effect(action.effects)
+        changed_relations = []
+        if check_action_can_apply:
+            if self.can_action_be_applied(action):
+                changed_relations = self._apply_action_effect(action.effects)
+        else:
+            changed_relations = self._apply_action_effect(action.effects)
+        return changed_relations
 
     def _apply_action_effect(self, action_definition: ActionDefinition):
         """A method that is used to apply the effect of an action to the current worldstate.
@@ -224,7 +234,13 @@ class WorldState:
         ----------
         action_definition : type ActionDefinition
             effect of the action that we want to apply to the worldstate
+        
+        Returns
+        -------
+        changed_relations : list
+            list of relations that were changed
         """
+        changed_relations = []
         for relation in action_definition.parameters:
             worldstate_relation = self.find_relation(relation, exclude_value=True)
 
@@ -232,6 +248,8 @@ class WorldState:
                 self.add_relation(relation)
             else:
                 worldstate_relation.modify_value(relation.value)
+            changed_relations.append(relation)
+        return changed_relations
 
     def get_entity_relations(self, entity: Entity, predicates=None, value_list = None) -> list:
         """A method that is used to get the relations of an entity. If predicate is not None, it will return only the relations that have the specified predicates.

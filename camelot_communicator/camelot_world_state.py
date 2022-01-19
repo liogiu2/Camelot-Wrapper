@@ -1,3 +1,4 @@
+from pddl.action import Action
 from pddl.problem import Problem
 from pddl.predicate import Predicate
 from pddl.relation_value import RelationValue
@@ -345,11 +346,15 @@ class CamelotWorldState:
             # I exclude the messages with "at"
             if message_parts[1] == "arrived" and message_parts[3] == "position":
                 new_world_state = copy.deepcopy( self.world_state )
-
                 character = new_world_state.find_entity_with_name(message_parts[2])
                 if character is None:
                     logging.error("Character %s not found in the world state" % message_parts[2])
                     raise Exception("Character %s not found in the problem" % message_parts[2])
+
+                # Exclude messages like "input arrived bob position luca" where the position is a character
+                location_entity = new_world_state.find_entity_with_name(message_parts[4])
+                if location_entity is not None and location_entity.type.name == "character":
+                    return changed_relations
 
                 location_parts = message_parts[4].split('.')
 
@@ -364,7 +369,7 @@ class CamelotWorldState:
                         self._change_relation_in_location(new_world_state, character, changed_relations, location_parts[0])
                 else:
                     for relation_at in relations_at:
-                        entity = relation_at.find_entity_with_type(type = shared_variables.supported_types['position'])
+                        entity = relation_at.find_entity_with_type(entity_type = shared_variables.supported_types['position'])
                         entity_parts = entity.name.split('.')
                         if self.current_room == "":
                             self.current_room = entity_parts[0]
@@ -422,6 +427,23 @@ class CamelotWorldState:
                     changed_relations.append(self._modify_relation_value(relation_at, RelationValue.FALSE))
 
                 self.world_state = copy.deepcopy(new_world_state)
+        elif message_parts[0] == 'succeeded':
+            remove_succedeed = len("succeeded ")
+            message_parts = message[remove_succedeed:].replace("(", "|").replace(")", "").replace(",", "|").replace(" ", "").split("|")
+            action_definition = self.domain.find_action_with_name(message_parts[0])
+            if action_definition is not None:
+                # Find the entities that are used in the action
+                list_parameters_entities = []
+                for i in range(1, len(message_parts)):
+                    list_parameters_entities.append(self.world_state.find_entity_with_name(message_parts[i]))
+                # Build the paramenters that compose the action
+                parameters = {}
+                for parameter in action_definition.parameters:
+                    for entity in list_parameters_entities:
+                        if parameter.type.name in entity.type.get_list_extensions():
+                            parameters[parameter.name] = entity
+                            break
+                changed_relations.append(self.world_state.apply_action(Action(action_definition, parameters), check_action_can_apply=False))
         return changed_relations
 
     def _change_relation_in_location(self, new_world_state: WorldState, character: Entity, changed_relations: list, location: str):
