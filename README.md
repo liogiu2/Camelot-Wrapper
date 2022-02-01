@@ -1,7 +1,19 @@
-# camelot_communicator_lib
+# camelot_communicator
  
-to have the PDDL executer working we need to install http://www.fast-downward.org/Releases/20.06
-During the installation we have to make sure to have installed Visual Studio with CMake. Execute the build.py from the visual studio console. Before executing make sure that the builds/release/CMakeCache has all the paths setted up correctly.
-```
+Camelot communicator is part of the PhD thesis of [Giulio Mori](https://github.com/liogiu2) that has the objective of making an evaluation tool for Experience Managers. 
+The aim of this library is to give a structure to [Camelot](http://cs.uky.edu/~sgware/projects/camelot/) where AIs can reason on without implementing all the camelot commands hard coded in the code. It uses [PDDL](https://planning.wiki/) as language to build a state of the word and as a medium to move informations of what is changing on the environment. 
 
-```
+## Compatible version of camelot tested
+[1.1](http://cs.uky.edu/~sgware/projects/camelot/v1-1/)
+
+## Project Status
+The project is actively under developement. Once all the major components will be ready there will be a release. 
+
+## Usage
+Please contact [Giulio Mori](https://github.com/liogiu2) for any questions about how is it used.
+
+## Contributing
+Pull requests are welcome, but please open an issue first to discuss what you would like to change.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
