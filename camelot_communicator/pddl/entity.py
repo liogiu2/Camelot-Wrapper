@@ -46,3 +46,13 @@ class Entity:
                 self.name == other.name and
                 self.type == other.type
                 )
+    
+    def to_PDDL(self):
+        """A method that is used to transform the entity to PDDL
+
+        Returns
+        -------
+        String
+            PDDL representation of the entity
+        """
+        return '%s' % (self.name)

@@ -1,4 +1,6 @@
-from pddl.action_definition import ActionDefinition, ActionProposition
+from pddl.PDDL import PDDL_Parser
+from pddl.action_definition import ActionDefinition
+from pddl.action_proposition import ActionProposition
 from pddl.predicate import Predicate
 from pddl.relation import Relation, RelationValue
 
@@ -134,6 +136,48 @@ class Action:
             return Relation(predicate, list_entity, RelationValue.FALSE)
         else:
             return Relation(predicate, list_entity, RelationValue.TRUE)
+    
+    def to_PDDL(self):
+        """A method that is used to transform the action to a PDDL action
+
+        Returns
+        -------
+        String
+            PDDL representation of the action
+        """
+        #':action openfurniture\n
+        # :parameters (bob alchemyshop.Chest alchemyshop.Chest )\n
+        # :precondition (and (alive bob = TRUE)
+        # (at bob alchemyshop.Chest = TRUE)
+        # (is_open alchemyshop.Chest = FALSE)
+        # (can_open alchemyshop.Chest = TRUE))\n
+        # :effect (and (is_open alchemyshop.Chest = TRUE))\n'
+        return_string = ":action %s\n"%(self.name)
+        return_string += ":parameters ("
+        for item in self.__parameters.keys():
+            return_string += "%s "%(self.__parameters[item].to_PDDL())
+        return_string += ")\n"
+        return_string += ":precondition %s\n"%(self.__preconditions.to_PDDL())
+        return_string += ":effect %s\n"%(self.__effects.to_PDDL())
+        return return_string
+    
+    # @classmethod
+    # def from_PDDL(cls, action_string):
+    #     """A method that is used to transform a PDDL action to an action
+
+    #     Parameters
+    #     ----------
+    #     action_string : String
+    #         PDDL representation of the action
+
+    #     Returns
+    #     -------
+    #     Action
+    #         Action object
+    #     """
+    #     dict_action_components = PDDL_Parser(nodomain=True).parse_incoming_action(action_string)
+
+    #     return None
     
             
         

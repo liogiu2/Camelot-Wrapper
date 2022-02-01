@@ -109,5 +109,28 @@ class Relation:
             self.predicate == other.predicate and 
             all(map(lambda x, y: x == y, self.entities, other.entities))
         )
+    
+    def to_PDDL(self):
+        """
+        Method that is used to convert a relation to a PDDL string.
+
+        Returns:
+        --------
+        string: str
+            The PDDL string of the relation.
+        """
+        string = self.predicate.name + " "
+        for item in self.entities:
+            string += item.to_PDDL() + " "
+        string += "= "
+        if self.value == RelationValue.TRUE:
+            string += "TRUE"
+        elif self.value == RelationValue.FALSE:
+            string += "FALSE"
+        elif self.value == RelationValue.PENDING_TRUE:
+            string += "PENDING_TRUE"
+        elif self.value == RelationValue.PENDING_FALSE:
+            string += "PENDING_FALSE"
+        return string
 
 

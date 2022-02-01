@@ -26,7 +26,9 @@ def GUI(queueIn : multiprocessing.Queue, queueOut : multiprocessing.Queue):
             sg.VSeperator(),
             sg.Column(other_list_column, scrollable=True ,vertical_scroll_only=True, size=(400,400), key='-COL2-'),
         ],
-        [sg.Input(key='-IN-', size = (200, 1)),sg.Submit()],
+        [sg.Text('Camelot instruction'), sg.Input(key='-INCI-', size = (100, 1)),sg.Button('Send', key='_SEND_CI_')],
+        #[sg.Text('PDDL relation'), sg.Input(key='-INPR-', size = (100, 1)),sg.Button('Send', key='_SEND_PR_')],
+        [sg.Text('PDDL action'), sg.Input(key='-INPA-', size = (100, 1)),sg.Button('Send', key='_SEND_PA_')],
         [sg.Button('Exit'), 
         sg.Button('Update')
         ],
@@ -36,6 +38,18 @@ def GUI(queueIn : multiprocessing.Queue, queueOut : multiprocessing.Queue):
     #sg.show_debugger_window(location=(0, 0))
     while True:             # Event Loop
         event, values = window.read(timeout=100)
+        if event == '_SEND_CI_':
+            if values['-INCI-'] != '':
+                send = {"CI": values['-INCI-']}
+                queueOut.put(send)
+        # if event == '_SEND_PR_':
+        #     if values['-INPR-'] != '':
+        #         send = {"PR": values['-INPR-']}
+        #         queueOut.put(send)
+        if event == '_SEND_PA_':
+            if values['-INPA-'] != '':
+                send = {"PA": values['-INPA-']}
+                queueOut.put(send)
         if event == "Update" or event == sg.TIMEOUT_KEY:
             new_state = None
             try:
@@ -64,14 +78,14 @@ def GUI(queueIn : multiprocessing.Queue, queueOut : multiprocessing.Queue):
                     j_n = 0
                     for relation in new_state.relations:
                         if j_n >= j:
-                            window.extend_layout(window['-COL2-'], [[sg.T(str(relation), key="-RELATION-"+str(j_n), text_color='red')]])
+                            window.extend_layout(window['-COL2-'], [[sg.T(str(relation), key="-RELATION-"+str(j_n), text_color='black')]])
                             window['-COL2-'].contents_changed() 
                         else:
                             if window["-RELATION-"+str(j_n)].get() == str(relation):
                                 #window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "black")
                                 pass
                             else:
-                                window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "red")
+                                window["-RELATION-"+str(j_n)].update(value = str(relation), text_color = "black")
                         j_n += 1
                     j = j_n
                     window['-COL2-'].contents_changed() 

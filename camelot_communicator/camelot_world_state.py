@@ -62,6 +62,7 @@ class CamelotWorldState:
         shared_variables.supported_predicates['in'] = self.domain.find_predicate('in')
         shared_variables.supported_predicates['stored'] = self.domain.find_predicate('stored')
         shared_variables.supported_predicates['can_open'] = self.domain.find_predicate('can_open')
+        shared_variables.supported_predicates['can_close'] = self.domain.find_predicate('can_close')
         shared_variables.supported_predicates['is_open'] = self.domain.find_predicate('is_open')
         shared_variables.supported_predicates['has_surface'] = self.domain.find_predicate('has_surface')
         shared_variables.supported_predicates['adjacent'] = self.domain.find_predicate('adjacent')
@@ -259,9 +260,18 @@ class CamelotWorldState:
                             except AttributeError:
                                 logging.info(
                                     "Relation %s already exists, so we skip it." % str(rel))
-                        elif attribute == 'Close':
                             rel = Relation(shared_variables.supported_predicates['is_open'], [
                                         obj], RelationValue.FALSE, self.domain, problem)
+                            try:
+                                problem.add_relation_to_initial_state(rel)
+                                logging.debug(
+                                    "Relation %s added to the problem" % str(rel))
+                            except AttributeError:
+                                logging.info(
+                                    "Relation %s already exists, so we skip it." % str(rel))
+                        elif attribute == 'Close':
+                            rel = Relation(shared_variables.supported_predicates['can_close'], [
+                                        obj], RelationValue.TRUE, self.domain, problem)
                             try:
                                 problem.add_relation_to_initial_state(rel)
                                 logging.debug(
@@ -443,7 +453,8 @@ class CamelotWorldState:
                         if parameter.type.name in entity.type.get_list_extensions():
                             parameters[parameter.name] = entity
                             break
-                changed_relations.append(self.world_state.apply_action(Action(action_definition, parameters), check_action_can_apply=False))
+                action = Action(action_definition, parameters)
+                changed_relations.append(self.world_state.apply_action(action , check_action_can_apply=False))
         return changed_relations
 
     def _change_relation_in_location(self, new_world_state: WorldState, character: Entity, changed_relations: list, location: str):
@@ -543,4 +554,9 @@ class CamelotWorldState:
             return self._add_relation_to_world_state(new_relation, world_state)
         else:
             return self._modify_relation_value(relation, relation_value)
+    
+    def create_action_from_incoming_message(self, message):
+        """This method is used to 
+        """
+        pass
         

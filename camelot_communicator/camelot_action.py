@@ -1,22 +1,24 @@
 import json
 import importlib.resources as pkg_resources
+import debugpy
 import json_data
 import logging
 import queue
-from camelot_IO_communication import CamelotIOCommunication
+from camelot_IO_communication import CamelotIOCommunication, singleton
 from camelot_input_multiplexer import CamelotInputMultiplexer
-"""
-Inputs: Json file with the description of each action
-Outputs: 
-"""
 #TODO: check if parameters in action are what camelot expects
+@singleton
 class CamelotAction:
+    """
+    This class is used to prepare the messages to be sent to Camelot.
+    """
 
     def __init__(self):
         self.camelot_input_multiplex = CamelotInputMultiplexer()
         self.camelot_input_multiplex.start()
         self.camelot_IO_communication = CamelotIOCommunication()
         self.success_messages = queue.Queue()
+        self.debug = False
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
@@ -39,6 +41,7 @@ class CamelotAction:
             # Return True if success response, else false for fail response
             if received == 'succeeded ' + command:
                 self.success_messages.put(received)
+                logging.debug("Camelot_Action: Success message added to queue")
                 return True
             elif received.startswith('failed ' + command):
                 return False
@@ -66,16 +69,28 @@ class CamelotAction:
         # This method assumes that the parameters are checked and ok to be printed
         command = self._generate_camelot_string(action_name, parameters, action_data)
         
-
-        self.camelot_IO_communication.print_action('start ' + command)
-        # open(0).write('start ' + command)
-        #print('start ' + command)
+        self.send_camelot_instruction('start ' + command)
 
         if wait==True:
             # Call function to check for its success
             return self.check_for_success(command)
         else:
             return True
+    
+    def send_camelot_instruction(self, instruction):
+        """
+        This method is used to send a command to Camelot without performing any checks.
+
+        Parameters
+        ----------
+        instruction : str
+            The instruction to send to Camelot.
+        """
+        if instruction.startswith('start '):
+            self.camelot_IO_communication.print_action(instruction)
+        else:
+            self.camelot_IO_communication.print_action('start ' + instruction)
+
     
     def _generate_camelot_string(self, action_name, parameters, action_data):
         command = action_name + "("

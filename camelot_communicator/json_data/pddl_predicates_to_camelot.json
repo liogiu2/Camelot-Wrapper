@@ -1,0 +1,53 @@
+{
+    "adjacent": {
+        "declaration": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('EnableIcon', ['Exit', 'Exit', '$param1$', 'Exit from $param1$', True], $wait$)"
+        ],
+        "input": {
+            "door": "input Exit $param1$",
+            "end": "input arrived $param2$ position $param1$"
+        },
+        "response": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('WalkTo',['$param2$', '$param1$'], $wait$)",
+            "camelot_action.action('FadeOut', [], $wait$)",
+            "camelot_action.action('SetPosition',['$param2$','$param3$'], $wait$)",
+            "camelot_action.action('SetCameraFocus',['$param2$'], $wait$)",
+            "camelot_action.action('FadeIn', $wait$)"
+        ]
+    },
+    "can_open" : {
+        "declaration": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', '$param1$', 'Open $param1$', True], $wait$)"
+        ],
+        "input": {
+            "message": "input OpenFurniture $param1$"
+        },
+        "response": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('OpenFurniture', ['$param2$', '$param1$'], $wait$)",
+            "camelot_action.action('DisableIcon',['OpenFurniture','$param1$'], $wait$)",
+            "camelot_action.action('EnableIcon', ['CloseFurniture', 'chest', '$param1$', 'Close $param1$', True], $wait$)"
+        ]
+    },
+    "can_close" : {
+        "declaration": [
+        ],
+        "input": {
+            "message": "input CloseFurniture $param1$"
+        },
+        "response": [
+            "from camelot_action import CamelotAction",
+            "camelot_action = CamelotAction()",
+            "camelot_action.action('CloseFurniture', ['$param2$', '$param1$'], $wait$)",
+            "camelot_action.action('DisableIcon',['CloseFurniture','$param1$'], $wait$)",
+            "camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', '$param1$', 'Open $param1$', True], $wait$)"
+        ]
+    }
+}

@@ -21,7 +21,7 @@ class GameController:
     def __init__(self):
         logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
         Path("logs/python/").mkdir(parents=True, exist_ok=True)
-        logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.ERROR)
+        logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
         self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
         self._parser = PDDL_Parser()
         self._domain = self._parser.parse_domain(self._domain_path)
@@ -62,35 +62,38 @@ class GameController:
     
     def _create_ingame_actions(self, game_loop = True):
         """A method that is used to create the actions that are used in the game.
-        It parses the pddl_actions_to_camelot.json and integrates the content in game.
+        It parses the pddl_predicates_to_camelot.json and integrates the content in game.
         
         """
-        json_p = parse_json("pddl_actions_to_camelot")
+        json_p = parse_json("pddl_predicates_to_camelot")
         for item in self._problem.initial_state:
             if item.predicate.name in json_p:
                 if item.predicate.name == "adjacent":
                     self._location_management(item, json_p, game_loop)
                     continue
+                # debugpy.breakpoint()
                 sub_dict = {
                     '$param1$' : item.entities[0].name,
                     '$param2$' : self._player.name,
-                    '$wait$' : str(False)
+                    '$wait$' : str(game_loop)
                 }
                 for istr in json_p[item.predicate.name]['declaration']:
                     istr_with_param = replace_all(istr, sub_dict)
                     exec(istr_with_param)
-                # debugpy.breakpoint()
                 input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
                 self.input_dict[input_key] = ""
                 for istr in json_p[item.predicate.name]['response']:
                     self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
         
-        for item in self._problem.objects:
-            if "chest" in item.name.lower():
-                self._camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', item.name, 'Open ' + item.name, True], game_loop)
-                self.input_dict["input OpenFurniture "+item.name] = ""
-                self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('OpenFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
-    
+        # for item in self._problem.objects:
+        #     if "chest" in item.name.lower():
+        #         self._camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', item.name, 'Open ' + item.name, True], game_loop)
+        #         self.input_dict["input OpenFurniture "+item.name] = ""
+        #         self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('OpenFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
+        #         self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('DisableIcon', ['OpenFurniture', '"+self._player.name+"'], "+ str(game_loop) + "))\n"
+        #         self.input_dict["input CloseFurniture "+item.name] = ""
+        #         self.input_dict["input CloseFurniture "+item.name] += "self._camelot_action.action('CloseFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
+
 
     def _location_management(self, item, json_p, game_loop = True):
         """A method that is used to manage the places declared on the domain
@@ -137,6 +140,7 @@ class GameController:
         if self._player != '':
             self._camelot_action.action("SetCameraFocus",[self._player.name])
         self._camelot_action.success_messages = queue.Queue()
+        self._camelot_action.debug = True
         while exit:
 
             self._input_handler()
@@ -217,4 +221,17 @@ class GameController:
         ----------
         None
         """
-        pass
+        try:
+            received = self.queueOut_GUI.get_nowait()
+            logging.debug("GameController: got external message \"%s\"" %( received ))
+        except queue.Empty:
+            return
+        
+        if "CI" in received:
+            # handle Camelot instruction
+            message = received["CI"]
+            self._camelot_action.send_camelot_instruction(message)
+        elif "PA" in received:
+            # handle PDDL action
+            message = received["PA"]
+            # action = Action.from_PDDL(message)

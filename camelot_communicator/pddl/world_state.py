@@ -1,7 +1,8 @@
+import debugpy
 from pddl.domain import Domain
 from pddl.action_definition import ActionDefinition
 from pddl.predicate import Predicate
-from pddl.action_definition import ActionProposition
+from pddl.action_proposition import ActionProposition
 from pddl.action import Action
 from pddl.relation import Relation
 from pddl.relation_value import RelationValue

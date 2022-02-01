@@ -21,6 +21,7 @@
         (alive ?character - character)
         (kneeling ?character - character)
         (can_open ?furniture - furniture) 
+        (can_close ?furniture - furniture) 
         (has_surface ?furniture - furniture)
         (stored ?item - item ?furniture - furniture)
     )
@@ -364,7 +365,6 @@
     (:action openfurniture
         :parameters (?character - character ?furniture - furniture ?position - position)
         :precondition (and (alive ?character)
-            (at ?furniture ?position) 
             (at ?character ?position) 
             (not(is_open ?furniture)) 
             (can_open ?furniture)

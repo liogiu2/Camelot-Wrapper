@@ -1,19 +1,21 @@
-#!/usr/bin/env python
-# Four spaces as indentation [no tabs]
+import debugpy
 from pddl.relation_value import RelationValue
 from pddl.relation import Relation
 from pddl.entity import Entity
 from pddl.predicate import Predicate
 import re
-from pddl.action_definition import ActionDefinition, ActionParameter, ActionProposition
+from pddl.action_definition import ActionDefinition
+from pddl.action_parameter import ActionParameter
+from pddl.action_proposition import ActionProposition
 from pddl.types import Type
 from pddl.domain import Domain
 from pddl.problem import Problem
 
 class PDDL_Parser:
 
-    def __init__(self):
-        self.domain = Domain()
+    def __init__(self, nodomain = False):
+        if not nodomain:
+            self.domain = Domain()
         self.supported_keywords = ['and', 'or', 'not', 'forall']
     # ------------------------------------------
     # Tokens
@@ -24,6 +26,9 @@ class PDDL_Parser:
             # Remove single line comments
             str = re.sub(r';.*$', '', f.read(), flags=re.MULTILINE).lower()
         # Tokenize
+        return self._tokenize(str)
+    
+    def _tokenize(self, str, skip_malformed_expression = False):
         stack = []
         list = []
         current = ''
@@ -48,13 +53,14 @@ class PDDL_Parser:
                     list.append(tmod)
                     if ((current == ':types' and tmod != ":types") or (current == ':objects' and tmod != ":objects")) and '\n' in t:
                         list.append('\n')
-
-
         if stack:
             raise Exception('Missing close parentheses')
-        if len(list) != 1:
-            raise Exception('Malformed expression')
-        return list[0]
+        if not skip_malformed_expression:
+            if len(list) != 1:
+                raise Exception('Malformed expression')
+            return list[0]
+        else:
+            return list
 
     #-----------------------------------------------
     # Parse domain
@@ -340,31 +346,53 @@ class PDDL_Parser:
                     raise ValueError("Action predicate don't correspond")
             action_parameter_predicate = Predicate(pred.name, list_action_paramenter)
             action_prop.add_parameter(action_parameter_predicate)
+    
+    # #-----------------------------------------------
+    # # PDDL action parser
+    # #-----------------------------------------------
+    # def parse_incoming_action(self, action_string):
+    #     """This method is used to parse an action that is sent by an external agent.
+    #     The PDDL action differs from the one used in the domain file because it represents relations and entities that are
+    #     currently in Camelot. For this reason it needs a different parser. 
+    #     An example of the action string is:
+    #     :action openfurniture\\n:parameters (bob alchemyshop.Chest alchemyshop.Chest )\\n:precondition (and (alive bob = TRUE)(at bob alchemyshop.Chest = TRUE)(is_open alchemyshop.Chest = FALSE)(can_open alchemyshop.Chest = TRUE))\\n:effect (and (is_open alchemyshop.Chest = TRUE))\\n
+        
+    #     Parameters
+    #     ----------
+    #     action_string : str
+    #         The action string to be parsed.
 
-
-
-# ==========================================
-# Main
-# ==========================================
-#if __name__ == '__main__':
-    # import sys
-    # import pprint
-    # domain = sys.argv[1]
-    # problem = sys.argv[2]
-    # parser = PDDL_Parser()
-    # print('----------------------------')
-    # pprint.pprint(parser.scan_tokens(domain))
-    # print('----------------------------')
-    # pprint.pprint(parser.scan_tokens(problem))
-    # print('----------------------------')
-    # parser.parse_domain(domain)
-    # parser.parse_problem(problem)
-    # print('Domain name:' + parser.domain_name)
-    # for act in parser.actions:
-    #     print(act)
-    # print('----------------------------')
-    # print('Problem name: ' + parser.problem_name)
-    # print('Objects: ' + str(parser.objects))
-    # print('State: ' + str(parser.state))
-    # print('Positive goals: ' + str(parser.positive_goals))
-    # print('Negative goals: ' + str(parser.negative_goals))
+    #     Returns
+    #     -------
+    #     dict
+    #         dict with the componeneents of the action.
+    #     """
+    #     return_dict = {}
+    #     debugpy.breakpoint()
+    #     action_string = action_string.replace('\\n', '')
+    #     action_parts = action_string.split(':')
+    #     if action_parts[0] == "":
+    #         action_parts = action_parts[1:]
+    #     if len(action_parts) != 4:
+    #         raise Exception('Action string is not valid')
+    #     # parse :action part
+    #     split = action_parts[0].split(" ")
+    #     if split[0] != 'action':
+    #         raise Exception('Action string is not valid: :action not found')
+    #     return_dict['action_name'] = split[1]
+    #     # parse :parameters part
+    #     token = self._tokenize(action_parts[1], skip_malformed_expression=True)
+    #     if token[0] != 'parameters':
+    #         raise Exception('Action string is not valid: :parameters not found')
+    #     return_dict['action_parameters'] = token[1]
+    #     # parse :precondition part
+    #     token = self._tokenize(action_parts[2], skip_malformed_expression=True)
+    #     if token[0] != 'precondition':
+    #         raise Exception('Action string is not valid: :precondition not found')
+    #     return_dict['action_precondition'] = token[1]
+    #     # parse :effect part
+    #     token = self._tokenize(action_parts[3], skip_malformed_expression=True)
+    #     if token[0] != 'effect':
+    #         raise Exception('Action string is not valid: :effect not found')
+    #     return_dict['action_effect'] = token[1]
+    #     return return_dict

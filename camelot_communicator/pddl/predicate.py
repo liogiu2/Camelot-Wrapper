@@ -28,8 +28,8 @@ class Predicate:
     def __eq__(self, other): 
         return (
             self.__class__ == other.__class__ and 
-            self.name == other.name and 
-            all(map(lambda x, y: x == y, self.arguments, other.arguments))
+            self.name == other.name 
+            # and all(map(lambda x, y: x == y, self.arguments, other.arguments))
         )
 
     def __repr__(self):
