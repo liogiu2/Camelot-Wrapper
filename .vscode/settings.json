@@ -1,9 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ],
-    "python.analysis.extraPaths": [
-        ".\\game-env\\lib\\site-packages\\camelot_communicator",
-        "./camelot_communicator"
-    ]
-}
