@@ -41,13 +41,14 @@ class CamelotAction:
             logging.debug("Camelot output: %s" % received)
             
             # Return True if success response, else false for fail response
-            if received == 'succeeded ' + command:
-                self.success_messages.put(received)
-                logging.debug("Camelot_Action: Success message added to queue")
-                return True
-            elif received.startswith('failed ' + command) or received.startswith('error ' + command):
-                shared_variables.error_messages.append(received)
-                return False
+            if received != None:
+                if received == 'succeeded ' + command:
+                    self.success_messages.put(received)
+                    logging.debug("Camelot_Action: Success message added to queue")
+                    return True
+                elif received.startswith('failed ' + command) or received.startswith('error ' + command):
+                    shared_variables.error_messages.append(received)
+                    return False
 
     '''
     Purpose: Format an action for interpretation by Camelot

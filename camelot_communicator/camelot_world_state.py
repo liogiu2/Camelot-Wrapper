@@ -1,13 +1,13 @@
-from pddl.action import Action
-from pddl.problem import Problem
-from pddl.predicate import Predicate
-from pddl.relation_value import RelationValue
-from pddl.relation import Relation
-from pddl.entity import Entity
+from ev_pddl.action import Action
+from ev_pddl.problem import Problem
+from ev_pddl.predicate import Predicate
+from ev_pddl.relation_value import RelationValue
+from ev_pddl.relation import Relation
+from ev_pddl.entity import Entity
 from camelot_action import CamelotAction
 from utilities import parse_json
-from pddl.domain import Domain
-from pddl.world_state import WorldState
+from ev_pddl.domain import Domain
+from ev_pddl.world_state import WorldState
 import random
 import logging
 import shared_variables

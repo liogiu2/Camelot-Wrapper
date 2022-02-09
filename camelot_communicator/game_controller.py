@@ -1,10 +1,10 @@
 import queue
 from GUI import GUI
 from platform_IO_communication import PlatformIOCommunication
-from pddl.action import Action
+from ev_pddl.action import Action
 from camelot_action import CamelotAction
 from camelot_world_state import CamelotWorldState
-from pddl.PDDL import PDDL_Parser
+from ev_pddl.PDDL import PDDL_Parser
 import logging
 from utilities import parse_json, replace_all
 from camelot_input_multiplexer import CamelotInputMultiplexer

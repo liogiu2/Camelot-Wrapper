@@ -1,10 +1,8 @@
-from tkinter.messagebox import NO
 import debugpy
-from numpy import empty
 from camelot_IO_communication import CamelotIOCommunication
 from utilities import singleton
 import threading
-from queue import Queue
+from queue import Queue, Empty
 import logging
 import shared_variables
 
@@ -74,7 +72,7 @@ class CamelotInputMultiplexer:
         message = ""
         try:
             message = self.__success_queue.get_nowait()
-        except Queue.Empty:
+        except Empty:
             message = None
             err_msg = self.get_error_message(command)
             if err_msg != None:
@@ -100,7 +98,7 @@ class CamelotInputMultiplexer:
             try:
                 message = self.__error_queue.get_nowait()
                 logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
-            except Queue.Empty:
+            except Empty:
                 message = None
                 empty = True
 

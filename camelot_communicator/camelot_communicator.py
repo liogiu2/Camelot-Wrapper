@@ -1,3 +1,10 @@
+import os
+import sys
+
+if os.name == 'nt':
+    pddl_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\EV_PDDL"
+
+sys.path.insert(0, pddl_path)
 from game_controller import GameController
 import logging
 import sys, getopt
