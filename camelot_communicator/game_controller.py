@@ -1,6 +1,6 @@
-from os import pathconf_names
 import queue
 from GUI import GUI
+from platform_IO_communication import PlatformIOCommunication
 from pddl.action import Action
 from camelot_action import CamelotAction
 from camelot_world_state import CamelotWorldState
@@ -12,16 +12,11 @@ import shared_variables
 import multiprocessing
 import debugpy
 import logging
-from pathlib import Path
-from datetime import datetime
 import re
 
 class GameController:
 
     def __init__(self):
-        logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
-        Path("logs/python/").mkdir(parents=True, exist_ok=True)
-        logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
         self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
         self._parser = PDDL_Parser()
         self._domain = self._parser.parse_domain(self._domain_path)
@@ -33,6 +28,7 @@ class GameController:
         self.current_state = None
         self.queueIn_GUI = multiprocessing.Queue()
         self.queueOut_GUI = multiprocessing.Queue()
+        self._platform_communication = PlatformIOCommunication()
         
     
     def start_game(self, game_loop = True):
@@ -150,6 +146,8 @@ class GameController:
             self._location_handler()
 
             self._incoming_messages_handler()
+
+            self._check_unhandled_error_messages()
         
         # self.queue_GUI.close()
         # self.queue_GUI.join_thread()
@@ -234,4 +232,14 @@ class GameController:
         elif "PA" in received:
             # handle PDDL action
             message = received["PA"]
-            # action = Action.from_PDDL(message)
+            action = self.current_state.create_action_from_incoming_message(message)
+    
+    def _check_unhandled_error_messages(self):
+        """
+        This method is used to check if there are any unhandled error messages in the shared variable error_messages.
+        If there are any, it send them to the external entity that is controlling the program.
+        """
+        for error in shared_variables.error_messages:
+            self._platform_communication.send_error_message(error)
+        shared_variables.error_messages = []
+            

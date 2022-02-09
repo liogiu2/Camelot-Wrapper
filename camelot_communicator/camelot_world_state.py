@@ -13,6 +13,7 @@ import logging
 import shared_variables
 import debugpy
 import copy
+import re
 
 
 class CamelotWorldState:
@@ -29,6 +30,9 @@ class CamelotWorldState:
 
     wait_for_actions : Boolean, optional
         A boolean flag that is set to False for Debugging porpuses. If True the actions will wait that Camelot responds before continuing the execution
+    
+    world_state : WorldState
+        The PDDL representation of the world state
 
     __supported_types : list, private
         All the domain types currently supported
@@ -356,13 +360,13 @@ class CamelotWorldState:
             # I exclude the messages with "at"
             if message_parts[1] == "arrived" and message_parts[3] == "position":
                 new_world_state = copy.deepcopy( self.world_state )
-                character = new_world_state.find_entity_with_name(message_parts[2])
+                character = new_world_state.find_entity(name = message_parts[2])
                 if character is None:
                     logging.error("Character %s not found in the world state" % message_parts[2])
                     raise Exception("Character %s not found in the problem" % message_parts[2])
 
                 # Exclude messages like "input arrived bob position luca" where the position is a character
-                location_entity = new_world_state.find_entity_with_name(message_parts[4])
+                location_entity = new_world_state.find_entity(name = message_parts[4])
                 if location_entity is not None and location_entity.type.name == "character":
                     return changed_relations
 
@@ -425,12 +429,12 @@ class CamelotWorldState:
             elif message_parts[1] == "exited" and message_parts[3] == "position":
                 new_world_state = copy.deepcopy( self.world_state )
 
-                character = new_world_state.find_entity_with_name(message_parts[2])
+                character = new_world_state.find_entity(name = message_parts[2])
                 if character is None:
                     logging.error("Character %s not found in the world state" % message_parts[2])
                     raise Exception("Character %s not found in the problem" % message_parts[2])
                     
-                location_entity = new_world_state.find_entity_with_name(message_parts[4])
+                location_entity = new_world_state.find_entity(name = message_parts[4])
 
                 relation_at = new_world_state.find_relation(Relation(shared_variables.supported_predicates['at'], [character, location_entity], RelationValue.TRUE))
                 if relation_at is not None:
@@ -445,7 +449,7 @@ class CamelotWorldState:
                 # Find the entities that are used in the action
                 list_parameters_entities = []
                 for i in range(1, len(message_parts)):
-                    list_parameters_entities.append(self.world_state.find_entity_with_name(message_parts[i]))
+                    list_parameters_entities.append(self.world_state.find_entity(name = message_parts[i]))
                 # Build the paramenters that compose the action
                 parameters = {}
                 for parameter in action_definition.parameters:
@@ -542,7 +546,7 @@ class CamelotWorldState:
 
         """
         old_relation_value = RelationValue.FALSE if relation_value == RelationValue.TRUE else RelationValue.TRUE
-        location_entity = world_state.find_entity_with_name(location)
+        location_entity = world_state.find_entity(name = location)
         if location_entity is None:
             location_entity = Entity(location, shared_variables.supported_types['position'], self.problem)
             self.problem.add_object(location_entity)
@@ -556,7 +560,33 @@ class CamelotWorldState:
             return self._modify_relation_value(relation, relation_value)
     
     def create_action_from_incoming_message(self, message):
-        """This method is used to 
+        """This method is used to create an action from an incoming message representing the action that the external agent wants to perform.
+
+        Parameters
+        ----------
+        message : str
+            The message that will be used to create the action
         """
-        pass
-        
+        # for debugging: openfurniture(bob, alchemyshop.Chest, alchemyshop.Chest)
+        message = message.replace(" ", "")
+        message_parts = re.split(r"\(|\)|,", message)
+        action_name = message_parts[0]
+        action_definition = self.domain.find_action_with_name(action_name)
+        if action_definition is None:
+            logging.error("GameController: PDDL action \"%s\" not found in domain" %( action_name ))
+            return
+        parameters = {}
+        debugpy.breakpoint()
+        for i in range(len(action_definition.parameters)):
+            parameters[action_definition.parameters[i].name] = self.world_state.find_entity(name = message_parts[i+1], type=action_definition.parameters[i].type)
+        return Action(action_definition, parameters=parameters)
+
+    def apply_action(self, action: Action):
+        """This method is used to apply an action to Camelot and to the world state.
+
+        Parameters
+        ----------
+        action : Action
+            The action that will be applied
+        """
+        self.world_state.apply_action(action)

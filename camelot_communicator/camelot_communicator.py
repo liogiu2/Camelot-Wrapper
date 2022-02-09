@@ -1,5 +1,8 @@
 from game_controller import GameController
 import logging
+import sys, getopt
+from pathlib import Path
+from datetime import datetime
 # from pyswip import Prolog
 
 # prolog = Prolog()
@@ -11,15 +14,34 @@ import logging
 # debugpy.wait_for_client()
 #debugpy.breakpoint()
 #import logging
-if __name__ == '__main__':
-    import debugpy
-    debugpy.listen(5678)
-    debugpy.wait_for_client()
+
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv,"hd")
+    except getopt.GetoptError:
+        print('Parameter not recognized')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print("usage: python camelot_communicator.py <optional> -d")
+            sys.exit()
+        elif opt == '-d':
+            import debugpy
+            debugpy.listen(5678)
+            debugpy.wait_for_client()
+            logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
+            Path("logs/python/").mkdir(parents=True, exist_ok=True)
+            logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
+
     gc = GameController()
     try:
         gc.start_game(True)
     except Exception as e:
         logging.exception("Main: Exception : %s" %( e ))
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+    
 
 
 # from camelot_input_manager import CamelotInputManager

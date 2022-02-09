@@ -1,5 +1,8 @@
+from tkinter.messagebox import NO
 import debugpy
-from camelot_IO_communication import CamelotIOCommunication, singleton
+from numpy import empty
+from camelot_IO_communication import CamelotIOCommunication
+from utilities import singleton
 import threading
 from queue import Queue
 import logging
@@ -23,7 +26,7 @@ class CamelotInputMultiplexer:
             self.__input_queue = Queue()
             self.__location_queue = Queue()
             self.__success_queue = Queue()
-            # self.__started_queue = Queue()
+            self.__error_queue = Queue()
             self.__other_queue = Queue()
             self.__messages_management = threading.Thread(target=self._input_messages_management , args =(), daemon=True)
             self.__messages_management.start()
@@ -57,23 +60,56 @@ class CamelotInputMultiplexer:
             elif message.startswith("started"):
                 logging.debug("CamelotInputMultiplexer: Received started so I pass next print to realease the event")
                 self.camelot_IO_communication.print_action("%PASS%")
-                # self.__started_queue.put(message)
-                # logging.debug("CamelotInputMultiplexer: Added to started queue")
+            elif message.startswith("error") or message.startswith("failed"):
+                self.__error_queue.put(message)
+                logging.debug("CamelotInputMultiplexer: Added to error queue")
             else:
                 self.__other_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to other queue")
     
-    def get_success_message(self, no_wait = False):
+    def get_success_message(self, command):
         """
         This method is used from the main thread to get the success messages that come from Camelot.
         """
-        if no_wait:
+        message = ""
+        try:
             message = self.__success_queue.get_nowait()
-        else:
-            message = self.__success_queue.get()
-        logging.debug("CamelotInputMultiplexer: Got success message: %s"%(message))
-        if message == "kill":
-            raise Exception("Kill called - End program")
+        except Queue.Empty:
+            message = None
+            err_msg = self.get_error_message(command)
+            if err_msg != None:
+                return err_msg
+        
+        if message != None:
+            logging.debug("CamelotInputMultiplexer: Got success message: %s"%(message))
+            if message == "kill":
+                raise Exception("Kill called - End program")
+        return message
+    
+    def get_error_message(self, message_part = None):
+        """
+        This method is used to get the error messages that come from Camelot. If message_part is not None, it will return the error message that contains the message_part.
+
+        Parameters
+        ----------
+        message_part : str
+            The part of the error message that is searched for.
+        """
+        empty = False
+        while not empty:
+            try:
+                message = self.__error_queue.get_nowait()
+                logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
+            except Queue.Empty:
+                message = None
+                empty = True
+
+            if message != None and message_part != None:
+                if message_part.lower() in message.lower():             
+                    return message
+                else:
+                    shared_variables.error_messages.append(message)
+
         return message
     
     def get_input_message(self, no_wait = False):

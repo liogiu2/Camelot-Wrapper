@@ -2,23 +2,8 @@ import threading
 import queue
 import logging
 import sys
-from pathlib import Path
-from datetime import datetime
 import time
-
-
-def singleton(self, *args, **kw):
-    """
-    The decorator is used to make sure that only one instance of the class is created in the program.
-    """
-    instances = {}
-
-    def _singleton(*args, **kw):
-        if self not in instances:
-            instances[self] = self(*args, **kw)
-        return instances[self]
-    return _singleton
-
+from utilities import singleton
 
 @singleton
 class CamelotIOCommunication:
@@ -179,3 +164,4 @@ class CamelotIOCommunication:
         self.__input_thread.join()
         self.__output_thread.join()
         sys.exit()
+

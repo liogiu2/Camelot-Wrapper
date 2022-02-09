@@ -97,14 +97,14 @@ class WorldState:
         """
         if type(entity) != Entity:
             raise TypeError("add_entity type must be Entity")
-        if self.find_entity(entity) == None:
+        if self.find_entity(entity = entity) == None:
             self.__entities.append(entity)
         else:
             logging.info(
                 "wolrdstate.add_entity(%s) -> The entity already exists. Skipping." % entity.name)
 
-    def find_entity(self, entity) -> Entity:
-        """A method that is used to find a Entity in the current WorldState
+    def find_entity(self, entity = None, name = None, type = None) -> Entity:
+        """A method that is used to find a Entity in the current WorldState. It works with the name, type and entity itself.
 
         Returns the Entity or None.
 
@@ -112,27 +112,23 @@ class WorldState:
         ----------
         Entity : type Entity
             Entity that needs to be found
-        """
-        if type(entity) != Entity:
-            raise TypeError("find_entity type must be Entity")
-        for item in self.__entities:
-            if item == entity:
-                return item
-        return None
-
-    def find_entity_with_name(self, name: str) -> Entity:
-        """A method that is used to find an entity with a specific name ignoring the case in the name
-
-        Returns the Entity or None.
-
-        Parameters
-        ----------
-        name : str
+        name : str, optional, default None
             name of the entity that needs to be found
+        type : str, optional, default None
+            type of the entity that needs to be found. It needs to be set with a name.
         """
-        for item in self.__entities:
-            if item.name.lower() == name.lower():
-                return item
+        if entity != None:
+            for item in self.__entities:
+                if item == entity:
+                    return item
+        elif name != None:
+            for item in self.__entities:
+                if item.name.lower() == name.lower():
+                    if type != None:
+                        if type in item.type.get_list_extensions():
+                            return item
+                    else:
+                        return item
         return None
 
     def get_dict_predicates(self) -> dict:

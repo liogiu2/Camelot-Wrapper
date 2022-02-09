@@ -2,6 +2,8 @@ import os
 
 location_message_prefix = ("input started walking", "input stopped walking", "input arrived", "input exited")
 
+error_messages = []
+
 supported_types = {}
 supported_predicates = {}
 

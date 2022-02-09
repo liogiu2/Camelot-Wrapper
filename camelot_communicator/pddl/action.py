@@ -11,7 +11,7 @@ class Action:
     Attributes
     ----------
     parameters : dict
-        dict of parameters that need to be sobstituted when transforming from action_definition to Action
+        dict of parameters (Entity) that need to be sobstituted when transforming from action_definition to Action
     name : String
         Name of the action
     precondition : ActionProposition, read-only

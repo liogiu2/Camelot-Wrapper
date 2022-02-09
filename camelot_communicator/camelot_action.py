@@ -4,7 +4,9 @@ import debugpy
 import json_data
 import logging
 import queue
-from camelot_IO_communication import CamelotIOCommunication, singleton
+import shared_variables
+from camelot_IO_communication import CamelotIOCommunication
+from utilities import singleton
 from camelot_input_multiplexer import CamelotInputMultiplexer
 #TODO: check if parameters in action are what camelot expects
 @singleton
@@ -35,7 +37,7 @@ class CamelotAction:
         while True:
 
             # Get response from Camelot
-            received = self.camelot_input_multiplex.get_success_message()
+            received = self.camelot_input_multiplex.get_success_message(command)
             logging.debug("Camelot output: %s" % received)
             
             # Return True if success response, else false for fail response
@@ -43,9 +45,8 @@ class CamelotAction:
                 self.success_messages.put(received)
                 logging.debug("Camelot_Action: Success message added to queue")
                 return True
-            elif received.startswith('failed ' + command):
-                return False
-            elif received.startswith('error ' + command):
+            elif received.startswith('failed ' + command) or received.startswith('error ' + command):
+                shared_variables.error_messages.append(received)
                 return False
 
     '''
