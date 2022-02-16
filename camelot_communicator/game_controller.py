@@ -1,12 +1,14 @@
 import queue
 from GUI import GUI
+from camelot_error import CamelotError
+from camelot_error_manager import CamelotErrorManager
 from platform_IO_communication import PlatformIOCommunication
 from ev_pddl.action import Action
 from camelot_action import CamelotAction
 from camelot_world_state import CamelotWorldState
 from ev_pddl.PDDL import PDDL_Parser
 import logging
-from utilities import parse_json, replace_all
+from utilities import parse_json, replace_all, get_action_list
 from camelot_input_multiplexer import CamelotInputMultiplexer
 import shared_variables
 import multiprocessing
@@ -18,6 +20,7 @@ class GameController:
 
     def __init__(self):
         self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
+        shared_variables.action_list = get_action_list()
         self._parser = PDDL_Parser()
         self._domain = self._parser.parse_domain(self._domain_path)
         self._problem = self._parser.parse_problem(self._problem_path)
@@ -29,6 +32,7 @@ class GameController:
         self.queueIn_GUI = multiprocessing.Queue()
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
+        self.error_manager = CamelotErrorManager()
         
     
     def start_game(self, game_loop = True):
@@ -147,7 +151,7 @@ class GameController:
 
             self._incoming_messages_handler()
 
-            self._check_unhandled_error_messages()
+            self._check_error_messages()
         
         # self.queue_GUI.close()
         # self.queue_GUI.join_thread()
@@ -234,12 +238,11 @@ class GameController:
             message = received["PA"]
             action = self.current_state.create_action_from_incoming_message(message)
     
-    def _check_unhandled_error_messages(self):
+    def _check_error_messages(self):
         """
-        This method is used to check if there are any unhandled error messages in the shared variable error_messages.
-        If there are any, it send them to the external entity that is controlling the program.
+        This method is used to check if there are any error messages.
         """
-        for error in shared_variables.error_messages:
-            self._platform_communication.send_error_message(error)
-        shared_variables.error_messages = []
+        error = self.camelot_input_multiplex.get_error_message()
+        if error != None:
+            self.error_manager.add_error(CamelotError(error))
             

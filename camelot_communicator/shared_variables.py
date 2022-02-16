@@ -2,10 +2,10 @@ import os
 
 location_message_prefix = ("input started walking", "input stopped walking", "input arrived", "input exited")
 
-error_messages = []
-
 supported_types = {}
 supported_predicates = {}
+
+action_list = []
 
 def get_domain_and_problem_path():
     domain_path = ""

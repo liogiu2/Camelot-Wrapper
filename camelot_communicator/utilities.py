@@ -23,3 +23,13 @@ def singleton(self, *args, **kw):
             instances[self] = self(*args, **kw)
         return instances[self]
     return _singleton
+
+def get_action_list():
+    """
+    This method is used to get the action list from the action list file.
+    """
+    action_list_parsed = parse_json("Actionlist")
+    action_list = []
+    for action in action_list_parsed:
+        action_list.append(action['name'])
+    return action_list

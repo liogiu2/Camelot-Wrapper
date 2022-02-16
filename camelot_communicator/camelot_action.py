@@ -24,20 +24,23 @@ class CamelotAction:
         with pkg_resources.open_text(json_data, 'Actionlist.json') as json_file:
             self.json_data_r = json.load(json_file)
 
-    
-    '''
-    Purpose: Waits for success or fail response from Camelot
-    Inputs: command that was sent to Camelot
-    Outputs: True for success, False for failure
-    '''
+    def check_for_success(self, command, action_name):
+        """
+        Waits for success or fail response from Camelot.
 
-    def check_for_success(self,command):
+        Parameters
+        ----------
+        command : str
+            The command that was sent to Camelot.
+        action_name : str
+            The name of the action.
+        """
 
         # Keep getting responses until the success of fail the given command is received
         while True:
 
             # Get response from Camelot
-            received = self.camelot_input_multiplex.get_success_message(command)
+            received = self.camelot_input_multiplex.get_success_message(command, action_name)
             logging.debug("Camelot output: %s" % received)
             
             # Return True if success response, else false for fail response
@@ -47,15 +50,30 @@ class CamelotAction:
                     logging.debug("Camelot_Action: Success message added to queue")
                     return True
                 elif received.startswith('failed ' + command) or received.startswith('error ' + command):
-                    shared_variables.error_messages.append(received)
+                    return False
+                elif received == False:
+                    # Found error from Camelot that belongs to this action
                     return False
 
-    '''
-    Purpose: Format an action for interpretation by Camelot
-    Inputs: Action to be sent to Camelot
-    Outputs: True for success, False for failure
-    '''
+
     def action(self, action_name, parameters = [] , wait=True):
+        """
+        Format an action for interpretation by Camelot and sends it to Camelot.
+
+        Parameters
+        ----------
+        action_name : str
+            The name of the action.
+        parameters : list
+            The parameters of the action.
+        wait : bool
+            If true, wait for success or fail response from Camelot. If False, do not wait.
+        
+        Returns
+        -------
+        bool
+            True if success, else False.
+        """
         if(not any(d['name'] == action_name for d in self.json_data_r)):
             raise KeyError("Action name {:} does not exist. The parameter Action Name is case sensitive.".format(action_name))
         if(type(parameters) == bool):
@@ -75,7 +93,7 @@ class CamelotAction:
 
         if wait==True:
             # Call function to check for its success
-            return self.check_for_success(command)
+            return self.check_for_success(command, action_name)
         else:
             return True
     

@@ -1,4 +1,5 @@
 import debugpy
+from camelot_error_manager import CamelotErrorManager
 from camelot_IO_communication import CamelotIOCommunication
 from utilities import singleton
 import threading
@@ -29,6 +30,7 @@ class CamelotInputMultiplexer:
             self.__messages_management = threading.Thread(target=self._input_messages_management , args =(), daemon=True)
             self.__messages_management.start()
             self.__started = True
+            self._camelot_error_manager = CamelotErrorManager()
 
     def _input_messages_management(self):
         """
@@ -58,14 +60,14 @@ class CamelotInputMultiplexer:
             elif message.startswith("started"):
                 logging.debug("CamelotInputMultiplexer: Received started so I pass next print to realease the event")
                 self.camelot_IO_communication.print_action("%PASS%")
-            elif message.startswith("error") or message.startswith("failed"):
+            elif message.startswith("error") or message.startswith("failed") or message.lower().startswith("exception"):
                 self.__error_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to error queue")
             else:
                 self.__other_queue.put(message)
                 logging.debug("CamelotInputMultiplexer: Added to other queue")
     
-    def get_success_message(self, command):
+    def get_success_message(self, command, action_name):
         """
         This method is used from the main thread to get the success messages that come from Camelot.
         """
@@ -74,9 +76,9 @@ class CamelotInputMultiplexer:
             message = self.__success_queue.get_nowait()
         except Empty:
             message = None
-            err_msg = self.get_error_message(command)
-            if err_msg != None:
-                return err_msg
+            error = self._camelot_error_manager.check_errors_with_action(action_name, command)
+            if error != None:
+                return False
         
         if message != None:
             logging.debug("CamelotInputMultiplexer: Got success message: %s"%(message))
@@ -84,7 +86,7 @@ class CamelotInputMultiplexer:
                 raise Exception("Kill called - End program")
         return message
     
-    def get_error_message(self, message_part = None):
+    def get_error_message(self):
         """
         This method is used to get the error messages that come from Camelot. If message_part is not None, it will return the error message that contains the message_part.
 
@@ -93,20 +95,11 @@ class CamelotInputMultiplexer:
         message_part : str
             The part of the error message that is searched for.
         """
-        empty = False
-        while not empty:
-            try:
-                message = self.__error_queue.get_nowait()
-                logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
-            except Empty:
-                message = None
-                empty = True
-
-            if message != None and message_part != None:
-                if message_part.lower() in message.lower():             
-                    return message
-                else:
-                    shared_variables.error_messages.append(message)
+        try:
+            message = self.__error_queue.get_nowait()
+            logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
+        except Empty:
+            message = None
 
         return message
     

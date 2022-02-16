@@ -7,7 +7,7 @@ if os.name == 'nt':
 sys.path.insert(0, pddl_path)
 from game_controller import GameController
 import logging
-import sys, getopt
+import getopt
 from pathlib import Path
 from datetime import datetime
 # from pyswip import Prolog
