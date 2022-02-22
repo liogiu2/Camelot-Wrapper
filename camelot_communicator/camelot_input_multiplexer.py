@@ -1,5 +1,6 @@
 import debugpy
 from camelot_error_manager import CamelotErrorManager
+from camelot_error import CamelotError
 from camelot_IO_communication import CamelotIOCommunication
 from utilities import singleton
 import threading
@@ -73,9 +74,10 @@ class CamelotInputMultiplexer:
         """
         message = ""
         try:
-            message = self.__success_queue.get_nowait()
+            message = self.__success_queue.get(timeout=0.5)
         except Empty:
             message = None
+            self.get_error_message()
             error = self._camelot_error_manager.check_errors_with_action(action_name, command)
             if error != None:
                 return False
@@ -100,6 +102,9 @@ class CamelotInputMultiplexer:
             logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
         except Empty:
             message = None
+        
+        if message != None:
+            self._camelot_error_manager.add_error(CamelotError(message))
 
         return message
     

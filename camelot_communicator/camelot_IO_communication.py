@@ -119,6 +119,7 @@ class CamelotIOCommunication:
             logging.debug("__standard_IO_operations: Printing message: " + message)
             return_message = "OK"
         elif mode == 1:
+            logging.debug("__standard_IO_operations: Reading from standard input")
             return_message = input()
             return_message = return_message.strip()
             logging.debug("__standard_IO_operations: Received message: " + return_message)

@@ -8,7 +8,7 @@ setup(
     author='Giulio Mori',
     license='MIT',
     install_requires=[''],
-    setup_requires=['pytest-runner'],
+    setup_requires=['pytest-runner', 'requests', 'EV_PDDL'],
     tests_require=['pytest'],
     test_suite='tests',
     include_package_data=True,

@@ -15,6 +15,7 @@
     (:init
         (in bob AlchemyShop)
         (in luca Blacksmith)
+        (at luca Blacksmith.Door)
         (at bob AlchemyShop.Door)
         (at AlchemyShop.Chest AlchemyShop)
         (adjacent AlchemyShop.Door Blacksmith.Door) 

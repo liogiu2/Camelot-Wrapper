@@ -33,3 +33,9 @@ def get_action_list():
     for action in action_list_parsed:
         action_list.append(action['name'])
     return action_list
+
+def str2bool(v):
+    """
+    This method is used to convert a string to a boolean.
+    """
+    return str(v).lower() in ("yes", "true", "t", "1")

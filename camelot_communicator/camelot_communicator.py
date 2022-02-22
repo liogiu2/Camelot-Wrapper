@@ -23,8 +23,9 @@ from datetime import datetime
 #import logging
 
 def main(argv):
+    GUI = False
     try:
-        opts, args = getopt.getopt(argv,"hd")
+        opts, args = getopt.getopt(argv,"hdGl")
     except getopt.GetoptError:
         print('Parameter not recognized')
         sys.exit(2)
@@ -36,11 +37,14 @@ def main(argv):
             import debugpy
             debugpy.listen(5678)
             debugpy.wait_for_client()
+        elif opt == '-l':
             logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
             Path("logs/python/").mkdir(parents=True, exist_ok=True)
             logging.basicConfig(filename='logs/python/'+logname, filemode='w', format='%(levelname)s:%(message)s', level=logging.DEBUG)
+        elif opt == '-G':
+            GUI = True
 
-    gc = GameController()
+    gc = GameController(GUI=GUI)
     try:
         gc.start_game(True)
     except Exception as e:

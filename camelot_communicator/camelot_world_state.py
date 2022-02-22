@@ -576,7 +576,6 @@ class CamelotWorldState:
             logging.error("GameController: PDDL action \"%s\" not found in domain" %( action_name ))
             return
         parameters = {}
-        debugpy.breakpoint()
         for i in range(len(action_definition.parameters)):
             parameters[action_definition.parameters[i].name] = self.world_state.find_entity(name = message_parts[i+1], type=action_definition.parameters[i].type)
         return Action(action_definition, parameters=parameters)
@@ -588,5 +587,10 @@ class CamelotWorldState:
         ----------
         action : Action
             The action that will be applied
+        
+        Returns
+        -------
+        list
+            A list of relations that are added or changed in the world state.
         """
-        self.world_state.apply_action(action)
+        return self.world_state.apply_action(action)

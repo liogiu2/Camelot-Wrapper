@@ -30,6 +30,7 @@
     ; Parameters:
     ; Preconditions:
     ; Effects: 
+    ; Example: move-between-location(luca, Blacksmith, AlchemyShop, Blacksmith.Door, AlchemyShop.Door)
     (:action move-between-location
         :parameters (?who - character ?from ?to - location ?entryfrom ?entryto - entrypoint)
         :precondition (and (in ?who ?from) 

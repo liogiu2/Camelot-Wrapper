@@ -18,7 +18,7 @@ import re
 
 class GameController:
 
-    def __init__(self):
+    def __init__(self, GUI = True):
         self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
         shared_variables.action_list = get_action_list()
         self._parser = PDDL_Parser()
@@ -33,6 +33,7 @@ class GameController:
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
         self.error_manager = CamelotErrorManager()
+        self.active_GUI = GUI
         
     
     def start_game(self, game_loop = True):
@@ -84,16 +85,6 @@ class GameController:
                 self.input_dict[input_key] = ""
                 for istr in json_p[item.predicate.name]['response']:
                     self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
-        
-        # for item in self._problem.objects:
-        #     if "chest" in item.name.lower():
-        #         self._camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', item.name, 'Open ' + item.name, True], game_loop)
-        #         self.input_dict["input OpenFurniture "+item.name] = ""
-        #         self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('OpenFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
-        #         self.input_dict["input OpenFurniture "+item.name] += "self._camelot_action.action('DisableIcon', ['OpenFurniture', '"+self._player.name+"'], "+ str(game_loop) + "))\n"
-        #         self.input_dict["input CloseFurniture "+item.name] = ""
-        #         self.input_dict["input CloseFurniture "+item.name] += "self._camelot_action.action('CloseFurniture', ['"+self._player.name+"', '"+ item.name +"'])\n"
-
 
     def _location_management(self, item, json_p, game_loop = True):
         """A method that is used to manage the places declared on the domain
@@ -164,7 +155,7 @@ class GameController:
         try:
             received = self._camelot_action.success_messages.get_nowait()
             logging.info("GameController: Success message received: " + received)
-            self.current_state.apply_camelot_message(received)
+            self._apply_camelot_message(received)
         except queue.Empty:
             return False
         return True       
@@ -187,6 +178,8 @@ class GameController:
 
             if received in self.input_dict.keys():
                 exec(self.input_dict[received])
+            elif received == "input Key Pause":
+                pass
         except queue.Empty:
             return False
         return True
@@ -204,9 +197,7 @@ class GameController:
             logging.info("GameController: got location message \"%s\"" %( received ))
             if received.startswith(shared_variables.location_message_prefix[2:]):
                 #self.queue_GUI.put(received)
-                changed_relations = self.current_state.apply_camelot_message(received)
-                if len(changed_relations) > 0:
-                    self.queueIn_GUI.put(self.current_state.world_state)
+                self._apply_camelot_message(received)
         except queue.Empty:
             return False
         except Exception as inst:
@@ -236,13 +227,45 @@ class GameController:
         elif "PA" in received:
             # handle PDDL action
             message = received["PA"]
-            action = self.current_state.create_action_from_incoming_message(message)
+            self._incoming_action_handler(message)
     
     def _check_error_messages(self):
         """
         This method is used to check if there are any error messages.
         """
-        error = self.camelot_input_multiplex.get_error_message()
-        if error != None:
-            self.error_manager.add_error(CamelotError(error))
+        self.camelot_input_multiplex.get_error_message()
+    
+    def _incoming_action_handler(self, message):
+        """
+        This method is used to handle the message that represents an action. 
+        It first creates a PDDL action, and then generates the camelot instructions that need to be sent to camelot for execution.
+
+        Parameters
+        ----------
+        message: str
+            The message that represents the action.
+        """
+        # move-between-location(luca, Blacksmith, AlchemyShop, Blacksmith.Door, AlchemyShop.Door)
+        action = self.current_state.create_action_from_incoming_message(message)
+        camelot_action_parameters = self._camelot_action.generate_camelot_action_parameters_from_action(action)
+        success = self._camelot_action.actions(camelot_action_parameters)
+        if success:
+            debugpy.breakpoint()
+            changed_relations = self.current_state.apply_action(action)
+            self.queueIn_GUI.put(self.current_state.world_state)
+    
+    def _apply_camelot_message(self, message):
+        """
+        This method is used to apply a message that is received from Camelot to the current state.
+
+        Parameters
+        ----------
+        message: str
+            The message that will be applied.
+        """
+        changed_relations = self.current_state.apply_camelot_message(message)
+        if len(changed_relations) > 0:
+            self.queueIn_GUI.put(self.current_state.world_state)
+        
+    
             

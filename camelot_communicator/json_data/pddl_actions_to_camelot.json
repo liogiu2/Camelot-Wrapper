@@ -3,7 +3,43 @@
     {
         "commands":
         [
-            ""
+            {
+                "action_name": "OpenFurniture",
+                "action_args": ["?character", "?furniture"],
+                "wait": "True"
+            },
+            {
+                "action_name": "DisableIcon",
+                "action_args": ["OpenFurniture", "?furniture"],
+                "wait": "True"
+            },
+            {
+                "action_name": "EnableIcon",
+                "action_args": ["CloseFurniture", "chest", "?furniture", "Close ?furniture", "True"],
+                "wait": "True"
+            }
+        ]
+    },
+    "give":
+    {
+        "commands":
+        [
+            {
+                "action_name": "Give",
+                "action_args": ["?giver", "?item", "?receiver"],
+                "wait": "True"
+            }
+        ]
+    },
+    "move-between-location":
+    {
+        "commands":
+        [
+            {
+                "action_name": "Enter",
+                "action_args": ["?who", "?entryto", "False"],
+                "wait": "True"
+            }
         ]
     }
 }
