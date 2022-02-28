@@ -594,3 +594,18 @@ class CamelotWorldState:
             A list of relations that are added or changed in the world state.
         """
         return self.world_state.apply_action(action)
+    
+    def check_action_can_apply(self, action: Action):
+        """This method is used to check if an action can be applied.
+
+        Parameters
+        ----------
+        action : Action
+            The action that will be checked
+        
+        Returns
+        -------
+        bool
+            True if the action can be applied, False otherwise
+        """
+        return self.world_state.check_action_can_apply(action)
