@@ -1,9 +1,15 @@
 import debugpy
 import logging
 import queue
-from camelot_IO_communication import CamelotIOCommunication
-from utilities import singleton, parse_json, replace_all, str2bool
-from camelot_input_multiplexer import CamelotInputMultiplexer
+try:
+    from camelot_IO_communication import CamelotIOCommunication
+    from utilities import parse_json, replace_all, str2bool
+    from camelot_input_multiplexer import CamelotInputMultiplexer
+except (ModuleNotFoundError, ImportError):
+    from .camelot_IO_communication import CamelotIOCommunication
+    from .utilities import parse_json, replace_all, str2bool
+    from .camelot_input_multiplexer import CamelotInputMultiplexer
+from singleton_decorator import singleton
 from ev_pddl.action import Action
 #TODO: check if parameters in action are what camelot expects
 

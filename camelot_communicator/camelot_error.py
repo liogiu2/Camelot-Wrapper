@@ -1,4 +1,7 @@
-from shared_variables import action_list
+try:
+    from shared_variables import action_list
+except (ModuleNotFoundError, ImportError):
+    from .shared_variables import action_list
 
 class CamelotError:
     """

@@ -48,6 +48,7 @@ def main(argv):
 
     gc = GameController(GUI=GUI)
     try:
+        gc.start_platform_communication()
         gc.start_game(True)
     except Exception as e:
         logging.exception("Main: Exception : %s" %( e ))

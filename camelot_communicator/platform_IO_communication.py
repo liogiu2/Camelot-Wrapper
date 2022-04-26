@@ -1,4 +1,4 @@
-from utilities import singleton
+from singleton_decorator import singleton
 import requests
 import json
 import time
@@ -14,11 +14,12 @@ class PlatformIOCommunication:
     """    
 
     def __init__(self):
-        self.base_link  = "http://127.0.0.1:8080"
-        self.__online = self._is_platform_online()
+        self.base_link  = "http://127.0.0.1:8080/"
         self.__message_queue = queue.Queue()
         self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
-        self.initial_message_link = ""
+        if self._is_platform_online():
+            self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()
+        self.initial_message_link = "inizialization_em"
         self.receive_message_link = ""
         self.send_message_link = ""
 
@@ -26,13 +27,13 @@ class PlatformIOCommunication:
         """
         This method is used to create a thread that continuosly makes request to the platform to receive a new message when available.
         """
-        while self.__online:
+        while self._is_platform_online():
             message = self._receive_message()
             if message != "":
                 message_queue.put(message)
             time.sleep(0.2)
 
-    def send_message(self, message):
+    def send_message(self, message, inizialization = False):
         """
         This method is used to send a message to the platform.
 
@@ -41,9 +42,21 @@ class PlatformIOCommunication:
         message : str
             The message to be sent.
         """
-        if self.__online:
-            response = requests.post(self.base_link + self.send_message_link, data = json.dumps({'text':message}))
-            pass
+        if self._is_platform_online():
+            if inizialization:
+                if type(message) == str:
+                    data = {'text': message}
+                    response = requests.post(self.base_link + self.initial_message_link, params = data)
+                elif type(message) == dict:
+                    response = requests.post(self.base_link + self.initial_message_link, params = message)
+                else:
+                    return None
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    return None
+            else:
+                response = requests.post(self.base_link + self.send_message_link, data = json.dumps({'text':message}))
     
     def get_received_message(self):
         """
@@ -68,7 +81,7 @@ class PlatformIOCommunication:
         str
             The message received from the platform.
         """
-        if self.__online:
+        if self._is_platform_online():
             response = requests.get(self.base_link + self.receive_message_link)
             return response.json()['text']
         return ""
@@ -82,29 +95,20 @@ class PlatformIOCommunication:
         message : str
             The error message to be sent.
         """
-        if self.__online:
-            response = requests.post(self.base_link + "/add_error_message", data = json.dumps({'text':message, "error_type": ""}))
+        if self._is_platform_online():
+            response = requests.post(self.base_link + "add_error_message", data = json.dumps({'text':message, "error_type": ""}))
             pass
 
-    def _is_platform_online(self) -> bool:
+    def _is_platform_online(self):
         """
-        This method is used to check if the API of the evaluation platform is online.
-
-        Returns
-        -------
-        bool
-            True if the API is online, False otherwise.
+        This method is used to check if the platform is online.
         """
-        t = threading.Timer(10.0, self._is_platform_online)
-        t.start()
         try:
-            response = requests.head(self.base_link + "/")
+            response = requests.head(self.base_link, timeout=0.5)
             if response.status_code == 200:
                 return True
             else:
-                t.cancel()
                 return False
         except:
-            t.cancel()
             return False
 

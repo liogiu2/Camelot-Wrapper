@@ -1,12 +1,19 @@
 import debugpy
-from camelot_error_manager import CamelotErrorManager
-from camelot_error import CamelotError
-from camelot_IO_communication import CamelotIOCommunication
-from utilities import singleton
+try:
+    from camelot_error_manager import CamelotErrorManager
+    from camelot_error import CamelotError
+    from camelot_IO_communication import CamelotIOCommunication
+    import shared_variables
+except (ModuleNotFoundError, ImportError):
+    from .camelot_error_manager import CamelotErrorManager
+    from .camelot_error import CamelotError
+    from .camelot_IO_communication import CamelotIOCommunication
+    from . import shared_variables
+from singleton_decorator import singleton
 import threading
 from queue import Queue, Empty
 import logging
-import shared_variables
+
 
 @singleton
 class CamelotInputMultiplexer:

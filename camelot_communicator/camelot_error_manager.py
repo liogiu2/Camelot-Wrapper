@@ -1,6 +1,10 @@
-from platform_IO_communication import PlatformIOCommunication
-from camelot_error import CamelotError
-from utilities import singleton
+try:
+    from platform_IO_communication import PlatformIOCommunication
+    from camelot_error import CamelotError
+except (ModuleNotFoundError, ImportError):
+    from .platform_IO_communication import PlatformIOCommunication
+    from .camelot_error import CamelotError
+from singleton_decorator import singleton
 
 @singleton
 class CamelotErrorManager:

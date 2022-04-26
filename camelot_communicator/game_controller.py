@@ -1,16 +1,30 @@
 import queue
-from GUI import GUI
-from camelot_error import CamelotError
-from camelot_error_manager import CamelotErrorManager
-from platform_IO_communication import PlatformIOCommunication
+try:
+    from GUI import GUI
+    from camelot_error import CamelotError
+    from camelot_error_manager import CamelotErrorManager
+    from platform_IO_communication import PlatformIOCommunication
+    from camelot_action import CamelotAction
+    from camelot_world_state import CamelotWorldState
+    from utilities import parse_json, replace_all, get_action_list
+    from camelot_input_multiplexer import CamelotInputMultiplexer
+    import shared_variables
+except (ModuleNotFoundError, ImportError):
+    from .GUI import GUI
+    from .camelot_error import CamelotError
+    from .camelot_error_manager import CamelotErrorManager
+    from .platform_IO_communication import PlatformIOCommunication
+    from .camelot_action import CamelotAction
+    from .camelot_world_state import CamelotWorldState
+    from .utilities import parse_json, replace_all, get_action_list
+    from .camelot_input_multiplexer import CamelotInputMultiplexer
+    from . import shared_variables
 from ev_pddl.action import Action
-from camelot_action import CamelotAction
-from camelot_world_state import CamelotWorldState
+
 from ev_pddl.PDDL import PDDL_Parser
+from ev_pddl.domain import Domain
+from ev_pddl.world_state import WorldState
 import logging
-from utilities import parse_json, replace_all, get_action_list
-from camelot_input_multiplexer import CamelotInputMultiplexer
-import shared_variables
 import multiprocessing
 import debugpy
 import logging
@@ -34,6 +48,31 @@ class GameController:
         self._platform_communication = PlatformIOCommunication()
         self.error_manager = CamelotErrorManager()
         self.active_GUI = GUI
+    
+    def start_platform_communication(self):
+        """A method that is used to start the platform communication. It follows the communication controller steps.
+        """
+        result = self._platform_communication.send_message(self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_3'] + "Camelot", inizialization=True)
+        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_4']:
+            return True
+        else:
+            raise Exception("Platform communication failed")
+    
+    def _platform_communication_phase_3_4(self, domain: Domain, wolrd_state: WorldState):
+        """A method that is used to handle phase 3 and 4 of the communication protocol.
+        """
+        message_text = {
+            "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_1'],
+            "domain" : domain.to_PDDL(),
+            "world_state" : wolrd_state.to_PDDL()
+        } 
+        result = self._platform_communication.send_message(message_text, inizialization=True)
+        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_2']:
+            self._platform_communication.send_message_link = result['add_message_url']
+            self._platform_communication.receive_message_link = result['get_message_url']
+            return True
+        else:
+            raise Exception("Platform communication failed")
         
     
     def start_game(self, game_loop = True):
@@ -47,12 +86,15 @@ class GameController:
         initial_state = CamelotWorldState(self._domain, self._problem, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
 
+        self._platform_communication_phase_3_4(initial_state.domain, initial_state.world_state)
+
         self._player = initial_state.find_player(self._problem)
         self._create_ingame_actions(game_loop)
         self._camelot_action.action("ShowMenu", wait=game_loop)
         self.current_state = initial_state
         self.GUI_process = multiprocessing.Process(target=GUI, args=(self.queueIn_GUI, self.queueOut_GUI))
-        self.GUI_process.start()
+        if self.active_GUI:
+            self.GUI_process.start()
         while game_loop:
             received = self.camelot_input_multiplex.get_input_message()
 

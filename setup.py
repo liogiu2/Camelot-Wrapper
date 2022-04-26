@@ -8,9 +8,9 @@ setup(
     author='Giulio Mori',
     license='MIT',
     install_requires=[''],
-    setup_requires=['pytest-runner', 'requests', 'EV_PDDL'],
-    tests_require=['pytest'],
-    test_suite='tests',
+    setup_requires=['requests', 'EV_PDDL', 'singleton-decorator', 'PySimpleGUI'],
+    tests_require=['unittest'],
+    test_suite='test_camelot_communicator',
     include_package_data=True,
     zip_safe=True,
 )
