@@ -20,7 +20,6 @@ except (ModuleNotFoundError, ImportError):
     from .camelot_input_multiplexer import CamelotInputMultiplexer
     from . import shared_variables
 from ev_pddl.action import Action
-
 from ev_pddl.PDDL import PDDL_Parser
 from ev_pddl.domain import Domain
 from ev_pddl.world_state import WorldState
@@ -53,7 +52,7 @@ class GameController:
         """A method that is used to start the platform communication. It follows the communication controller steps.
         """
         result = self._platform_communication.send_message(self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_3'] + "Camelot", inizialization=True)
-        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_4']:
+        if result == self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_4']:
             return True
         else:
             raise Exception("Platform communication failed")
@@ -62,12 +61,12 @@ class GameController:
         """A method that is used to handle phase 3 and 4 of the communication protocol.
         """
         message_text = {
-            "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_1'],
+            "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_6'],
             "domain" : domain.to_PDDL(),
             "world_state" : wolrd_state.to_PDDL()
         } 
         result = self._platform_communication.send_message(message_text, inizialization=True)
-        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_2']:
+        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_4']['message_9']:
             self._platform_communication.send_message_link = result['add_message_url']
             self._platform_communication.receive_message_link = result['get_message_url']
             return True

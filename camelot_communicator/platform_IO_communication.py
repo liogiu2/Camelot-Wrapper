@@ -12,13 +12,13 @@ class PlatformIOCommunication:
     """
     This class is used to send and receive messages to the platform.
     """    
+    communication_protocol_phase_messages = None
 
     def __init__(self):
         self.base_link  = "http://127.0.0.1:8080/"
         self.__message_queue = queue.Queue()
         self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
-        if self._is_platform_online():
-            self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()
+        self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()
         self.initial_message_link = "inizialization_em"
         self.receive_message_link = ""
         self.send_message_link = ""
@@ -46,9 +46,9 @@ class PlatformIOCommunication:
             if inizialization:
                 if type(message) == str:
                     data = {'text': message}
-                    response = requests.post(self.base_link + self.initial_message_link, params = data)
+                    response = requests.post(self.base_link + self.initial_message_link, json = data)
                 elif type(message) == dict:
-                    response = requests.post(self.base_link + self.initial_message_link, params = message)
+                    response = requests.post(self.base_link + self.initial_message_link, json = message)
                 else:
                     return None
                 if response.status_code == 200:
@@ -56,7 +56,7 @@ class PlatformIOCommunication:
                 else:
                     return None
             else:
-                response = requests.post(self.base_link + self.send_message_link, data = json.dumps({'text':message}))
+                response = requests.post(self.base_link + self.send_message_link, json = json.dumps({'text':message}))
     
     def get_received_message(self):
         """

@@ -1,7 +1,6 @@
 {
     "adjacent": {
         "declaration": [
-            "from camelot_action import CamelotAction",
             "camelot_action = CamelotAction()",
             "camelot_action.action('EnableIcon', ['Exit', 'Exit', '$param1$', 'Exit from $param1$', True], $wait$)"
         ],
@@ -21,7 +20,6 @@
     },
     "can_open" : {
         "declaration": [
-            "from camelot_action import CamelotAction",
             "camelot_action = CamelotAction()",
             "camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', '$param1$', 'Open $param1$', True], $wait$)"
         ],
