@@ -42,7 +42,7 @@ class TestPlatformCommunication(unittest.TestCase):
     def test_send_message(self):
         message = {'message': 'message'}
         responses.add(responses.GET, 'http://127.0.0.1:8080/get_protocol_messages', json=self.protocol_messages)
-        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_em', json=message, status=200)
+        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=message, status=200)
         from camelot_communicator.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
             mock_is_platform_online.return_value = True
@@ -50,7 +50,7 @@ class TestPlatformCommunication(unittest.TestCase):
             reply = platform_communication.send_message("test", inizialization=True)
         self.assertEqual(reply, message)
         self.assertEqual(len(responses.calls) , 2 )
-        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_em')
+        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_env')
         self.assertEqual(responses.calls[1].request.body , b'{"text": "test"}')
         self.assertEqual(responses.calls[1].response.text , '{"message": "message"}' )
     
@@ -58,7 +58,7 @@ class TestPlatformCommunication(unittest.TestCase):
     def test_phase1(self):
         message = {'message': 'message'}
         responses.add(responses.GET, 'http://127.0.0.1:8080/get_protocol_messages', json=self.protocol_messages)
-        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_em', json=self.protocol_messages['PHASE_2']['message_4'], status=200)
+        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=self.protocol_messages['PHASE_2']['message_4'], status=200)
         from camelot_communicator.game_controller import GameController
         from camelot_communicator.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
@@ -68,7 +68,7 @@ class TestPlatformCommunication(unittest.TestCase):
                 gc = GameController(GUI=False)
                 result = gc.start_platform_communication()
         self.assertEqual(len(responses.calls) , 2 )
-        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_em')
+        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_env')
         self.assertEqual(responses.calls[1].request.body , b'{"text": "start of communication. name:Camelot"}')
         self.assertTrue(result)
     
@@ -81,7 +81,7 @@ class TestPlatformCommunication(unittest.TestCase):
             'add_message_url' : 'url',
             'get_message_url' : 'url'
         }
-        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_em', json=response_message, status=200)
+        responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=response_message, status=200)
         from camelot_communicator.game_controller import GameController
         from camelot_communicator.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
@@ -94,7 +94,7 @@ class TestPlatformCommunication(unittest.TestCase):
                     gc.start_game(game_loop=False)
 
         self.assertEqual(len(responses.calls) , 2 )
-        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_em')
+        self.assertEqual(responses.calls[1].request.url , 'http://127.0.0.1:8080/inizialization_env')
 
 
 

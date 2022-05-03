@@ -19,7 +19,7 @@ class PlatformIOCommunication:
         self.__message_queue = queue.Queue()
         self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
         self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()
-        self.initial_message_link = "inizialization_em"
+        self.initial_message_link = "inizialization_env"
         self.receive_message_link = ""
         self.send_message_link = ""
 
