@@ -27,7 +27,7 @@ import logging
 import multiprocessing
 import debugpy
 import logging
-import re
+import time
 
 class GameController:
 
@@ -40,19 +40,24 @@ class GameController:
         self._camelot_action = CamelotAction()
         self._player = ''
         self.input_dict = {}
-        self.camelot_input_multiplex = CamelotInputMultiplexer()
         self.current_state = None
         self.queueIn_GUI = multiprocessing.Queue()
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
-        self.error_manager = CamelotErrorManager()
         self.active_GUI = GUI
     
     def start_platform_communication(self):
         """A method that is used to start the platform communication. It follows the communication controller steps.
         """
-        result = self._platform_communication.send_message(self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_3'] + "Camelot", inizialization=True)
-        if result == self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_4']:
+        self._platform_communication.start()
+        logging.info("Platform communication started")
+        logging.info("Platform communication starting handshake phase 1")
+        message = self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_3'] + "Camelot"
+        logging.info("GameController: Sending message: " + message)
+        result = self._platform_communication.send_message(message, inizialization=True)
+        logging.info("GameController: received message: " + str(result))
+        if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_2']['message_4']:
+            logging.info("Platform communication handshake phase 1 finished")
             return True
         else:
             raise Exception("Platform communication failed")
@@ -60,18 +65,31 @@ class GameController:
     def _platform_communication_phase_3_4(self, domain: Domain, wolrd_state: WorldState):
         """A method that is used to handle phase 3 and 4 of the communication protocol.
         """
+        logging.info("Platform communication starting handshake phase 3")
+        logging.info("Platform communication waiting for phase 3 to start")
+        while self._platform_communication.get_handshake_phase() != "PHASE_3":
+            time.sleep(0.1)
+        logging.info("Platform communication phase 3 started")
         message_text = {
             "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_6'],
             "domain" : domain.to_PDDL(),
             "world_state" : wolrd_state.to_PDDL()
         } 
+        logging.info("GameController: Sending message: " + str(message_text))
         result = self._platform_communication.send_message(message_text, inizialization=True)
+        logging.info("GameController: received message: " + str(result))
         if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_4']['message_9']:
             self._platform_communication.send_message_link = result['add_message_url']
             self._platform_communication.receive_message_link = result['get_message_url']
+            logging.info("Platform communication setting urls finished")
+            logging.info("Platform communication handshake phase 4 finished")
             return True
         else:
             raise Exception("Platform communication failed")
+
+    def _initialize(self):
+        self.camelot_input_multiplex = CamelotInputMultiplexer()
+        self.error_manager = CamelotErrorManager()
         
     
     def start_game(self, game_loop = True):
@@ -82,6 +100,7 @@ class GameController:
         game_loop : default: True
             Variable used for debugging purposes.
         """
+        self._initialize()
         initial_state = CamelotWorldState(self._domain, self._problem, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
 

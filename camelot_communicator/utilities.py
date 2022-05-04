@@ -1,6 +1,9 @@
 import json
 import importlib.resources as pkg_resources
-import camelot_communicator.json_data as json_data
+try:
+    import json_data
+except (ModuleNotFoundError, ImportError):
+    from . import json_data
 
 def parse_json(jsonfile):
     with pkg_resources.open_text(json_data, jsonfile+'.json') as json_file:

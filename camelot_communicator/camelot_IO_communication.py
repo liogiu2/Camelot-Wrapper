@@ -87,7 +87,7 @@ class CamelotIOCommunication:
         """
         logging.debug("__camelot_receiver_thread: Starting")
         while(is_running):
-            event_obj.wait(timeout=0.1)
+            event_obj.wait(timeout=0.5)
             logging.debug("__camelot_receiver_thread: Trying to get message from standard input")
             message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
