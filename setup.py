@@ -8,7 +8,7 @@ setup(
     author='Giulio Mori',
     license='MIT',
     install_requires=[''],
-    setup_requires=['requests', 'EV_PDDL', 'singleton-decorator', 'PySimpleGUI'],
+    setup_requires=['requests', 'EV_PDDL', 'singleton-decorator', 'PySimpleGUI', 'jsonpickle'],
     tests_require=['unittest'],
     test_suite='test_camelot_communicator',
     include_package_data=True,

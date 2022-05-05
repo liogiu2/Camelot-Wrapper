@@ -1,3 +1,4 @@
+import json
 import queue
 try:
     from GUI import GUI
@@ -28,6 +29,7 @@ import multiprocessing
 import debugpy
 import logging
 import time
+import jsonpickle
 
 class GameController:
 
@@ -47,7 +49,8 @@ class GameController:
         self.active_GUI = GUI
     
     def start_platform_communication(self):
-        """A method that is used to start the platform communication. It follows the communication controller steps.
+        """
+        A method that is used to start the platform communication. It follows the communication controller steps.
         """
         self._platform_communication.start()
         logging.info("Platform communication started")
@@ -63,7 +66,8 @@ class GameController:
             raise Exception("Platform communication failed")
     
     def _platform_communication_phase_3_4(self, domain: Domain, wolrd_state: WorldState):
-        """A method that is used to handle phase 3 and 4 of the communication protocol.
+        """
+        A method that is used to handle phase 3 and 4 of the communication protocol.
         """
         logging.info("Platform communication starting handshake phase 3")
         logging.info("Platform communication waiting for phase 3 to start")
@@ -73,14 +77,16 @@ class GameController:
         message_text = {
             "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_6'],
             "domain" : domain.to_PDDL(),
-            "world_state" : wolrd_state.to_PDDL()
+            "problem" : wolrd_state.to_PDDL()
         } 
         logging.info("GameController: Sending message: " + str(message_text))
         result = self._platform_communication.send_message(message_text, inizialization=True)
         logging.info("GameController: received message: " + str(result))
         if result['text'] == self._platform_communication.communication_protocol_phase_messages['PHASE_4']['message_9']:
-            self._platform_communication.send_message_link = result['add_message_url']
-            self._platform_communication.receive_message_link = result['get_message_url']
+            self._platform_communication.send_message_link = result['add_message_url'].replace('/', '')
+            logging.info("Send message link: /" + self._platform_communication.send_message_link)
+            self._platform_communication.receive_message_link = result['get_message_url'].replace('/', '')
+            logging.info("Receive message link: /" + self._platform_communication.receive_message_link)
             logging.info("Platform communication setting urls finished")
             logging.info("Platform communication handshake phase 4 finished")
             return True
@@ -88,6 +94,10 @@ class GameController:
             raise Exception("Platform communication failed")
 
     def _initialize(self):
+        """
+        This method is used to initialize the components of the game controller that we don-t want to initialize in the init method, 
+        but after when the first stage of the communication handshake finished.
+        """
         self.camelot_input_multiplex = CamelotInputMultiplexer()
         self.error_manager = CamelotErrorManager()
         
@@ -310,7 +320,6 @@ class GameController:
         camelot_action_parameters = self._camelot_action.generate_camelot_action_parameters_from_action(action)
         success = self._camelot_action.actions(camelot_action_parameters)
         if success:
-            debugpy.breakpoint()
             changed_relations = self.current_state.apply_action(action)
             self.queueIn_GUI.put(self.current_state.world_state)
     
@@ -326,6 +335,20 @@ class GameController:
         changed_relations = self.current_state.apply_camelot_message(message)
         if len(changed_relations) > 0:
             self.queueIn_GUI.put(self.current_state.world_state)
-        
-    
-            
+            self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
+
+    def _format_changed_relations_for_external_message(self, changed_relations):
+        """
+        This method is used to format a message for the external communication.
+
+        Parameters
+        ----------
+        message: list
+            The list of relations that changed.
+        """
+        relation_list = []
+        for item in changed_relations:
+            i = (item[0], item[1].to_PDDL())
+            relation_list.append(i)
+        json_message = jsonpickle.encode(relation_list)
+        return json_message

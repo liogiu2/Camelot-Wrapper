@@ -1,3 +1,4 @@
+import logging
 from singleton_decorator import singleton
 import requests
 import json
@@ -21,6 +22,9 @@ class PlatformIOCommunication:
         self.protocol_phase_link = "protocol_phase"
         self.receive_message_link = ""
         self.send_message_link = ""
+        self.__number_of_requests = 100
+        self.__platform_online = False
+        self.__max_number_of_requests = 10
     
     def start(self):
         self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
@@ -47,7 +51,7 @@ class PlatformIOCommunication:
         """
         if self._is_platform_online():
             response = requests.get(self.base_link + self.protocol_phase_link)
-            return response.text
+            return response.text.replace('"', '')
         return ""
 
     def send_message(self, message, inizialization = False):
@@ -71,9 +75,17 @@ class PlatformIOCommunication:
                 if response.status_code == 200:
                     return response.json()
                 else:
+                    logging.error("Error sending message to platform")
                     return None
             else:
+                logging.info("PlatformIOCommunication -- Sending message to platform: " + message)
                 response = requests.post(self.base_link + self.send_message_link, json = json.dumps({'text':message}))
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    debugpy.breakpoint()
+                    logging.error("PlatformIOCommunication -- Error sending message to platform")
+                    return None
     
     def get_received_message(self):
         """
@@ -119,13 +131,20 @@ class PlatformIOCommunication:
     def _is_platform_online(self):
         """
         This method is used to check if the platform is online.
+        It does that every X times this method is called to avoid congestion on API side.
         """
-        try:
-            response = requests.head(self.base_link, timeout=0.5)
-            if response.status_code == 200:
-                return True
-            else:
-                return False
-        except:
-            return False
+        if self.__number_of_requests > self.__max_number_of_requests:
+            try:
+                response = requests.head(self.base_link, timeout=0.5)
+                if response.status_code == 200:
+                    self.__platform_online = True
+                else:
+                    self.__platform_online = False
+            except:
+                self.__platform_online = False
+            self.__number_of_requests = 0
+        else:
+            self.__number_of_requests += 1
+        
+        return self.__platform_online
 
