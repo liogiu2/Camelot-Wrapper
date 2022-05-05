@@ -78,12 +78,15 @@ class PlatformIOCommunication:
                     logging.error("Error sending message to platform")
                     return None
             else:
-                logging.info("PlatformIOCommunication -- Sending message to platform: " + message)
-                response = requests.post(self.base_link + self.send_message_link, json = json.dumps({'text':message}))
+                message_preparation = {
+                    'text':message,
+                    'to_user_role' : 'EM'
+                }
+                logging.info("PlatformIOCommunication -- Sending message to platform: " + str(message_preparation))
+                response = requests.post(self.base_link + self.send_message_link, json = message_preparation)
                 if response.status_code == 200:
                     return response.json()
                 else:
-                    debugpy.breakpoint()
                     logging.error("PlatformIOCommunication -- Error sending message to platform")
                     return None
     
