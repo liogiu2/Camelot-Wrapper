@@ -7,7 +7,7 @@ try:
     from platform_IO_communication import PlatformIOCommunication
     from camelot_action import CamelotAction
     from camelot_world_state import CamelotWorldState
-    from utilities import parse_json, replace_all, get_action_list
+    from utilities import parse_json, replace_all, get_action_list, str2bool
     from camelot_input_multiplexer import CamelotInputMultiplexer
     import shared_variables
 except (ModuleNotFoundError, ImportError):
@@ -17,7 +17,7 @@ except (ModuleNotFoundError, ImportError):
     from .platform_IO_communication import PlatformIOCommunication
     from .camelot_action import CamelotAction
     from .camelot_world_state import CamelotWorldState
-    from .utilities import parse_json, replace_all, get_action_list
+    from .utilities import parse_json, replace_all, get_action_list, str2bool
     from .camelot_input_multiplexer import CamelotInputMultiplexer
     from . import shared_variables
 from ev_pddl.action import Action
@@ -141,23 +141,31 @@ class GameController:
         for item in self._problem.initial_state:
             if item.predicate.name in json_p:
                 if item.predicate.name == "adjacent":
-                    self._location_management(item, json_p, game_loop)
+                    self._adjacent_predicate_handling(item, json_p, game_loop)
                     continue
-                # debugpy.breakpoint()
+                
                 sub_dict = {
                     '$param1$' : item.entities[0].name,
-                    '$param2$' : self._player.name,
-                    '$wait$' : str(game_loop)
+                    '$param2$' : self._player.name
                 }
+                # execute declaration part
                 for istr in json_p[item.predicate.name]['declaration']:
-                    istr_with_param = replace_all(istr, sub_dict)
-                    exec(istr_with_param)
+                    action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+                    self._camelot_action.action(action_name, action_parameters, wait=wait)
+                # prepare input dict
                 input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
-                self.input_dict[input_key] = ""
+                self.input_dict[input_key] = []
+                # popolate input dict with istructions to use when input is called
                 for istr in json_p[item.predicate.name]['response']:
-                    self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
+                    action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+                    action_dict = {
+                        'action_name' : action_name,
+                        'action_parameters' : action_parameters,
+                        'wait' : wait
+                    }
+                    self.input_dict[input_key].append(action_dict)
 
-    def _location_management(self, item, json_p, game_loop = True):
+    def _adjacent_predicate_handling(self, item, json_p, game_loop = True):
         """A method that is used to manage the places declared on the domain
 
         It declares the input function that is used from Camelot to enable an action to happen. In this case the action is the exit action. 
@@ -173,22 +181,50 @@ class GameController:
             '$param1$' : item.entities[0].name,
             '$param2$' : self._player.name,
             '$param3$' : item.entities[1].name,
-            '$wait$' : str(game_loop)
         }
+        # execute declaration part
         for istr in json_p['adjacent']['declaration']:
-            istr_with_param = replace_all(istr, sub_dict)
-            exec(istr_with_param)
+            action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+            self._camelot_action.action(action_name, action_parameters, wait=wait)
+
+        # prepare input dict
         loc, entry = item.entities[0].name.split('.')
         if 'end' in entry.lower():
             input_key = replace_all(json_p['adjacent']['input']['end'], sub_dict)
-            self.input_dict[input_key] = ""
+            self.input_dict[input_key] = []
         else:
             input_key = replace_all(json_p['adjacent']['input']['door'], sub_dict)
-            self.input_dict[input_key] = ""
-            
+            self.input_dict[input_key] = []
+        
+        # popolate input dict with istructions to use when input is called
         for istr in json_p['adjacent']['response']:
-            self.input_dict[input_key] += replace_all(istr, sub_dict) + '\n'
+            action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+            action_dict = {
+                'action_name' : action_name,
+                'action_parameters' : action_parameters,
+                'wait' : wait
+            }
+            self.input_dict[input_key].append(action_dict)
                 
+    def _get_camelot_action_parameters_from_json(self, istr : dict, sub_dict : dict):
+        """
+        Utility method used to create the parameters of the camelot action using the json file.
+        """
+        action_name = istr.get('action_name')
+        action_parameters = []
+        for item in istr.get('action_args'):
+            if item in sub_dict.keys():
+                action_parameters.append(sub_dict[item])
+            elif any(k in item for k in sub_dict.keys()):
+                action_parameters.append(replace_all(item, sub_dict))
+            elif item == "TRUE":
+                action_parameters.append(True)
+            elif item == "FALSE":
+                action_parameters.append(False)
+            else:
+                action_parameters.append(item)
+        wait = str2bool(istr.get('wait'))
+        return action_name, action_parameters, wait
 
     def _main_game_controller(self, game_loop = True):
         """A method that is used as main game controller
@@ -249,8 +285,11 @@ class GameController:
             debugpy.breakpoint()
 
             if received in self.input_dict.keys():
-                #TODO: change to new version of execution without exec
-                exec(self.input_dict[received])
+                for item in self.input_dict[received]:
+                    action_name = item['action_name']
+                    action_parameters = item['action_parameters']
+                    wait = item['wait']
+                    self._camelot_action.action(action_name, action_parameters, wait=wait)
             elif received == "input Key Pause":
                 pass
         except queue.Empty:

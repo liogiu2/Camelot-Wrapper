@@ -45,14 +45,10 @@ class CamelotInputMultiplexer:
         This thread is used to manage the input messages received from the camelot_IO_communication.
         It gets the messages from the camelot_IO_communication and put them in the right queue that is used from the main thread.
         """
-        previous_message = ""
+        previous_input_message = ""
         while self.__thread_running:
             message = self.camelot_IO_communication.get_message()
             logging.debug("CamelotInputMultiplexer: Got message from main queue: %s" % message)
-            if previous_message == message:
-                logging.debug("CamelotInputMultiplexer: skipping message because it's duplicated")
-                continue
-            previous_message = str(message)
 
             if message == "input Quit":
                 self.__thread_running = False
@@ -67,6 +63,10 @@ class CamelotInputMultiplexer:
                     self.__location_queue.put(message)
                     logging.debug("CamelotInputMultiplexer: Added to location queue")
                 else:
+                    if previous_input_message == message:
+                        logging.debug("CamelotInputMultiplexer: skipping message because it's duplicated")
+                        continue
+                    previous_input_message = str(message)
                     self.__input_queue.put(message)
                     logging.debug("CamelotInputMultiplexer: Added to input queue")
             elif message.startswith("started"):
@@ -150,7 +150,10 @@ class CamelotInputMultiplexer:
         if message == "kill":
             raise Exception("Kill called - End program")
         return message
-    
+        
+    def get_location_queue_size(self):
+        return self.__location_queue.qsize()
+
     def stop(self):
         """
         This method is used to stop the thread.

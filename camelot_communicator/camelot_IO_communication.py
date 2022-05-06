@@ -35,6 +35,7 @@ class CamelotIOCommunication:
             self.__started = True
             #self._keep_alive()
     
+    
     def _keep_alive(self):
         """
         This method is called to keep the threads alive.
@@ -86,8 +87,9 @@ class CamelotIOCommunication:
         event_obj : threading.Event; the event used to notify the thread that a message has been sent to the standard output so the operation on the standard input can be performed.
         """
         logging.debug("__camelot_receiver_thread: Starting")
+        timeout = 1.0
         while(is_running):
-            event_obj.wait(timeout=0.5)
+            event_obj.wait(timeout=timeout)
             logging.debug("__camelot_receiver_thread: Trying to get message from standard input")
             message = self.__standard_IO_operations(None, 1, lock)
             if message == None:
@@ -99,6 +101,9 @@ class CamelotIOCommunication:
             logging.debug("__camelot_receiver_thread: added to the queue")
             if message == "input Quit":
                 is_running = False
+            elif message == "succeeded HideMenu()":
+                timeout = 0.1
+                logging.debug("__camelot_receiver_thread: changing timeout to 0.1")
 
     def __standard_IO_operations(self, message: str, mode: int, lock: threading.Lock) -> str:
         """

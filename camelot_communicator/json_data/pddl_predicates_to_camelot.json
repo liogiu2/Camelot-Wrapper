@@ -1,35 +1,71 @@
 {
     "adjacent": {
         "declaration": [
-            "camelot_action = CamelotAction()",
-            "camelot_action.action('EnableIcon', ['Exit', 'Exit', '$param1$', 'Exit from $param1$', True], $wait$)"
+            {
+                "action_name" : "EnableIcon",
+                "action_args": ["Exit", "Exit", "$param1$", "Exit from $param1$", "TRUE"],
+                "wait": "True"
+            }
         ],
         "input": {
             "door": "input Exit $param1$",
             "end": "input arrived $param2$ position $param1$"
         },
         "response": [
-            "camelot_action = CamelotAction()",
-            "camelot_action.action('WalkTo',['$param2$', '$param1$'], $wait$)",
-            "camelot_action.action('FadeOut', [], $wait$)",
-            "camelot_action.action('SetPosition',['$param2$','$param3$'], $wait$)",
-            "camelot_action.action('SetCameraFocus',['$param2$'], $wait$)",
-            "camelot_action.action('FadeIn', $wait$)"
+            {
+                "action_name" : "WalkTo",
+                "action_args": ["$param2$", "$param1$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "FadeOut",
+                "action_args": [],
+                "wait": "True"
+            },
+            {
+                "action_name" : "SetPosition",
+                "action_args": ["$param2$","$param3$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "SetCameraFocus",
+                "action_args": ["$param2$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "FadeIn",
+                "action_args": [],
+                "wait": "True"
+            }
         ]
     },
     "can_open" : {
         "declaration": [
-            "camelot_action = CamelotAction()",
-            "camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', '$param1$', 'Open $param1$', True], $wait$)"
+            {
+                "action_name" : "EnableIcon",
+                "action_args": ["OpenFurniture", "chest", "$param1$", "Open $param1$", "TRUE"],
+                "wait": "True"
+            }
         ],
         "input": {
             "message": "input OpenFurniture $param1$"
         },
         "response": [
-            "camelot_action = CamelotAction()",
-            "camelot_action.action('OpenFurniture', ['$param2$', '$param1$'], $wait$)",
-            "camelot_action.action('DisableIcon',['OpenFurniture','$param1$'], $wait$)",
-            "camelot_action.action('EnableIcon', ['CloseFurniture', 'chest', '$param1$', 'Close $param1$', True], $wait$)"
+            {
+                "action_name" : "OpenFurniture",
+                "action_args": ["$param2$", "$param1$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "DisableIcon",
+                "action_args": ["OpenFurniture","$param1$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "EnableIcon",
+                "action_args": ["CloseFurniture", "chest", "$param1$", "Close $param1$", "TRUE"],
+                "wait": "True"
+            }
         ]
     },
     "can_close" : {
@@ -39,10 +75,21 @@
             "message": "input CloseFurniture $param1$"
         },
         "response": [
-            "camelot_action = CamelotAction()",
-            "camelot_action.action('CloseFurniture', ['$param2$', '$param1$'], $wait$)",
-            "camelot_action.action('DisableIcon',['CloseFurniture','$param1$'], $wait$)",
-            "camelot_action.action('EnableIcon', ['OpenFurniture', 'chest', '$param1$', 'Open $param1$', True], $wait$)"
+            {
+                "action_name" : "CloseFurniture",
+                "action_args": ["$param2$", "$param1$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "DisableIcon",
+                "action_args": ["CloseFurniture","$param1$"],
+                "wait": "True"
+            },
+            {
+                "action_name" : "EnableIcon",
+                "action_args": ["OpenFurniture", "chest", "$param1$", "Open $param1$", "TRUE"],
+                "wait": "True"
+            }
         ]
     }
 }
