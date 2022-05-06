@@ -45,10 +45,14 @@ class CamelotInputMultiplexer:
         This thread is used to manage the input messages received from the camelot_IO_communication.
         It gets the messages from the camelot_IO_communication and put them in the right queue that is used from the main thread.
         """
-
+        previous_message = ""
         while self.__thread_running:
             message = self.camelot_IO_communication.get_message()
             logging.debug("CamelotInputMultiplexer: Got message from main queue: %s" % message)
+            if previous_message == message:
+                logging.debug("CamelotInputMultiplexer: skipping message because it's duplicated")
+                continue
+            previous_message = str(message)
 
             if message == "input Quit":
                 self.__thread_running = False
@@ -114,6 +118,12 @@ class CamelotInputMultiplexer:
             self._camelot_error_manager.add_error(CamelotError(message))
 
         return message
+    
+    def add_error_message(self, message):
+        """
+        This method is used to add an error message to the error queue.
+        """
+        self.__error_queue.put(message)
     
     def get_input_message(self, no_wait = False):
         """

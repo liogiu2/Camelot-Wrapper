@@ -9,7 +9,6 @@
             "end": "input arrived $param2$ position $param1$"
         },
         "response": [
-            "from camelot_action import CamelotAction",
             "camelot_action = CamelotAction()",
             "camelot_action.action('WalkTo',['$param2$', '$param1$'], $wait$)",
             "camelot_action.action('FadeOut', [], $wait$)",
@@ -27,7 +26,6 @@
             "message": "input OpenFurniture $param1$"
         },
         "response": [
-            "from camelot_action import CamelotAction",
             "camelot_action = CamelotAction()",
             "camelot_action.action('OpenFurniture', ['$param2$', '$param1$'], $wait$)",
             "camelot_action.action('DisableIcon',['OpenFurniture','$param1$'], $wait$)",
@@ -41,7 +39,6 @@
             "message": "input CloseFurniture $param1$"
         },
         "response": [
-            "from camelot_action import CamelotAction",
             "camelot_action = CamelotAction()",
             "camelot_action.action('CloseFurniture', ['$param2$', '$param1$'], $wait$)",
             "camelot_action.action('DisableIcon',['CloseFurniture','$param1$'], $wait$)",

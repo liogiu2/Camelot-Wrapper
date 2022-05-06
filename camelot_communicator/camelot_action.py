@@ -47,7 +47,7 @@ class CamelotAction:
             received = self.camelot_input_multiplex.get_success_message(command, action_name)
             
             # Return True if success response, else false for fail response
-            if received != None:
+            if received is not None:
                 logging.debug("Camelot output: %s" % received)
                 if received == 'succeeded ' + command:
                     self.success_messages.put(received)
@@ -58,6 +58,15 @@ class CamelotAction:
                 elif received == False:
                     # Found error from Camelot that belongs to this action
                     return False
+            else:
+                # No response from Camelot
+                error = self.camelot_input_multiplex.get_error_message()
+                if error is not None:
+                    logging.debug("--------------------------Camelot_action error: %s" % error)
+                    self.camelot_input_multiplex.add_error_message(error)
+
+                
+            
 
 
     def action(self, action_name, parameters = [] , wait=True):

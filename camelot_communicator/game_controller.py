@@ -47,6 +47,7 @@ class GameController:
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
         self.active_GUI = GUI
+        self.error_list = []
     
     def start_platform_communication(self):
         """
@@ -245,8 +246,10 @@ class GameController:
         try:
             received = self.camelot_input_multiplex.get_input_message(no_wait=True)
             logging.info("GameController: got input message \"%s\"" %( received ))
+            debugpy.breakpoint()
 
             if received in self.input_dict.keys():
+                #TODO: change to new version of execution without exec
                 exec(self.input_dict[received])
             elif received == "input Key Pause":
                 pass
@@ -263,6 +266,7 @@ class GameController:
         None
         """
         try:
+            #TODO: evolve to handle multiple location inputs
             received = self.camelot_input_multiplex.get_location_message(no_wait=True)
             logging.info("GameController: got location message \"%s\"" %( received ))
             if received.startswith(shared_variables.location_message_prefix[2:]):
@@ -303,7 +307,11 @@ class GameController:
         """
         This method is used to check if there are any error messages.
         """
-        self.camelot_input_multiplex.get_error_message()
+        error_message = self.camelot_input_multiplex.get_error_message()
+        if error_message is not None:
+            error = CamelotError(error_message)
+            self.error_list.append(error)
+
     
     def _incoming_action_handler(self, message):
         """
@@ -322,6 +330,7 @@ class GameController:
         if success:
             changed_relations = self.current_state.apply_action(action)
             self.queueIn_GUI.put(self.current_state.world_state)
+            self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
     
     def _apply_camelot_message(self, message):
         """

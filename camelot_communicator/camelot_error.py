@@ -11,7 +11,10 @@ class CamelotError:
 
     def __init__(self, error_message):
         self.error_message = error_message
-        self._error_evaluation()
+        try:
+            self._error_evaluation()
+        except:
+            pass
         self.handled = False
 
     def __str__(self):
