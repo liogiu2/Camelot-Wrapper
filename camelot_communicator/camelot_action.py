@@ -45,15 +45,17 @@ class CamelotAction:
 
             # Get response from Camelot
             received = self.camelot_input_multiplex.get_success_message(command, action_name)
+            logging.debug("CamelotAction(check_for_success) - Received: " + str(received))
             
             # Return True if success response, else false for fail response
             if received is not None:
                 logging.debug("Camelot output: %s" % received)
                 if received == 'succeeded ' + command:
                     self.success_messages.put(received)
-                    logging.debug("Camelot_Action: Success message added to queue")
+                    logging.debug("Camelot_Action(check_for_success): Success message added to queue")
                     return True
                 elif received.startswith('failed ' + command) or received.startswith('error ' + command):
+                    logging.debug("Camelot_Action(check_for_success): Received error message, returning False")
                     return False
                 elif received == False:
                     # Found error from Camelot that belongs to this action

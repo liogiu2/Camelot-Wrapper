@@ -282,7 +282,6 @@ class GameController:
         try:
             received = self.camelot_input_multiplex.get_input_message(no_wait=True)
             logging.info("GameController: got input message \"%s\"" %( received ))
-            debugpy.breakpoint()
 
             if received in self.input_dict.keys():
                 for item in self.input_dict[received]:
@@ -314,7 +313,6 @@ class GameController:
         except queue.Empty:
             return False
         except Exception as inst:
-            debugpy.breakpoint()
             logging.exception("GameController: Exception in location handler: %s" %( inst ))
             return False
         return True
@@ -396,7 +394,10 @@ class GameController:
         """
         relation_list = []
         for item in changed_relations:
-            i = (item[0], item[1].to_PDDL())
-            relation_list.append(i)
+            if len(item) == 2:
+                i = (item[0], item[1].to_PDDL())
+                relation_list.append(i)
+            else:
+                logging.debug("GameController(_format_changed_relations_for_external_message): Invalid relation: %s" %( item ))
         json_message = jsonpickle.encode(relation_list)
         return json_message

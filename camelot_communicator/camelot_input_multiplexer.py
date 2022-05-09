@@ -87,8 +87,7 @@ class CamelotInputMultiplexer:
         try:
             message = self.__success_queue.get(timeout=0.5)
         except Empty:
-            message = None
-            self.get_error_message()
+            message = self.get_error_message()
             error = self._camelot_error_manager.check_errors_with_action(action_name, command)
             if error != None:
                 return False
@@ -110,7 +109,7 @@ class CamelotInputMultiplexer:
         """
         try:
             message = self.__error_queue.get_nowait()
-            logging.debug("CamelotInputMultiplexer(get_success_message): Got error message: %s"%(message))
+            logging.debug("CamelotInputMultiplexer(get_error_message): Got error message: %s"%(message))
         except Empty:
             message = None
         
