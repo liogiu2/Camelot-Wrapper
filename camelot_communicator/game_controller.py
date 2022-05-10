@@ -37,8 +37,8 @@ class GameController:
         self._domain_path, self._problem_path = shared_variables.get_domain_and_problem_path()
         shared_variables.action_list = get_action_list()
         self._parser = PDDL_Parser()
-        self._domain = self._parser.parse_domain(self._domain_path)
-        self._problem = self._parser.parse_problem(self._problem_path)
+        self._domain = self._parser.parse_domain(domain_filename = self._domain_path)
+        self._problem = self._parser.parse_problem(problem_filename = self._problem_path)
         self._camelot_action = CamelotAction()
         self._player = ''
         self.input_dict = {}
