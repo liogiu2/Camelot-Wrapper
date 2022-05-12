@@ -328,17 +328,23 @@ class GameController:
         try:
             received = self.queueOut_GUI.get_nowait()
             logging.debug("GameController: got external message \"%s\"" %( received ))
+
+            if "CI" in received:
+                # handle Camelot instruction
+                message = received["CI"]
+                self._camelot_action.send_camelot_instruction(message)
+            elif "PA" in received:
+                # handle PDDL action
+                message = received["PA"]
+                self._incoming_action_handler(message)
         except queue.Empty:
-            return
+            pass
         
-        if "CI" in received:
-            # handle Camelot instruction
-            message = received["CI"]
-            self._camelot_action.send_camelot_instruction(message)
-        elif "PA" in received:
-            # handle PDDL action
-            message = received["PA"]
-            self._incoming_action_handler(message)
+        action = self._platform_communication.receive_message()
+        if action is not None:
+            action_text = action[0]['text']
+            logging.debug("GameController: got external message from platform: \"%s\"" %( action_text ))
+            self._incoming_action_handler(action_text)
     
     def _check_error_messages(self):
         """

@@ -22,23 +22,35 @@ class PlatformIOCommunication:
         self.protocol_phase_link = "protocol_phase"
         self.receive_message_link = ""
         self.send_message_link = ""
-        self.__number_of_requests = 100
+        self.__number_of_requests_plt_online = 100
         self.__platform_online = False
-        self.__max_number_of_requests = 10
+        self.__max_number_of_requests_plt_online = 10
+        self.__number_of_requests_plt_rcv_mess = 100
+        self.__max_number_of_requests_rcv_mess  = 10
     
     def start(self):
-        self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
         self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()
+    
+    def start_receiving_normal_messages(self):
+        """
+        This method is used to start the thread that receives normal messages from the platform.
+        """
+        self.__input_thread = threading.Thread(target=self.__receive_message_thread, args=(self.__message_queue), daemon=True)
+        self.__input_thread.start()
+        pass
 
     def __receive_message_thread(self, message_queue: queue.Queue):
         """
         This method is used to create a thread that continuosly makes request to the platform to receive a new message when available.
         """
+        debugpy.breakpoint()
+        logging.debug("PlatformIOCommunication:__receive_message_thread: started")
         while self._is_platform_online():
-            message = self._receive_message()
+            message = self.receive_message()
             if message != "":
                 message_queue.put(message)
-            time.sleep(0.2)
+                logging.debug("PlatformIOCommunication:__receive_message_thread -- Received message and added to the queue: " + str(message))
+            time.sleep(1)
     
     def get_handshake_phase(self) -> str:
         """
@@ -104,7 +116,7 @@ class PlatformIOCommunication:
         except queue.Empty:
             return ""
 
-    def _receive_message(self) -> str:
+    def receive_message(self) -> str:
         """
         This method is used to receive a message from the platform.
 
@@ -113,10 +125,19 @@ class PlatformIOCommunication:
         str
             The message received from the platform.
         """
-        if self._is_platform_online():
-            response = requests.get(self.base_link + self.receive_message_link)
-            return response.json()['text']
-        return ""
+        if self.__number_of_requests_plt_rcv_mess > self.__max_number_of_requests_rcv_mess:
+            self.__number_of_requests_plt_rcv_mess = 0
+            if self._is_platform_online():
+                response = requests.get(self.base_link + self.receive_message_link)
+                if response.status_code == 200:
+                    if response.json() == []:
+                        return None
+                    else:
+                        return response.json()
+            return None
+        else:
+            self.__number_of_requests_plt_rcv_mess += 1 
+            return None
     
     def send_error_message(self, message):
         """
@@ -136,7 +157,7 @@ class PlatformIOCommunication:
         This method is used to check if the platform is online.
         It does that every X times this method is called to avoid congestion on API side.
         """
-        if self.__number_of_requests > self.__max_number_of_requests:
+        if self.__number_of_requests_plt_online > self.__max_number_of_requests_plt_online:
             try:
                 response = requests.head(self.base_link, timeout=0.5)
                 if response.status_code == 200:
@@ -145,9 +166,9 @@ class PlatformIOCommunication:
                     self.__platform_online = False
             except:
                 self.__platform_online = False
-            self.__number_of_requests = 0
+            self.__number_of_requests_plt_online = 0
         else:
-            self.__number_of_requests += 1
+            self.__number_of_requests_plt_online += 1
         
         return self.__platform_online
 
