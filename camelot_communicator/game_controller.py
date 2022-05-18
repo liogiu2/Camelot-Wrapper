@@ -114,6 +114,7 @@ class GameController:
         self._initialize()
         initial_state = CamelotWorldState(self._domain, self._problem, wait_for_actions= game_loop)
         initial_state.create_camelot_env_from_problem()
+        initial_state.check_domain_actions_available_to_use()
 
         self._platform_communication_phase_3_4(initial_state.domain, initial_state.world_state)
 

@@ -1,0 +1,5 @@
+debugpy==1.2.1
+jsonpickle==2.1.0
+PySimpleGUI==4.60.0
+requests==2.27.1
+singleton_decorator==1.0.0

@@ -24,6 +24,7 @@
         (can_close ?furniture - furniture) 
         (has_surface ?furniture - furniture)
         (stored ?item - item ?furniture - furniture)
+        (has_item_in_pocket ?character - character ?item - item)
     )
 
     ; Camelot Action: 
@@ -50,13 +51,11 @@
     ; Preconditions:
     ; Effects: 
     (:action move-within-location
-        :parameters (?who -character
-            ?from ?to - position)
-        :precondition (and (at ?who ?from) 
+        :parameters (?who -character ?to - position ?loc - location)
+        :precondition (and (at ?to ?loc) 
             (alive ?who)
         )
         :effect (and (at ?who ?to)
-            (not (at ?who ?from))
         )
     )
     
@@ -400,9 +399,6 @@
                 (at ?furniture ?position) 
                 (at ?character ?position) 
                 (stored ?item ?furniture)
-                (forall (?characters - character) 
-                    (not(equip ?item ?characters))
-                )
                 (or
                     (has_surface ?furniture)
                     (and 
@@ -424,9 +420,37 @@
     ; Effects:
     ;               
     (:action pocket
-        :parameters ()
-        :precondition (and )
-        :effect (and )
+        :parameters (?character - character ?item - item)
+        :precondition (and 
+            (alive ?character)
+            (equip ?item ?character)
+        )
+        :effect (and 
+            (not (equip ?item ?character))
+            (has_item_in_pocket ?character ?item)
+        )
+    )
+
+    (:action unpocket
+        :parameters (?character - character ?item - item)
+        :precondition (and 
+            (alive ?character)
+            (has_item_in_pocket ?character ?item)
+        )
+        :effect (and 
+            (not (has_item_in_pocket ?character ?item))
+            (equip ?item ?character)
+        )
+    )
+
+    (:action revive
+        :parameters (?character - character)
+        :precondition (and 
+            (not (alive ?character))
+        )
+        :effect (and 
+            (alive ?character)
+        )
     )
     
     

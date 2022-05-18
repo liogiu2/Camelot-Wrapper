@@ -92,6 +92,20 @@ class CamelotWorldState:
         for item in self.problem.initial_state:
             world.add_relation(item)
         return world
+    
+    def check_domain_actions_available_to_use(self):
+        """A method that is used to check if all the actions available in the domain can be used.
+        It checks the JSON file pddl_actions_to_camelot.json and if the action is not available it will be deactivated from the domain.
+
+        Parameters
+        ----------
+        None
+
+        """
+        json_actions = parse_json('pddl_actions_to_camelot')
+        for action in self.domain.actions:
+            if action.name not in json_actions.keys():
+                action.available = False
 
     def create_camelot_env_from_problem(self):
         """A method that is used to create the camelot environmen from the problem linked to the WorldState class

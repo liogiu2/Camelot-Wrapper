@@ -25,8 +25,9 @@ class PlatformIOCommunication:
         self.__number_of_requests_plt_online = 100
         self.__platform_online = False
         self.__max_number_of_requests_plt_online = 10
-        self.__number_of_requests_plt_rcv_mess = 100
-        self.__max_number_of_requests_rcv_mess  = 10
+        self.__number_of_requests_plt_rcv_mess = 999999
+        # 500 max number of requests are 15ms 
+        self.__max_number_of_requests_rcv_mess  = 1000
     
     def start(self):
         self.communication_protocol_phase_messages = requests.get(self.base_link + "get_protocol_messages").json()

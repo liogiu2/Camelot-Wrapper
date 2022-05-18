@@ -1,16 +1,10 @@
-import os
 import sys
-
-if os.name == 'nt':
-    pddl_path = "C:\\Users\\giulio17\\Documents\\Camelot_work\\EV_PDDL"
-else:
-    pddl_path = "/Users/giuliomori/Documents/GitHub/EV_PDDL/"
-
-sys.path.insert(0, pddl_path)
+from pathlib import Path
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..\\..', 'EV_PDDL'))
 import game_controller
 import logging
 import getopt
-from pathlib import Path
 from datetime import datetime
 
 def main(argv):

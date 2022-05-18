@@ -41,5 +41,16 @@
                 "wait": "True"
             }
         ]
+    },
+    "move-within-location":
+    {
+        "commands":
+        [
+            {
+                "action_name": "WalkTo",
+                "action_args": ["?who", "?to"],
+                "wait": "True"
+            }
+        ]
     }
 }
