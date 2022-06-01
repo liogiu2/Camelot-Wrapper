@@ -185,6 +185,9 @@ class CamelotAction:
             return None
         command_data = self.json_actions_to_camelot.get(action.name).get("commands")
         parameters = {k : v.name for (k,v) in action.parameters.items()}
+        if action.name.startswith("instantiate_"):
+            parameters['?name'] = parameters['?obj']
+            parameters['?obj'] = ''.join(i for i in parameters['?name'] if not i.isdigit())
         for command in command_data:
             command_dict = {
                 "action_name": command["action_name"],

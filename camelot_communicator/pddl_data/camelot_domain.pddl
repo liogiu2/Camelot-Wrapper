@@ -453,6 +453,14 @@
         )
     )
     
+    (:action instantiate_object_in_furniture
+        :parameters (?obj - item ?into - location ?furniture - furniture)
+        :precondition ( and 
+            (at ?furniture ?into))
+        :effect (and
+            (in ?obj ?into)
+            (stored ?obj ?furniture) )
+    )
     
     
 )

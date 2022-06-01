@@ -19,6 +19,7 @@ import logging
 import debugpy
 import copy
 import re
+import random
 
 
 class CamelotWorldState:
@@ -205,8 +206,7 @@ class CamelotWorldState:
                     break
             if itm == '':
                 raise Exception('item not found in camelot')
-            self._camelot_action.action(
-                'CreateItem', [item.name, itm], self._wait_for_actions)
+            self._camelot_action.action('CreateItem', [item.name, itm], self._wait_for_actions)
 
     def _find_in_json(self, json, what, where):
         json_parsed = parse_json(json)
@@ -595,8 +595,17 @@ class CamelotWorldState:
             logging.error("GameController: PDDL action \"%s\" not found in domain" %( action_name ))
             return
         parameters = {}
-        for i in range(len(action_definition.parameters)):
-            parameters[action_definition.parameters[i].name] = self.world_state.find_entity(name = message_parts[i+1], type=action_definition.parameters[i].type)
+        if action_name.startswith("instantiate_"):
+            for i in range(len(action_definition.parameters)):
+                if action_definition.parameters[i].type.name == "item":
+                    item = Entity(name=message_parts[i+1] + str(random.randint(0,100)), type_e=action_definition.parameters[i].type)
+                    self.world_state.add_entity(item)
+                    parameters[action_definition.parameters[i].name] = item
+                else:
+                    parameters[action_definition.parameters[i].name] = self.world_state.find_entity(name = message_parts[i+1], type=action_definition.parameters[i].type)
+        else:
+            for i in range(len(action_definition.parameters)):
+                parameters[action_definition.parameters[i].name] = self.world_state.find_entity(name = message_parts[i+1], type=action_definition.parameters[i].type)
         return Action(action_definition, parameters=parameters)
 
     def apply_action(self, action: Action):
@@ -612,7 +621,10 @@ class CamelotWorldState:
         list
             A list of relations that are added or changed in the world state.
         """
-        return self.world_state.apply_action(action)
+        changed_relations = self.world_state.apply_action(action)
+        if action.name.startswith("instantiate_"):
+            changed_relations.insert(0, ('new_entity', action.parameters['?obj']))
+        return changed_relations
     
     def check_action_can_apply(self, action: Action):
         """This method is used to check if an action can be applied.

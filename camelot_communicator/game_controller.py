@@ -143,28 +143,29 @@ class GameController:
             if item.predicate.name in json_p:
                 if item.predicate.name == "adjacent":
                     self._adjacent_predicate_handling(item, json_p, game_loop)
-                    continue
-                
-                sub_dict = {
-                    '$param1$' : item.entities[0].name,
-                    '$param2$' : self._player.name
-                }
-                # execute declaration part
-                for istr in json_p[item.predicate.name]['declaration']:
-                    action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
-                    self._camelot_action.action(action_name, action_parameters, wait=wait)
-                # prepare input dict
-                input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
-                self.input_dict[input_key] = []
-                # popolate input dict with istructions to use when input is called
-                for istr in json_p[item.predicate.name]['response']:
-                    action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
-                    action_dict = {
-                        'action_name' : action_name,
-                        'action_parameters' : action_parameters,
-                        'wait' : wait
+                elif item.predicate.name == "stored":
+                    self._stored_predicate_handling(item, json_p)
+                else:
+                    sub_dict = {
+                        '$param1$' : item.entities[0].name,
+                        '$param2$' : self._player.name
                     }
-                    self.input_dict[input_key].append(action_dict)
+                    # execute declaration part
+                    for istr in json_p[item.predicate.name]['declaration']:
+                        action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+                        self._camelot_action.action(action_name, action_parameters, wait=wait)
+                    # prepare input dict
+                    input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
+                    self.input_dict[input_key] = []
+                    # popolate input dict with istructions to use when input is called
+                    for istr in json_p[item.predicate.name]['response']:
+                        action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+                        action_dict = {
+                            'action_name' : action_name,
+                            'action_parameters' : action_parameters,
+                            'wait' : wait
+                        }
+                        self.input_dict[input_key].append(action_dict)
 
     def _adjacent_predicate_handling(self, item, json_p, game_loop = True):
         """A method that is used to manage the places declared on the domain
@@ -199,6 +200,28 @@ class GameController:
         
         # popolate input dict with istructions to use when input is called
         for istr in json_p['adjacent']['response']:
+            action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
+            action_dict = {
+                'action_name' : action_name,
+                'action_parameters' : action_parameters,
+                'wait' : wait
+            }
+            self.input_dict[input_key].append(action_dict)
+    
+    def _stored_predicate_handling(self, item, json_p):
+        """A method that is used to popolate the input_dict with the actions that are used to manage the stored predicates.
+        
+        """
+        sub_dict = {
+            '$param1$' : item.entities[0].name,
+            '$param2$' : self._player.name,
+            '$param3$' : item.entities[1].name,
+        }
+
+        input_key = replace_all(json_p[item.predicate.name]['input']["message"], sub_dict)
+        self.input_dict[input_key] = []
+
+        for istr in json_p[item.predicate.name]['response']:
             action_name, action_parameters, wait = self._get_camelot_action_parameters_from_json(istr, sub_dict)
             action_dict = {
                 'action_name' : action_name,
@@ -373,6 +396,10 @@ class GameController:
         success = self._camelot_action.actions(camelot_action_parameters)
         if success:
             changed_relations = self.current_state.apply_action(action)
+            if action.name.startswith("instantiate_object"):
+                json_p = parse_json("pddl_predicates_to_camelot")
+                stored = [item[1] for item in changed_relations if item[0] == "new" and item[1].predicate.name == "stored"]
+                self._stored_predicate_handling(stored[0], json_p)
             self.queueIn_GUI.put(self.current_state.world_state)
             self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
     
@@ -401,7 +428,11 @@ class GameController:
         """
         relation_list = []
         for item in changed_relations:
-            if len(item) == 2:
+            if type(item) == list:
+                for subitem in item:
+                    i = (subitem[0], subitem[1].to_PDDL())
+                    relation_list.append(i)
+            elif type(item) == tuple and len(item) == 2:
                 i = (item[0], item[1].to_PDDL())
                 relation_list.append(i)
             else:

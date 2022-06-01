@@ -52,5 +52,37 @@
                 "wait": "True"
             }
         ]
+    },
+    "instantiate_object_in_furniture":
+    {
+        "commands":
+        [
+            {
+                "action_name": "CreateItem",
+                "action_args": ["?name", "?obj"],
+                "wait": "True"
+            },
+            {
+                "action_name": "SetPosition",
+                "action_args": ["?name", "?furniture"],
+                "wait": "True"
+            },
+            {
+                "action_name": "EnableIcon",
+                "action_args": ["pickup", "hand", "?name", "Pickup ?obj", "True"],
+                "wait": "True"
+            }
+        ]
+    },
+    "pickup":
+    {
+        "commands":
+        [
+            {
+                "action_name": "Pickup",
+                "action_args": ["?character", "?item", "?furniture"],
+                "wait": "True"
+            }
+        ]
     }
 }

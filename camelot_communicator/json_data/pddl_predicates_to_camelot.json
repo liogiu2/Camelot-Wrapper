@@ -91,5 +91,19 @@
                 "wait": "True"
             }
         ]
+    },
+    "stored" : {
+        "declaration": [
+        ],
+        "input": {
+            "message": "input pickup $param1$"
+        },
+        "response": [
+            {
+                "action_name": "Pickup",
+                "action_args": ["$param2$", "$param1$", "$param3$"],
+                "wait": "True"
+            }
+        ]
     }
 }
