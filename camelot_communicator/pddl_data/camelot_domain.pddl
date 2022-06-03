@@ -323,12 +323,12 @@
     ;               giver does NOT have the item equipped anymore
     ;               receiver equips the item
     (:action give
-        :parameters (?giver ?receiver - character ?item - item ?l - position)
+        :parameters (?giver ?receiver - character ?item - item ?l - location)
         :precondition (and (alive ?giver) 
             (alive ?receiver)
             (equip ?item ?giver) 
-            (at ?giver ?l) 
-            (at ?receiver ?l)
+            (in ?giver ?l) 
+            (in ?receiver ?l)
         )
         :effect (and (not (equip ?item ?giver)) (equip ?item ?receiver))
     )
@@ -363,9 +363,10 @@
     ; Effects:
     ;               furniture is is_open
     (:action openfurniture
-        :parameters (?character - character ?furniture - furniture ?position - position)
+        :parameters (?character - character ?furniture - furniture ?position - location)
         :precondition (and (alive ?character)
-            (at ?character ?position) 
+            (in ?character ?position) 
+            (at ?furniture ?position)
             (not(is_open ?furniture)) 
             (can_open ?furniture)
         )

@@ -356,7 +356,7 @@ class CamelotWorldState:
                     logging.info("Object %s already exists, so we skip it." % str(obj))
         return obj
 
-    def apply_camelot_message(self, message: str) -> list:
+    def apply_camelot_message(self, message: str, received_action_from_platform = None) -> list:
         """
         This method gets a success message from Camelot and creates a new world state with what happened applied.
 
@@ -465,19 +465,23 @@ class CamelotWorldState:
             message_parts = message[remove_succedeed:].replace("(", "|").replace(")", "").replace(",", "|").replace(" ", "").split("|")
             action_definition = self.domain.find_action_with_name(message_parts[0])
             if action_definition is not None:
-                # Find the entities that are used in the action
-                list_parameters_entities = []
-                for i in range(1, len(message_parts)):
-                    list_parameters_entities.append(self.world_state.find_entity(name = message_parts[i]))
-                # Build the paramenters that compose the action
-                parameters = {}
-                for parameter in action_definition.parameters:
-                    for entity in list_parameters_entities:
-                        if parameter.type.name in entity.type.get_list_extensions():
-                            parameters[parameter.name] = entity
-                            break
-                action = Action(action_definition, parameters)
-                changed_relations.append(self.world_state.apply_action(action , check_action_can_apply=False))
+                debugpy.breakpoint()
+                if received_action_from_platform is not None and action_definition.name == received_action_from_platform.name:
+                    changed_relations.append( self.world_state.apply_action(received_action_from_platform, check_action_can_apply=False))
+                else:
+                    # Find the entities that are used in the action
+                    list_parameters_entities = []
+                    for i in range(1, len(message_parts)):
+                        list_parameters_entities.append(self.world_state.find_entity(name = message_parts[i]))
+                    # Build the paramenters that compose the action
+                    parameters = {}
+                    for parameter in action_definition.parameters:
+                        for entity in list_parameters_entities:
+                            if parameter.type.name in entity.type.get_list_extensions():
+                                parameters[parameter.name] = entity
+                                break
+                    action = Action(action_definition, parameters)
+                    changed_relations.append(self.world_state.apply_action(action , check_action_can_apply=False))
         return changed_relations
 
     def _change_relation_in_location(self, new_world_state: WorldState, character: Entity, changed_relations: list, location: str):

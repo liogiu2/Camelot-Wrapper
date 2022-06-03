@@ -9,7 +9,6 @@
         AlchemyShop.Chest - furniture
         AlchemyShop.Door - entrypoint
         Blacksmith.Door - entrypoint
-        RedKey - item
     )
     
     (:init
@@ -20,14 +19,13 @@
         (at AlchemyShop.Chest AlchemyShop)
         (adjacent AlchemyShop.Door Blacksmith.Door) 
         (adjacent Blacksmith.Door AlchemyShop.Door)
-        (stored RedKey AlchemyShop.Chest)
         (can_open AlchemyShop.Chest)
         (alive bob)
         (alive luca)
     )
     
     (:goal
-        (and(equip RedKey bob)
+        (and
         (at bob Blacksmith))
         
     )

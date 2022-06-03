@@ -30,6 +30,7 @@ import debugpy
 import logging
 import time
 import jsonpickle
+import copy
 
 class GameController:
 
@@ -48,6 +49,7 @@ class GameController:
         self._platform_communication = PlatformIOCommunication()
         self.active_GUI = GUI
         self.error_list = []
+        self._received_action_from_platform = None
     
     def start_platform_communication(self):
         """
@@ -392,6 +394,7 @@ class GameController:
         """
         # move-between-location(luca, Blacksmith, AlchemyShop, Blacksmith.Door, AlchemyShop.Door)
         action = self.current_state.create_action_from_incoming_message(message)
+        self._received_action_from_platform = copy.deepcopy(action)
         camelot_action_parameters = self._camelot_action.generate_camelot_action_parameters_from_action(action)
         success = self._camelot_action.actions(camelot_action_parameters)
         if success:
@@ -412,7 +415,7 @@ class GameController:
         message: str
             The message that will be applied.
         """
-        changed_relations = self.current_state.apply_camelot_message(message)
+        changed_relations = self.current_state.apply_camelot_message(message, self._received_action_from_platform)
         if len(changed_relations) > 0:
             self.queueIn_GUI.put(self.current_state.world_state)
             self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
