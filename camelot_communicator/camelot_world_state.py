@@ -465,7 +465,6 @@ class CamelotWorldState:
             message_parts = message[remove_succedeed:].replace("(", "|").replace(")", "").replace(",", "|").replace(" ", "").split("|")
             action_definition = self.domain.find_action_with_name(message_parts[0])
             if action_definition is not None:
-                debugpy.breakpoint()
                 if received_action_from_platform is not None and action_definition.name == received_action_from_platform.name:
                     changed_relations.append( self.world_state.apply_action(received_action_from_platform, check_action_can_apply=False))
                 else:
@@ -480,6 +479,9 @@ class CamelotWorldState:
                             if parameter.type.name in entity.type.get_list_extensions():
                                 parameters[parameter.name] = entity
                                 break
+                        if parameter.name not in parameters.keys():
+                            parameters[parameter.name] = self.world_state.find_entities_with_type(parameter.type)[0]
+                    
                     action = Action(action_definition, parameters)
                     changed_relations.append(self.world_state.apply_action(action , check_action_can_apply=False))
         return changed_relations
