@@ -9,6 +9,10 @@ The aim of this library is to give a structure to [Camelot](http://cs.uky.edu/~s
 ## Project Status
 The project is actively under developement. Once all the major components will be ready there will be a release. 
 
+## Installation
+Install [YarnRunner-Python](https://github.com/relaypro-open/YarnRunner-Python)
+pip install git+https://github.com/relaypro-open/YarnRunner-Python@v0.2.1#egg=yarnrunner_python
+
 ## Usage
 Please contact [Giulio Mori](https://github.com/liogiu2) for any questions about how is it used.
 

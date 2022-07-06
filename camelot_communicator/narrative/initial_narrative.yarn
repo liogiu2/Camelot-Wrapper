@@ -1,0 +1,39 @@
+title: Start
+---
+Companion: Awake at last, I see - it seems that Arnell had you out late last night.
+-> Player: Yes, I guess he did.
+    <<jump ArnellChatting>>
+-> Player: Good morning to you to, Father.
+    Companion: Forgive me. Good morning,<FirstName>. Did you sleep well?
+    -> Player: Yes, thank you. I suppose that it's time for hystory lesson.
+        Companion: Indeed it is! Past time, in fact, but no matter. Shall we begin?
+         Player: Very well.
+    -> Player: Yes, but not long enough. Can we postpone our lesson until later?
+===
+title: ArnellChatting
+---
+Companion: I trust that you managed to keep him out of trouble?
+-> Player: As long as I'm there to help him puzzle things out, he tends to keep a cooler head.
+    Companion: Haha! I don't know what he'd do without you, that lad.
+    Companion: But I'm not here to tak about Arnell's quick temper. It's time for this week's history lesson. Are you ready?
+    -> Player: Can't I just sleep for a little longer? Arnell really did keep me out late...
+       Companion: Sady, no, I have an important meeting with the village council late today, and it can't be delayed. Shall we begin?
+        Player: Very well.
+         <<jump TalkingAboutKing>>
+    -> Player: Very well, let's begin.
+        <<jump TalkingAboutKing>>
+-> Player: Sometimes a well-placed punch is the best kind of diplomacy.
+    Companion: Well now. I suppose you have a point, but I'm not sure how I feel about you two becoming the village brawlers.
+     <<jump HystoryLesson>>
+-> Player: Well fortune favours the bold, they say, and Arnell and I have certainly found our share of fortune over the years.
+    Companion: Ha ha! That you have, that you have.
+     <<jump HystoryLesson>>
+===
+title: TalkingAboutKing
+---
+Companion: Alright, let's get started then. We left off last time talking about the king - our king - back when he was but the young prince of Erafor.
+===
+title: HystoryLesson
+---
+Companion: But I'm not here to talk about Arnell's quick temper. It's time for this week's history lesson. Are you ready?
+===
