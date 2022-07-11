@@ -198,7 +198,7 @@
 		"name": "WestSign",
 		"attribute": ["Furniture"]
 	}, {
-		"name": "Eastsight",
+		"name": "EastSign",
 		"attribute": ["Furniture"]
 	}]
 }, {
@@ -212,7 +212,7 @@
 		"attribute": ["Open", "Close", "EntryPoint"],
 		"position": ["In"]
 	}, {
-		"name": "Beanch",
+		"name": "Bench",
 		"attribute": ["Seat"],
 		"position": ["Left", "Right"]
 	}, {
@@ -241,7 +241,7 @@
 		"attribute": [""],
 		"position": ["Alley2"]
 	}, {
-		"name": "blueHouseDoor",
+		"name": "BlueHouseDoor",
 		"attribute": ["Open", "Close", "EntryPoint"],
 		"position": ["In"]
 	}, {
@@ -311,11 +311,11 @@
 		"name": "Target",
 		"attribute": [""]
 	}, {
-		"name": "RightBeanch",
+		"name": "RightBench",
 		"attribute": ["Seat"],
 		"position": ["Left", "Right"]
 	}, {
-		"name": "LeftBeanch",
+		"name": "LeftBench",
 		"attribute": ["Seat"],
 		"position": ["Left", "Right"]
 	}]
@@ -450,7 +450,7 @@
 		"name": "DirtPile",
 		"attribute": [""]
 	}, {
-		"name": "Pathblock",
+		"name": "PathBlock",
 		"attribute": [""],
 		"position": ["Pathblock"]
 	}, {
@@ -464,13 +464,13 @@
 		"name": "Gate",
 		"attribute": ["Open", "Close", "EntryPoint"]
 	}, {
-		"name": "Leftfoyer",
+		"name": "LeftFoyer",
 		"attribute": [""],
-		"position": ["Leftfoyer"]
+		"position": ["LeftFoyer"]
 	}, {
-		"name": "Rightfoyer",
+		"name": "RightFoyer",
 		"attribute": [""],
-		"position": ["Rightfoyer"]
+		"position": ["RightFoyer"]
 	}, {
 		"name": "BasementDoor",
 		"attribute": ["Open", "Close", "EntryPoint"],
@@ -637,7 +637,7 @@
 		"name": "Chest",
 		"attribute": ["Open", "Close"]
 	}, {
-		"name": "Altar",
+		"name": "Altar.Behind",
 		"attribute": ["Surface"],
 		"position": ["Behind"]
 	}]
@@ -657,9 +657,9 @@
 		"name": "Well",
 		"attribute": [""]
 	}, {
-		"name": "Pathblock",
+		"name": "PathBlock",
 		"attribute": [""],
-		"position": ["Pathblock"]
+		"position": ["PathBlock"]
 	}, {
 		"name": "EastEnd",
 		"attribute": ["EntryPoint"]
