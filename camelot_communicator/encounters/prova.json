@@ -1,0 +1,13 @@
+[
+    {
+
+        "name": "Prova",
+        "description": "Prova",
+        "metadata": {
+            "type": "prova"
+        },
+        "commands": [
+            ""
+        ]
+    }
+]
