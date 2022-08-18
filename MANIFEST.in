@@ -1,1 +1,2 @@
 include camelot_communicator/json_data/*.json
+include camelot_communicator/encounters/*.json

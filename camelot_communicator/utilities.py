@@ -2,12 +2,18 @@ import json
 import importlib.resources as pkg_resources
 try:
     import json_data
+    import encounters
 except (ModuleNotFoundError, ImportError):
     from . import json_data
+    from . import encounters
 
-def parse_json(jsonfile):
-    with pkg_resources.open_text(json_data, jsonfile+'.json') as json_file:
-        json_data_parsed = json.load(json_file)
+def parse_json(jsonfile, encounter = False):
+    if encounter:
+        with pkg_resources.open_text(encounters, jsonfile+'.json') as json_file:
+            json_data_parsed = json.load(json_file)
+    else:
+        with pkg_resources.open_text(json_data, jsonfile+'.json') as json_file:
+            json_data_parsed = json.load(json_file)
     return json_data_parsed
     
 def replace_all(text, dic):

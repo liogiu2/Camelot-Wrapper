@@ -9,6 +9,7 @@ try:
     from camelot_world_state import CamelotWorldState
     from utilities import parse_json, replace_all, get_action_list, str2bool
     from camelot_input_multiplexer import CamelotInputMultiplexer
+    from encounters_controller import EncountersController
     import shared_variables
 except (ModuleNotFoundError, ImportError):
     from .GUI import GUI
@@ -19,6 +20,7 @@ except (ModuleNotFoundError, ImportError):
     from .camelot_world_state import CamelotWorldState
     from .utilities import parse_json, replace_all, get_action_list, str2bool
     from .camelot_input_multiplexer import CamelotInputMultiplexer
+    from .encounters_controller import EncountersController
     from . import shared_variables
 from ev_pddl.action import Action
 from ev_pddl.PDDL import PDDL_Parser
@@ -50,6 +52,7 @@ class GameController:
         self.active_GUI = GUI
         self.error_list = []
         self._received_action_from_platform = None
+        self._encounter_controller = EncountersController()
     
     def start_platform_communication(self):
         """

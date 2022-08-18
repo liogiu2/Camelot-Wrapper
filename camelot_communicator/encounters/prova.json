@@ -1,13 +1,23 @@
-[
-    {
+{
 
-        "name": "Prova",
-        "description": "Prova",
-        "metadata": {
-            "type": "prova"
+    "name": "Prova",
+    "description": "Prova",
+    "metadata": {
+        "type": "prova"
+    },
+    "preconditions": "(and (in luca City) (in bob City) (alive bob) (alive luca))",
+    "instructions": [
+        {
+            "type" : "PDDL",
+            "commands": [
+                "move-within-location(luca, bob)"
+            ]
         },
-        "commands": [
-            ""
-        ]
-    }
-]
+        {
+            "type" : "Camelot",
+            "commands": [
+                "Wave(bob)"
+            ]
+        }
+    ]
+}
