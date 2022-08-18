@@ -43,7 +43,7 @@ class TestPlatformCommunication(unittest.TestCase):
         message = {'message': 'message'}
         responses.add(responses.GET, 'http://127.0.0.1:8080/get_protocol_messages', json=self.protocol_messages)
         responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=message, status=200)
-        from camelot_communicator.platform_IO_communication import PlatformIOCommunication
+        from camelot_wrapper.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
             mock_is_platform_online.return_value = True
             platform_communication = PlatformIOCommunication()
@@ -59,8 +59,8 @@ class TestPlatformCommunication(unittest.TestCase):
         message = {'message': 'message'}
         responses.add(responses.GET, 'http://127.0.0.1:8080/get_protocol_messages', json=self.protocol_messages)
         responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=self.protocol_messages['PHASE_2']['message_4'], status=200)
-        from camelot_communicator.game_controller import GameController
-        from camelot_communicator.platform_IO_communication import PlatformIOCommunication
+        from camelot_wrapper.game_controller import GameController
+        from camelot_wrapper.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
             with patch('camelot_communicator.camelot_input_multiplexer.CamelotInputMultiplexer.__wrapped__', autospec=True) as mock_camelot_communication:
                 mock_camelot_communication.start = True
@@ -82,8 +82,8 @@ class TestPlatformCommunication(unittest.TestCase):
             'get_message_url' : 'url'
         }
         responses.add(responses.POST, 'http://127.0.0.1:8080/inizialization_env', json=response_message, status=200)
-        from camelot_communicator.game_controller import GameController
-        from camelot_communicator.platform_IO_communication import PlatformIOCommunication
+        from camelot_wrapper.game_controller import GameController
+        from camelot_wrapper.platform_IO_communication import PlatformIOCommunication
         with patch.object(PlatformIOCommunication.__wrapped__ , '_is_platform_online') as mock_is_platform_online:
             with patch('camelot_communicator.camelot_input_multiplexer.CamelotInputMultiplexer.__wrapped__', autospec=True) as mock_camelot_communication:
                 mock_camelot_communication.start = True

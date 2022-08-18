@@ -1,6 +1,6 @@
 import unittest
 
-from camelot_communicator.encounter import Encounter
+from camelot_wrapper.encounter import Encounter
 
 class TestEncounter(unittest.TestCase):
 
