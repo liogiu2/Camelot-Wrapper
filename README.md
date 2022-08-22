@@ -24,6 +24,7 @@ pip install git+https://github.com/relaypro-open/YarnRunner-Python@v0.2.1#egg=ya
 
 ## Usage
 Please contact [Giulio Mori](https://github.com/liogiu2) for any questions about how is it used.
+If you use this software and you're writing a research paper, please cite our research paper where we showcase this software using the Github function for citation. 
 
 ## Contributing
 Pull requests are welcome, but please open an issue first to discuss what you would like to change.
