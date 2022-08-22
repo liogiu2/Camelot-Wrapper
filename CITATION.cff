@@ -23,5 +23,5 @@ preferred-citation:
   type: conference-paper
   year: 2022
   conference: "18th AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment (AIIDE-22)"
-  publisher: "AAAI Press"
+  booktitle: "AAAI Press"
 title: "Camelot-Wrapper"
