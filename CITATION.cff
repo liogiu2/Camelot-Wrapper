@@ -20,6 +20,8 @@ preferred-citation:
       family-names: Schiffel
       affiliation: Reykjavik University
   title: "EM-Glue: A Platform for Decoupling Experience Managers and Environments"
-  type: inproceedings
+  type: conference-paper
   year: 2022
+  conference: "18th AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment (AIIDE-22)"
+  publisher: "AAAI Press"
 title: "Camelot-Wrapper"
