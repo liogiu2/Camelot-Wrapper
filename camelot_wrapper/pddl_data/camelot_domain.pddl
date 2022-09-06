@@ -463,5 +463,8 @@
             (stored ?obj ?furniture) )
     )
     
+    (:special-action start_conversation
+        :parameters (?character - character ?conversation_name - conversation)
+    )
     
 )

@@ -17,7 +17,9 @@ The documentation is under construction.
 ## Installation
 To have it working correcly, a Camelot Wrapper needs to be launched in combination with the [EM-Glue](https://github.com/liogiu2/EM-Glue) platform. Please check the README of that repository to successfully launch this software.
 
-(For future developments) Install [YarnRunner-Python](https://github.com/relaypro-open/YarnRunner-Python)
+(For future developments) 
+Install the latest version of the [YarnSpinner-Console](https://github.com/YarnSpinnerTool/YarnSpinner-Console) program ```ysc```. This will be used by the conversation manager to compile the ```.yarn``` files containing the conversation files.
+Then install the [YarnRunner-Python](https://github.com/relaypro-open/YarnRunner-Python)
 ```
 pip install git+https://github.com/relaypro-open/YarnRunner-Python@v0.2.1#egg=yarnrunner_python
 ```

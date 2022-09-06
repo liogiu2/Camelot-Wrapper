@@ -16,7 +16,8 @@
         {
             "type" : "Camelot",
             "commands": [
-                "Wave(bob)"
+                "Wave(bob)",
+                "EnableIcon(\"Talk\", talk, luca, \"Talk with Luca\", true)"
             ]
         }
     ]

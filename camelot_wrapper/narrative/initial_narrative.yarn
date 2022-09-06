@@ -4,6 +4,7 @@ Companion: Awake at last, I see - it seems that Arnell had you out late last nig
 -> Player: Yes, I guess he did.
     <<jump ArnellChatting>>
 -> Player: Good morning to you to, Father.
+    <<update_player_model 0 0 0 0 1>>
     Companion: Forgive me. Good morning,<FirstName>. Did you sleep well?
     -> Player: Yes, thank you. I suppose that it's time for hystory lesson.
         Companion: Indeed it is! Past time, in fact, but no matter. Shall we begin?
