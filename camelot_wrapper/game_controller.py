@@ -10,6 +10,7 @@ try:
     from utilities import parse_json, replace_all, get_action_list, str2bool
     from camelot_input_multiplexer import CamelotInputMultiplexer
     from encounters_controller import EncountersController
+    from conversation_controller import ConversationController
     import shared_variables
 except (ModuleNotFoundError, ImportError):
     from .GUI import GUI
@@ -21,6 +22,7 @@ except (ModuleNotFoundError, ImportError):
     from .utilities import parse_json, replace_all, get_action_list, str2bool
     from .camelot_input_multiplexer import CamelotInputMultiplexer
     from .encounters_controller import EncountersController
+    from .conversation_controller import ConversationController
     from . import shared_variables
 from ev_pddl.action import Action
 from ev_pddl.PDDL import PDDL_Parser
@@ -33,6 +35,7 @@ import logging
 import time
 import jsonpickle
 import copy
+import re
 
 class GameController:
 
@@ -46,6 +49,7 @@ class GameController:
         self._player = ''
         self.input_dict = {}
         self.current_state = None
+        self.conversation_active = False
         self.queueIn_GUI = multiprocessing.Queue()
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
@@ -53,6 +57,7 @@ class GameController:
         self.error_list = []
         self._received_action_from_platform = None
         self._encounter_controller = EncountersController()
+        self._conversation_controller = ConversationController()
     
     def start_platform_communication(self):
         """
@@ -309,7 +314,7 @@ class GameController:
         bool -> True if received message from input queue and responded to it; False if not.
         """
         try:
-            received = self.camelot_input_multiplex.get_input_message(no_wait=True)
+            received = str(self.camelot_input_multiplex.get_input_message(no_wait=True))
             logging.info("GameController: got input message \"%s\"" %( received ))
 
             if received in self.input_dict.keys():
@@ -320,6 +325,10 @@ class GameController:
                     self._camelot_action.action(action_name, action_parameters, wait=wait)
             elif received == "input Key Pause":
                 pass
+            elif received.startswith("input Selected"):
+                selection = received.removeprefix("input Selected ")
+                if selection.isdigit():
+                    self._conversation_controller.continue_conversation_with_choice(int(selection))
         except queue.Empty:
             return False
         return True
@@ -396,18 +405,28 @@ class GameController:
             The message that represents the action.
         """
         # move-between-location(luca, Blacksmith, AlchemyShop, Blacksmith.Door, AlchemyShop.Door)
-        action = self.current_state.create_action_from_incoming_message(message)
-        self._received_action_from_platform = copy.deepcopy(action)
-        camelot_action_parameters = self._camelot_action.generate_camelot_action_parameters_from_action(action)
-        success = self._camelot_action.actions(camelot_action_parameters)
-        if success:
-            changed_relations = self.current_state.apply_action(action)
-            if action.name.startswith("instantiate_object"):
-                json_p = parse_json("pddl_predicates_to_camelot")
-                stored = [item[1] for item in changed_relations if item[0] == "new" and item[1].predicate.name == "stored"]
-                self._stored_predicate_handling(stored[0], json_p)
-            self.queueIn_GUI.put(self.current_state.world_state)
-            self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
+        # start_conversation(luca, initial_narrative)
+        message = message.replace(" ", "")
+        if message.startswith("start_conversation"):
+            message_parts = re.split(r"\(|\)|,", message)
+            character = message_parts[1]
+            conversation = message_parts[2]
+            if self._conversation_controller.check_conversation_exists(conversation):
+                self.conversation_active = True
+                self._conversation_controller.start_camelot_conversation(conversation_name=conversation, player_name=self._player.name, npc_name=character)
+        else:
+            action = self.current_state.create_action_from_incoming_message(message)
+            self._received_action_from_platform = copy.deepcopy(action)
+            camelot_action_parameters = self._camelot_action.generate_camelot_action_parameters_from_action(action)
+            success = self._camelot_action.actions(camelot_action_parameters)
+            if success:
+                changed_relations = self.current_state.apply_action(action)
+                if action.name.startswith("instantiate_object"):
+                    json_p = parse_json("pddl_predicates_to_camelot")
+                    stored = [item[1] for item in changed_relations if item[0] == "new" and item[1].predicate.name == "stored"]
+                    self._stored_predicate_handling(stored[0], json_p)
+                self.queueIn_GUI.put(self.current_state.world_state)
+                self._platform_communication.send_message(self._format_changed_relations_for_external_message(changed_relations))
     
     def _apply_camelot_message(self, message):
         """

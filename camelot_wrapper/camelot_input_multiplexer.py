@@ -124,7 +124,7 @@ class CamelotInputMultiplexer:
         """
         self.__error_queue.put(message)
     
-    def get_input_message(self, no_wait = False):
+    def get_input_message(self, no_wait = False) -> str:
         """
         This method is used from the main thread to get the input messages that come from Camelot.
         """

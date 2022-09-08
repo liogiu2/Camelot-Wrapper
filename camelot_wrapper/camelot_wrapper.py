@@ -22,7 +22,6 @@ def main(argv):
         elif opt == '-d':
             import debugpy
             debugpy.listen(5678)
-            debugpy.wait_for_client()
         elif opt == '-l':
             logname = "logPython"+datetime.now().strftime("%d%m%Y%H%M%S")+".log"
             Path("logs/python/").mkdir(parents=True, exist_ok=True)

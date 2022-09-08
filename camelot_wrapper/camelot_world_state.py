@@ -593,7 +593,6 @@ class CamelotWorldState:
             The message that will be used to create the action
         """
         # for debugging: openfurniture(bob, alchemyshop.Chest, alchemyshop.Chest)
-        message = message.replace(" ", "")
         message_parts = re.split(r"\(|\)|,", message)
         action_name = message_parts[0]
         action_definition = self.domain.find_action_with_name(action_name)
