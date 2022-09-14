@@ -50,6 +50,7 @@ class GameController:
         self.input_dict = {}
         self.current_state = None
         self.conversation_active = False
+        self._menu_showing = False
         self.queueIn_GUI = multiprocessing.Queue()
         self.queueOut_GUI = multiprocessing.Queue()
         self._platform_communication = PlatformIOCommunication()
@@ -324,11 +325,23 @@ class GameController:
                     wait = item['wait']
                     self._camelot_action.action(action_name, action_parameters, wait=wait)
             elif received == "input Key Pause":
-                pass
+                if not self._menu_showing:
+                    self._camelot_action.action("ShowMenu", [], True)
+                    self._camelot_action.action("SetTitle", ["Pause Menu"], True)
+                    self._menu_showing = True
+            elif received in ("input Selected Resume", "input Close Menu"):
+                self._camelot_action.action("HideMenu", [], True)
+                if not self.conversation_active:
+                    self._camelot_action.action("EnableInput", [], True)
+                self._menu_showing = False
             elif received.startswith("input Selected"):
                 selection = received.removeprefix("input Selected ")
                 if selection.isdigit():
                     self._conversation_controller.continue_conversation_with_choice(int(selection))
+                elif selection == 'next':
+                    self._conversation_controller.continue_conversation()
+                elif selection == 'end':
+                    self._conversation_controller.end_conversation()
         except queue.Empty:
             return False
         return True

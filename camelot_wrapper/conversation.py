@@ -1,3 +1,4 @@
+import logging
 import subprocess
 from yarnrunner_python import YarnRunner
 import shlex
@@ -31,9 +32,11 @@ class Conversation:
                 self.runner = YarnRunner(story_f, strings_f, autostart=False)
 
         def update_player_model(fighter, method_actor, storyteller, tactician, power_gamer):
-            print(fighter, method_actor, storyteller, tactician, power_gamer)
+            logging.info("Updating player model with paramenters: {}, {}, {}, {}, {}".format(fighter, method_actor, storyteller, tactician, power_gamer))
         
         self.runner.add_command_handler("update_player_model", update_player_model)
+
+        self.runner.resume()
 
         self.player_name = player_name
         self.npc_name = npc_name
@@ -55,7 +58,7 @@ class Conversation:
         """
         if not self._prepared:
             raise Exception("Conversation is not prepared.")
-        self.runner.resume()
+            
         if self.runner.has_line():
             return self.runner.get_line()
         else:
@@ -81,7 +84,6 @@ class Conversation:
         if not self._prepared:
             raise Exception("Conversation is not prepared.")
 
-        self.runner.resume()
         return self.runner.get_lines()
     
     def is_finished(self):
@@ -144,6 +146,11 @@ class Conversation:
         line_of_dialog = self.run_one_line_conversation()
         return_list.append(self._prepare_line(line_of_dialog))
         if self.has_line():
+            return_list.append("[{}|{}] ".format('next', "Next line"))
+            return return_list
+        #TODO: final step of conversation has to close the dialogue window, add extra case here to solve that use case
+        elif self.is_finished():
+            return_list.append("[{}|{}] ".format('end', "End Dialog"))
             return return_list
         else:
             for choice in self.get_choices():

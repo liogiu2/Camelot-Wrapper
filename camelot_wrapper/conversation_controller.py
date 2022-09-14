@@ -74,10 +74,33 @@ class ConversationController:
         choice : int
             The choice to continue the conversation with.
         """
-        self._camelot_action.action("ClearDialog", [], False)
         running_conversation = self.get_running_conversation()
         running_conversation.choose(choice)
+        self.continue_conversation(running_conversation=running_conversation)
+    
+    def continue_conversation(self, running_conversation : Conversation = None):
+        """
+        This method is used to continue a conversation.
+        It will create and send all the camelot commands to continue the execution of the conversation.
+
+        Parameters
+        ----------
+        running_conversation : Conversation (Optional)
+            The conversation to continue.
+        """
+        self._camelot_action.action("ClearDialog", [], False)
+        if running_conversation is None:
+            running_conversation = self.get_running_conversation()
         self._prepare_and_send_camelot_setdialog_command(running_conversation.name)
+    
+    def end_conversation(self):
+        """
+        This method is used to end a conversation.
+        It will create and send all the camelot commands to end the execution of the conversation.
+        """
+        self._camelot_action.action("HideDialog", [], True)
+        self._camelot_action.action("EnableInput", [], True)
+        self._camelot_action.action("ClearDialog", [], False)
 
         
     def _prepare_and_send_camelot_setdialog_command(self, conversation_name : str):

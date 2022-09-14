@@ -64,8 +64,7 @@ class CamelotInputMultiplexer:
                     logging.debug("CamelotInputMultiplexer: Added to location queue")
                 else:
                     if previous_input_message == message:
-                        logging.debug("CamelotInputMultiplexer: skipping message because it's duplicated")
-                        continue
+                        logging.debug("CamelotInputMultiplexer: Duplicated message, but keeping it.")
                     previous_input_message = str(message)
                     self.__input_queue.put(message)
                     logging.debug("CamelotInputMultiplexer: Added to input queue")

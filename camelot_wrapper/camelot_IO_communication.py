@@ -29,13 +29,24 @@ class CamelotIOCommunication:
             self.__input_thread = threading.Thread(target=self.__camelot_sender_thread, args=(
                 self.__queue_output, self.__running, lock, event_obj), daemon=True)
             self.__input_thread.start()
-            self.__output_thread = threading.Thread(target=self.__camelot_receiver_thread, args=(
-                self.__queue_input, self.__running, lock, event_obj), daemon=True)
-            self.__output_thread.start()
+            threading.Timer(1.0, self.__start_receiver_thread, args=(lock, event_obj)).start()
             self.__started = True
             #self._keep_alive()
     
-    
+    def __start_receiver_thread(self, lock, event_obj):
+        """
+        This method is called to start the receiver thread.
+
+        Parameters
+        ----------
+        lock : threading.Lock 
+            the lock used to ensure that the standard input / output is not used by two threads at the same time
+        event_obj : threading.Event 
+            the event used to notify the thread that a message has been sent to the standard output so the operation on the standard input can be performed.
+        """
+        self.__output_thread = threading.Thread(target=self.__camelot_receiver_thread, args=(self.__queue_input, self.__running, lock, event_obj), daemon=True)
+        self.__output_thread.start()
+
     def _keep_alive(self):
         """
         This method is called to keep the threads alive.

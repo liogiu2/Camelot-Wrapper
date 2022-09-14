@@ -5,11 +5,13 @@ Companion: Awake at last, I see - it seems that Arnell had you out late last nig
     <<jump ArnellChatting>>
 -> Player: Good morning to you to, Father.
     <<update_player_model 0 0 0 0 1>>
-    Companion: Forgive me. Good morning,<FirstName>. Did you sleep well?
+    Companion: Forgive me. Good morning, <FirstName>. Did you sleep well?
     -> Player: Yes, thank you. I suppose that it's time for hystory lesson.
         Companion: Indeed it is! Past time, in fact, but no matter. Shall we begin?
          Player: Very well.
+         <<jump TalkingAboutKing>>
     -> Player: Yes, but not long enough. Can we postpone our lesson until later?
+        <<jump Stall>>
 ===
 title: ArnellChatting
 ---
@@ -28,11 +30,15 @@ title: HystoryLesson
 ---
 Companion: But I'm not here to tak about Arnell's quick temper. It's time for this week's history lesson. Are you ready?
 -> Player: Can't I just sleep for a little longer? Arnell really did keep me out late...
-    Companion: Sady, no, I have an important meeting with the village council late today, and it can't be delayed. Shall we begin?
-    Player: Very well.
-        <<jump TalkingAboutKing>>
+    <<jump Stall>>
 -> Player: Very well, let's begin.
     <<jump TalkingAboutKing>>
+===
+title: Stall
+---
+Companion: Sady, no, I have an important meeting with the village council late today, and it can't be delayed. Shall we begin?
+    Player: Very well.
+        <<jump TalkingAboutKing>>
 ===
 title: TalkingAboutKing
 ---
@@ -56,9 +62,9 @@ Companion: A quiet time came over the kingdom, and Pince Vi'dal grew more and mo
 title: OldMan
 ---
 Companion: One day, after a particularly unsuccessful village tour, Prince Vi'dal came across an old, crooked man at the side of the road.
-Companion: "That I doubt", said the prince, "for I seek one who can match either my wits or my blade, and your mind seems as fuddled as your bones seem weak."
-Companion: "You would be wise to not underestimate me," said the man, "but I have no quarrel with you. My offer stands: help me, and I will do what I can for you."
-Companion: "If you offer no challenge," said the Prince, "then my time here is wasted." With that, Prince Vidal turned away and continued his journey along the road.
+Companion: ''That I doubt'', said the prince, ''for I seek one who can match either my wits or my blade, and your mind seems as fuddled as your bones seem weak.''
+Companion: ''You would be wise to not underestimate me,'' said the man, ''but I have no quarrel with you. My offer stands: help me, and I will do what I can for you.''
+Companion: ''If you offer no challenge,'' said the Prince, ''then my time here is wasted.'' With that, Prince Vidal turned away and continued his journey along the road.
 -> Player: He could have at least asked the old man what his problem was...
     <<jump MoralVidalStory>>
 -> Player: From the old man's boasts, the Prince should have challenged him to a fight!
@@ -74,16 +80,16 @@ title: MoralVidalStory
 ---
 Companion: Right you may be, my <boy/girl>, but alas, he did not, and we may never know what that poor old man had to offer.
 Companion: Now tell me, <FirstName>: what can we learn from Prince Vi'dal's choice? Is there a moral to this story?
--> Player: "Personal ambition should not blind us to the needs of others."
+-> Player: ''Personal ambition should not blind us to the needs of others.''
     Companion: Well done indeed! Prince Vi'dal's ambition may well have cost him months of time spent searching the land.
     <<jump EndOfLesson>>
--> Player: "Strangers on the road may reward us for our help."
+-> Player: ''Strangers on the road may reward us for our help.''
     Companion: True, true. Even old men tend to have a little gold on hand to help get themselves out of a bind.
     <<jump EndOfLesson>>
--> Player: "Sometimes even a prince needs a crack on the head."
+-> Player: ''Sometimes even a prince needs a crack on the head.''
     Companion: Sometimes indeed! I just wouldn't recommend trying it yourself.
     <<jump EndOfLesson>>
--> Player: "When care is taken, problems may be solved in unexpected ways."
+-> Player: ''When care is taken, problems may be solved in unexpected ways.''
     Companion: Indeed they can! Prince Vidal may have even found the old man's problem worthy of his skills.
     <<jump EndOfLesson>>
 ===
