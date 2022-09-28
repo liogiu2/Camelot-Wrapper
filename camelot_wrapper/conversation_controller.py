@@ -113,9 +113,6 @@ class ConversationController:
         conversation_name : str
             The name of the conversation to prepare the camelot setdialog command for.
         """
-        # debugpy.listen(5678)
-        # debugpy.wait_for_client()
-        # debugpy.breakpoint()
         lines_of_dialog = self.conversations[conversation_name].get_camelot_setdialog_string()
         for line_of_dialog in lines_of_dialog:
             self._camelot_action.action("SetDialog", [line_of_dialog], False)

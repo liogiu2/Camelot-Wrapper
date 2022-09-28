@@ -46,6 +46,8 @@ class GameController:
         self._domain = self._parser.parse_domain(domain_filename = self._domain_path)
         self._problem = self._parser.parse_problem(problem_filename = self._problem_path)
         self._camelot_action = CamelotAction()
+        self._encounter_controller = EncountersController()
+        self._conversation_controller = ConversationController()
         self._player = ''
         self.input_dict = {}
         self.current_state = None
@@ -57,8 +59,7 @@ class GameController:
         self.active_GUI = GUI
         self.error_list = []
         self._received_action_from_platform = None
-        self._encounter_controller = EncountersController()
-        self._conversation_controller = ConversationController()
+        
     
     def start_platform_communication(self):
         """
@@ -86,10 +87,12 @@ class GameController:
         while self._platform_communication.get_handshake_phase() != "PHASE_3":
             time.sleep(0.1)
         logging.info("Platform communication phase 3 started")
+        debugpy.breakpoint()
         message_text = {
             "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_6'],
             "domain" : domain.to_PDDL(),
-            "problem" : wolrd_state.to_PDDL()
+            "problem" : wolrd_state.to_PDDL(),
+            "additional_data" : self._encounter_controller.get_encounters_message()
         } 
         logging.info("GameController: Sending message: " + str(message_text))
         result = self._platform_communication.send_message(message_text, inizialization=True)
@@ -407,7 +410,7 @@ class GameController:
             self.error_list.append(error)
 
     
-    def _incoming_action_handler(self, message):
+    def _incoming_action_handler(self, message : str):
         """
         This method is used to handle the message that represents an action. 
         It first creates a PDDL action, and then generates the camelot instructions that need to be sent to camelot for execution.
@@ -420,13 +423,17 @@ class GameController:
         # move-between-location(luca, Blacksmith, AlchemyShop, Blacksmith.Door, AlchemyShop.Door)
         # start_conversation(luca, initial_narrative)
         message = message.replace(" ", "")
-        if message.startswith("start_conversation"):
+        if message.startswith("start_"):
             message_parts = re.split(r"\(|\)|,", message)
-            character = message_parts[1]
-            conversation = message_parts[2]
-            if self._conversation_controller.check_conversation_exists(conversation):
-                self.conversation_active = True
-                self._conversation_controller.start_camelot_conversation(conversation_name=conversation, player_name=self._player.name, npc_name=character)
+            if message.startswith("start_conversation"):
+                character = message_parts[1]
+                conversation = message_parts[2]
+                if self._conversation_controller.check_conversation_exists(conversation):
+                    self.conversation_active = True
+                    self._conversation_controller.start_camelot_conversation(conversation_name=conversation, player_name=self._player.name, npc_name=character)
+            elif message.startswith("start_encounter"):
+                encounter_name = message_parts[1]
+                self._encounter_controller.start_encounter(encounter_name)
         else:
             action = self.current_state.create_action_from_incoming_message(message)
             self._received_action_from_platform = copy.deepcopy(action)

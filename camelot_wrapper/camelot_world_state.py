@@ -105,7 +105,7 @@ class CamelotWorldState:
         """
         json_actions = parse_json('pddl_actions_to_camelot')
         for action in self.domain.actions:
-            if action.name not in json_actions.keys():
+            if action.name not in json_actions.keys() and not action.special_action:
                 action.available = False
 
     def create_camelot_env_from_problem(self):

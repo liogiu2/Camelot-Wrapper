@@ -7,7 +7,7 @@
         position item character - general
         furniture entrypoint location - position
         player - character
-        conversation - other
+        conversation encounter - other
     )
 
     ;TODO: include the fact that a furniture needs to be inside a place and items can be in a furniture. migth need to change some actions effects and preconditions (draw)
@@ -466,6 +466,12 @@
 
     (:special-action start_conversation
         :parameters (?character - character ?conversation_name - conversation)
+        :precondition (and )
+        :effect (and )
+    )
+
+    (:special-action start_encounter
+        :parameters (?encounter_name - encounter)
         :precondition (and )
         :effect (and )
     )

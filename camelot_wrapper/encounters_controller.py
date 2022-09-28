@@ -3,12 +3,16 @@ import jsonpickle
 from encounter import Encounter
 from utilities import parse_json
 import glob
+import os
 
 class EncountersController:
 
     def __init__(self):
+        initial_path = os.getcwd()
+        os.chdir(os.path.dirname(__file__))
         filenames = [path.removeprefix("encounters/").removesuffix(".json") for path in glob.glob('encounters/*.json')]
         self.encounters = [Encounter(parse_json(filename, encounter=True)) for filename in filenames]
+        os.chdir(initial_path)
     
     def find_encounter(self, encounter_name) -> Encounter:
         """
@@ -49,6 +53,21 @@ class EncountersController:
             "encounters": [encounter.get_EM_message() for encounter in self.encounters]
         }
         return jsonpickle.encode(message)
+    
+    def start_encounter(self, encounter_name : str):
+        """
+        Method used to start an encounter.
+
+        Parameters:
+        ----------
+        encounter_name : str
+            The name of the encounter to start.
+        """
+        encounter = self.find_encounter(encounter_name)
+        if encounter:
+            pass
+        else:
+            raise ValueError("Encounter not found.")
     
     
     
