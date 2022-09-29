@@ -15,7 +15,7 @@ The project is actively under developement. Once all the major components will b
 The documentation is under construction. 
 
 ## Installation
-Install the latest version of the [YarnSpinner-Console](https://github.com/YarnSpinnerTool/YarnSpinner-Console) program ```ysc```. This will be used by the conversation manager to compile the ```.yarn``` files containing the conversation files.
+Install the latest version of the [YarnSpinner-Console](https://github.com/YarnSpinnerTool/YarnSpinner-Console) program ```ysc```. This will be used by the conversation manager to compile the ```.yarn``` files containing the conversation files. On Windows, once you downloaded the ysc program into your PC, make sure that the ```ysc.exe``` is in the path variable and accessible by the terminal. 
 Then install the [YarnRunner-Python](https://github.com/relaypro-open/YarnRunner-Python)
 ```
 pip install git+https://github.com/relaypro-open/YarnRunner-Python@v0.2.1#egg=yarnrunner_python
