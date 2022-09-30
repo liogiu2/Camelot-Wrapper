@@ -10,7 +10,10 @@ class EncountersController:
     def __init__(self):
         initial_path = os.getcwd()
         os.chdir(os.path.dirname(__file__))
-        filenames = [path.removeprefix("encounters/").removesuffix(".json") for path in glob.glob('encounters/*.json')]
+        if os.name == 'nt':
+            filenames = [path.removeprefix("encounters\\").removesuffix(".json") for path in glob.glob('encounters/*.json')]
+        else:
+            filenames = [path.removeprefix("encounters/").removesuffix(".json") for path in glob.glob('encounters/*.json')]
         self.encounters = [Encounter(parse_json(filename, encounter=True)) for filename in filenames]
         os.chdir(initial_path)
     

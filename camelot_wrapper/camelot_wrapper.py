@@ -2,7 +2,10 @@ import sys
 from pathlib import Path
 import sys, os
 #sys.path.append(os.path.join(os.path.dirname(__file__), '..\\..', 'EV_PDDL'))
-sys.path.append("/Users/giuliomori/Documents/GitHub/EV_PDDL/")
+if os.name == 'nt':
+    sys.path.append("C:\\Users\\giulio17\\Documents\\Camelot_work\\EV_PDDL")
+else:
+    sys.path.append("/Users/giuliomori/Documents/GitHub/EV_PDDL/")
 import game_controller
 import logging
 import getopt

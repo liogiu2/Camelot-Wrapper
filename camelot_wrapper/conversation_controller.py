@@ -17,7 +17,10 @@ class ConversationController:
     def __init__(self):
         initial_path = os.getcwd()
         os.chdir(os.path.dirname(__file__))
-        self.narrative_filenames = [path.removeprefix("narrative/") for path in glob.glob('narrative/*.yarn')]
+        if os.name == 'nt':
+            self.narrative_filenames = [path.removeprefix("narrative\\") for path in glob.glob('narrative/*.yarn')]
+        else:
+            self.narrative_filenames = [path.removeprefix("narrative/") for path in glob.glob('narrative/*.yarn')]
         self.narrative_names = [filename.replace(".yarn", "") for filename in self.narrative_filenames]
         os.chdir("narrative")
         self.conversations = {}

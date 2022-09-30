@@ -29,8 +29,7 @@ class CamelotIOCommunication:
             self.__input_thread = threading.Thread(target=self.__camelot_sender_thread, args=(
                 self.__queue_output, self.__running, lock, event_obj), daemon=True)
             self.__input_thread.start()
-            threading.Timer(1.0, self.__start_receiver_thread, args=(lock, event_obj)).start()
-            self.__started = True
+            # threading.Timer(1.0, self.__start_receiver_thread, args=(lock, event_obj)).start()
             #self._keep_alive()
     
     def __start_receiver_thread(self, lock, event_obj):
@@ -47,12 +46,12 @@ class CamelotIOCommunication:
         self.__output_thread = threading.Thread(target=self.__camelot_receiver_thread, args=(self.__queue_input, self.__running, lock, event_obj), daemon=True)
         self.__output_thread.start()
 
-    def _keep_alive(self):
-        """
-        This method is called to keep the threads alive.
-        """
-        threading.Timer(3.0, self._keep_alive).start()
-        self.__queue_output.put("%PASS%")
+    # def _keep_alive(self):
+    #     """
+    #     This method is called to keep the threads alive.
+    #     """
+    #     threading.Timer(3.0, self._keep_alive).start()
+    #     self.__queue_output.put("%PASS%")
 
     def __camelot_sender_thread(self, queue: queue.Queue, is_running: bool, lock: threading.Lock, event_obj: threading.Event):
         """
@@ -70,7 +69,9 @@ class CamelotIOCommunication:
         logging.debug("__camelot_sender_thread: Starting")
         while(is_running):
             event_obj.clear()
-
+            if self.__started == False:
+                self.__started = True
+                self.__start_receiver_thread(lock, event_obj)
             logging.debug("__camelot_sender_thread: Trying to get message from queue")
             message = queue.get()
             logging.debug("__camelot_sender_thread: Received from queue: %s" % (message))
