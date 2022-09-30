@@ -69,12 +69,13 @@ class CamelotIOCommunication:
         logging.debug("__camelot_sender_thread: Starting")
         while(is_running):
             event_obj.clear()
-            if self.__started == False:
-                self.__started = True
-                self.__start_receiver_thread(lock, event_obj)
             logging.debug("__camelot_sender_thread: Trying to get message from queue")
             message = queue.get()
             logging.debug("__camelot_sender_thread: Received from queue: %s" % (message))
+            if self.__started == False:
+                logging.debug("__camelot_sender_thread: Starting receiver thread")
+                self.__started = True
+                self.__start_receiver_thread(lock, event_obj)
             if message == "kill":
                 is_running = False
                 break

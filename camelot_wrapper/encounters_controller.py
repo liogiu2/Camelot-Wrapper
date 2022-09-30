@@ -16,6 +16,7 @@ class EncountersController:
             filenames = [path.removeprefix("encounters/").removesuffix(".json") for path in glob.glob('encounters/*.json')]
         self.encounters = [Encounter(parse_json(filename, encounter=True)) for filename in filenames]
         os.chdir(initial_path)
+        self.encounter_in_execution = None
     
     def find_encounter(self, encounter_name) -> Encounter:
         """
@@ -68,9 +69,27 @@ class EncountersController:
         """
         encounter = self.find_encounter(encounter_name)
         if encounter:
-            pass
+            encounter.start_encounter()
+            self.encounter_in_execution = encounter
         else:
             raise ValueError("Encounter not found.")
+    
+    def get_next_instruction(self) -> tuple:
+        """
+        Method used to get the next instruction of the encounter in execution.
+
+        Returns:
+        ----------
+        instruction : tuple
+            The instruction as a tuple (instruction_type, instruction_command).
+        """
+        try:
+            instruction = next(self.encounter_in_execution.instructions_generator)
+        except StopIteration:
+            self.encounter_in_execution.finish_execution()
+            self.encounter_in_execution = None
+            return None
+        return instruction
     
     
     

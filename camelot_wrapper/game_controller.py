@@ -87,7 +87,6 @@ class GameController:
         while self._platform_communication.get_handshake_phase() != "PHASE_3":
             time.sleep(0.1)
         logging.info("Platform communication phase 3 started")
-        debugpy.breakpoint()
         message_text = {
             "text" : self._platform_communication.communication_protocol_phase_messages['PHASE_3']['message_6'],
             "domain" : domain.to_PDDL(),
@@ -288,6 +287,8 @@ class GameController:
             self._incoming_messages_handler()
 
             self._check_error_messages()
+
+            self._encounter_execution_handler()
         
         # self.queue_GUI.close()
         # self.queue_GUI.join_thread()
@@ -432,6 +433,7 @@ class GameController:
                     self.conversation_active = True
                     self._conversation_controller.start_camelot_conversation(conversation_name=conversation, player_name=self._player.name, npc_name=character)
             elif message.startswith("start_encounter"):
+                debugpy.breakpoint()
                 encounter_name = message_parts[1]
                 self._encounter_controller.start_encounter(encounter_name)
         else:
@@ -484,3 +486,13 @@ class GameController:
                 logging.debug("GameController(_format_changed_relations_for_external_message): Invalid relation: %s" %( item ))
         json_message = jsonpickle.encode(relation_list)
         return json_message
+    
+    def _encounter_execution_handler(self):
+        """
+        This method is used to handle the execution of an encounter. 
+        It checks if the encounter is active, and if it is, executes the next instruction.
+        """
+        if self._encounter_controller.encounter_in_execution is not None:
+            next_instruction = self._encounter_controller.get_next_instruction()
+            if next_instruction is not None:
+                pass

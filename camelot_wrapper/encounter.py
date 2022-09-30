@@ -20,9 +20,34 @@ class Encounter:
         self.preconditions = json_data['preconditions']
         self._instructions = json_data['instructions']
         self._instructions_sent = []
+        self.started = False
+        self.executed = False
     
+    def start_encounter(self):
+        """
+        Method used to start the encounter.
+        """
+        self.started = True
+        self.instructions_generator = self.get_generator_instruction()
     
-    def get_instruction(self):
+    def is_started(self) -> bool:
+        """
+        Method used to know if the encounter has been started.
+
+        Returns:
+        ----------
+        started : bool
+            True if the encounter has been started, False otherwise.
+        """
+        return self.started 
+    
+    def finish_execution(self):
+        """
+        Method used to finish the execution of the encounter.
+        """
+        self.executed = True
+    
+    def get_generator_instruction(self):
         """
         Method used to get the instructions of the encounter. 
         This function is a generator that returns the instructions one by one as a tuple (instruction_type, instruction_command).
