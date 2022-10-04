@@ -10,14 +10,14 @@
         {
             "type" : "PDDL",
             "commands": [
-                "move-within-location(luca, bob)"
+                "move-within-location(luca, City.GreenHouseDoor, City)"
             ]
         },
         {
             "type" : "Camelot",
             "commands": [
-                "Wave(bob)",
-                "EnableIcon(\"Talk\", talk, luca, \"Talk with Luca\", true)"
+                "Wave(luca)",
+                "EnableIcon(Talk,talk,luca,Talk with Luca,true)"
             ]
         }
     ]

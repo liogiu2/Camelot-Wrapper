@@ -433,7 +433,6 @@ class GameController:
                     self.conversation_active = True
                     self._conversation_controller.start_camelot_conversation(conversation_name=conversation, player_name=self._player.name, npc_name=character)
             elif message.startswith("start_encounter"):
-                debugpy.breakpoint()
                 encounter_name = message_parts[1]
                 self._encounter_controller.start_encounter(encounter_name)
         else:
@@ -495,4 +494,8 @@ class GameController:
         if self._encounter_controller.encounter_in_execution is not None:
             next_instruction = self._encounter_controller.get_next_instruction()
             if next_instruction is not None:
-                pass
+                if next_instruction[0] == "Camelot":
+                    message_parts = re.split(r"\(|\)|,", next_instruction[1])
+                    self._camelot_action.action(message_parts[0], [item for item in message_parts[1:] if item != ""])
+                elif next_instruction[0] == "PDDL":
+                    self._incoming_action_handler(next_instruction[1])

@@ -57,6 +57,8 @@ class Encounter:
         instruction : tuple
             The instruction as a tuple (instruction_type, instruction_command).
         """
+        if self.executed:
+            return None
         for instruction in self._instructions:
             for command in instruction["commands"]:
                 return_instruction = (instruction["type"], command)

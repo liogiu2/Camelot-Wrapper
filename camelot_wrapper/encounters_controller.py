@@ -4,6 +4,7 @@ from encounter import Encounter
 from utilities import parse_json
 import glob
 import os
+import debugpy
 
 class EncountersController:
 
