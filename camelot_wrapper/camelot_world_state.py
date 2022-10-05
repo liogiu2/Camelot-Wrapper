@@ -145,30 +145,28 @@ class CamelotWorldState:
             relation to convert to camelot action
         """
         if relation.predicate.name in shared_variables.supported_predicates.keys():
-            action = self._find_in_json(
-                'Actionlist', relation.predicate.name, 'PDDLProblem')
+            action = self._find_in_json('Actionlist', relation.predicate.name, 'PDDLProblem')
             if action is None:
-                logging.info(
-                    "%s skipped because it doesn't corrispond to a Camelot action" % str(relation))
+                logging.info("%s skipped because it doesn't corrispond to a Camelot action" % str(relation))
             else:
                 list_entity = [i.name for i in relation.entities]
-                self._camelot_action.action(
-                    action['name'], list_entity, self._wait_for_actions)
+                self._camelot_action.action(action['name'], list_entity, self._wait_for_actions)
 
-    def _create_characters_from_problem(self, problem):
-        list_char = problem.find_objects_with_type(
-            shared_variables.supported_types['character'])
+    def _create_characters_from_problem(self, problem : Problem):
+        list_char = problem.find_objects_with_type(shared_variables.supported_types['character'])
         while list_char:
             char = list_char.pop(0)
             self._random_character(char.name)
+            obj = Entity(char.name, shared_variables.supported_types['position'])
+            problem.add_object(obj, check_duplicates=False)
+
 
     def _random_character(self, name):
         json_parsed = parse_json('characterlist')
         list_body = [d['name'] for d in json_parsed['body_type']]
         r_int = random.randint(0, len(list_body)-1)
         body = list_body[r_int]
-        self._camelot_action.action(
-            'CreateCharacter', [name, body], self._wait_for_actions)
+        self._camelot_action.action('CreateCharacter', [name, body], self._wait_for_actions)
         outfit = ''
         while True:
             r_int_outfit = random.randint(0, len(json_parsed['outfit'])-1)
@@ -178,24 +176,20 @@ class CamelotWorldState:
                     break
             else:
                 break
-        self._camelot_action.action(
-            'SetClothing', [name, outfit['name']], self._wait_for_actions)
+        self._camelot_action.action('SetClothing', [name, outfit['name']], self._wait_for_actions)
 
     def _create_locations_from_problem(self, problem):
-        list_locations = problem.find_objects_with_type(
-            shared_variables.supported_types['location'])
+        list_locations = problem.find_objects_with_type(shared_variables.supported_types['location'])
         while list_locations:
             location = list_locations.pop(0)
             room = location.name
             loc = self._find_in_json('places', room, 'name')
             if loc is None:
                 raise Exception('location not found in camelot')
-            self._camelot_action.action(
-                'CreatePlace', [room, loc['name']], self._wait_for_actions)
+            self._camelot_action.action('CreatePlace', [room, loc['name']], self._wait_for_actions)
 
     def _create_items_from_problem(self, problem):
-        list_item = problem.find_objects_with_type(
-            shared_variables.supported_types['item'])
+        list_item = problem.find_objects_with_type(shared_variables.supported_types['item'])
         while list_item:
             item = list_item.pop(0)
             json_parsed = parse_json('items')
@@ -253,8 +247,7 @@ class CamelotWorldState:
         for location in list_loc:
             item = self._find_in_json('places', location.name, 'name')
             if item is None:
-                raise Exception(
-                    'Cannot find location %s in places.json' % (location.name))
+                raise Exception('Cannot find location %s in places.json' % (location.name))
             for room_component in item['room_components']:
                 # Create new Relation and new Objects taken from the json and add them to the problem
                 obj = self._integrate_wordstate_with_camelot_rooms_components(room_component, location.name, problem)
@@ -262,56 +255,41 @@ class CamelotWorldState:
                 rel = Relation(shared_variables.supported_predicates['at'], [obj, location], RelationValue.TRUE, self.domain, problem)
                 try:
                     problem.add_relation_to_initial_state(rel)
-                    logging.debug(
-                        "Relation %s added to the problem" % str(rel))
+                    logging.debug("Relation %s added to the problem" % str(rel))
                 except AttributeError:
-                    logging.info(
-                        "Relation %s already exists, so we skip it." % str(rel))
+                    logging.info("Relation %s already exists, so we skip it." % str(rel))
                 # Parameter to set: ['Open', 'Close', 'Surface', 'Furniture', 'Seat', 'EntryPoint']
                 if  "door" not in room_component['name'].lower():
                     for attribute in room_component['attribute']:
                         if attribute == '':
                             continue
                         elif attribute == 'Open':
-                            # debugpy.breakpoint()
-                            rel = Relation(shared_variables.supported_predicates['can_open'], [
-                                        obj], RelationValue.TRUE, self.domain, problem)
+                            rel = Relation(shared_variables.supported_predicates['can_open'], [obj], RelationValue.TRUE, self.domain, problem)
                             try:
                                 problem.add_relation_to_initial_state(rel)
-                                logging.debug(
-                                    "Relation %s added to the problem" % str(rel))
+                                logging.debug("Relation %s added to the problem" % str(rel))
                             except AttributeError:
-                                logging.info(
-                                    "Relation %s already exists, so we skip it." % str(rel))
-                            rel = Relation(shared_variables.supported_predicates['is_open'], [
-                                        obj], RelationValue.FALSE, self.domain, problem)
+                                logging.info("Relation %s already exists, so we skip it." % str(rel))
+                            rel = Relation(shared_variables.supported_predicates['is_open'], [obj], RelationValue.FALSE, self.domain, problem)
                             try:
                                 problem.add_relation_to_initial_state(rel)
-                                logging.debug(
-                                    "Relation %s added to the problem" % str(rel))
+                                logging.debug("Relation %s added to the problem" % str(rel))
                             except AttributeError:
-                                logging.info(
-                                    "Relation %s already exists, so we skip it." % str(rel))
+                                logging.info("Relation %s already exists, so we skip it." % str(rel))
                         elif attribute == 'Close':
-                            rel = Relation(shared_variables.supported_predicates['can_close'], [
-                                        obj], RelationValue.TRUE, self.domain, problem)
+                            rel = Relation(shared_variables.supported_predicates['can_close'], [obj], RelationValue.TRUE, self.domain, problem)
                             try:
                                 problem.add_relation_to_initial_state(rel)
-                                logging.debug(
-                                    "Relation %s added to the problem" % str(rel))
+                                logging.debug("Relation %s added to the problem" % str(rel))
                             except AttributeError:
-                                logging.info(
-                                    "Relation %s already exists, so we skip it." % str(rel))
+                                logging.info("Relation %s already exists, so we skip it." % str(rel))
                         elif attribute == 'Surface':
-                            rel = Relation(shared_variables.supported_predicates['has_surface'], [
-                                        obj], RelationValue.TRUE, self.domain, problem)
+                            rel = Relation(shared_variables.supported_predicates['has_surface'], [obj], RelationValue.TRUE, self.domain, problem)
                             try:
                                 problem.add_relation_to_initial_state(rel)
-                                logging.debug(
-                                    "Relation %s added to the problem" % str(rel))
+                                logging.debug("Relation %s added to the problem" % str(rel))
                             except AttributeError:
-                                logging.info(
-                                    "Relation %s already exists, so we skip it." % str(rel))
+                                logging.info("Relation %s already exists, so we skip it." % str(rel))
                         elif attribute == 'Furniture':
                             pass
                         elif attribute == 'Seat':

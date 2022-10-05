@@ -338,6 +338,8 @@ class GameController:
                 if not self.conversation_active:
                     self._camelot_action.action("EnableInput", [], True)
                 self._menu_showing = False
+            elif received in ("input Selected Quit", "input Quit"):
+                self.camelot_input_multiplex.stop()
             elif received.startswith("input Selected"):
                 selection = received.removeprefix("input Selected ")
                 if selection.isdigit():
@@ -346,6 +348,7 @@ class GameController:
                     self._conversation_controller.continue_conversation()
                 elif selection == 'end':
                     self._conversation_controller.end_conversation()
+                    self.conversation_active = False
         except queue.Empty:
             return False
         return True
@@ -491,7 +494,7 @@ class GameController:
         This method is used to handle the execution of an encounter. 
         It checks if the encounter is active, and if it is, executes the next instruction.
         """
-        if self._encounter_controller.encounter_in_execution is not None:
+        if self._encounter_controller.encounter_in_execution is not None and self.conversation_active == False:
             next_instruction = self._encounter_controller.get_next_instruction()
             if next_instruction is not None:
                 if next_instruction[0] == "Camelot":
