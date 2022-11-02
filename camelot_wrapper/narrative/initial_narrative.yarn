@@ -1,10 +1,10 @@
-title: Start
+title: Start_Initial
 ---
 Companion: Awake at last, I see - it seems that Arnell had you out late last night.
 -> Player: Yes, I guess he did.
     <<jump ArnellChatting>>
 -> Player: Good morning to you to, Father.
-    <<update_player_model 0 0 0 0 1>>
+    <<update_player_model 0 40 0 0 0>>
     Companion: Forgive me. Good morning, <FirstName>. Did you sleep well?
     -> Player: Yes, thank you. I suppose that it's time for hystory lesson.
         Companion: Indeed it is! Past time, in fact, but no matter. Shall we begin?
@@ -17,12 +17,15 @@ title: ArnellChatting
 ---
 Companion: I trust that you managed to keep him out of trouble?
 -> Player: As long as I'm there to help him puzzle things out, he tends to keep a cooler head.
+    <<update_player_model 0 0 0 40 0>>
     Companion: Haha! I don't know what he'd do without you, that lad.
     <<jump HystoryLesson>>
 -> Player: Sometimes a well-placed punch is the best kind of diplomacy.
+    <<update_player_model 100 0 0 0 0>>
     Companion: Well now. I suppose you have a point, but I'm not sure how I feel about you two becoming the village brawlers.
     <<jump HystoryLesson>>
 -> Player: Well fortune favours the bold, they say, and Arnell and I have certainly found our share of fortune over the years.
+    <<update_player_model 0 0 0 0 40>>
     Companion: Ha ha! That you have, that you have.
     <<jump HystoryLesson>>
 ===
@@ -30,6 +33,7 @@ title: HystoryLesson
 ---
 Companion: But I'm not here to tak about Arnell's quick temper. It's time for this week's history lesson. Are you ready?
 -> Player: Can't I just sleep for a little longer? Arnell really did keep me out late...
+    <<update_player_model 0 0 40 0 0>>
     <<jump Stall>>
 -> Player: Very well, let's begin.
     <<jump TalkingAboutKing>>
@@ -46,16 +50,20 @@ Companion: Alright, let's get started then. We left off last time talking about 
 Companion: Prince Vi'dal was a man of great skill and ambition, his sharpness of wit rivalled only by the speed of his blade. None in the realm would dare to challenge him, for public humiliation tempted no one.
 Companion: A quiet time came over the kingdom, and Pince Vi'dal grew more and more restless. Having no one to challenge him, he could feel his skills slipping away.
 -> Player: Couldn't he offer a reward to encourage challengers?
+    <<update_player_model 0 0 0 0 40>>
     Companion: Aye, and that's exactly what he did. It started off small - only a few bits of gold - but whenever new challengers stopped coming forward, the value of the reward increased.
     Companion: Soon the royal coffers grew thin, the rewards stopped, and the prince's restlessness retuned. Off he went into the countryside, travelling from village to village in search of a worthy opponent.
     <<jump OldMan>>
 -> Player: It sounds like the prince needed to find himself a princess...
+    <<update_player_model 0 0 40 0 0>>
     Companion: Ha ha! That may have helped indeed! Love, however, was far from the prince's mind. Off he went into the countryside, travelling from village to village in search of a worthy opponent.
     <<jump OldMan>>
 -> Player: Surely he could have found a worthy challenger in all of Erafor...
+    <<update_player_model 0 0 0 40 0>>
     Companion: Aye, he thought so as well. Off he went into the countryside, travelling from village to village in search of a worthy opponent.
     <<jump OldMan>>
 -> Player: Couldn't he just demand that the people become skilled enough to fight him?
+    <<update_player_model 40 0 0 0 0>>
     Companion: Such a demand would have led only to a revolt, I fear. Perhaps the Prince agreed, for off he went into the countryside, travelling from village to village in search of a worthy opponent.
     <<jump OldMan>>    
 ===
@@ -66,14 +74,19 @@ Companion: ''That I doubt'', said the prince, ''for I seek one who can match eit
 Companion: ''You would be wise to not underestimate me,'' said the man, ''but I have no quarrel with you. My offer stands: help me, and I will do what I can for you.''
 Companion: ''If you offer no challenge,'' said the Prince, ''then my time here is wasted.'' With that, Prince Vidal turned away and continued his journey along the road.
 -> Player: He could have at least asked the old man what his problem was...
+    <<update_player_model 0 0 100 0 0>>
     <<jump MoralVidalStory>>
 -> Player: From the old man's boasts, the Prince should have challenged him to a fight!
+    <<update_player_model 100 0 0 0 0>>
     <<jump MoralVidalStory>>
 -> Player: The Prince should have started a battle of wits-that old man seemed pretty shrewd to me.
+    <<update_player_model 0 0 0 100 0>>
     <<jump MoralVidalStory>>
 -> Player: The old man should have reminded the Prince of his duty to his people.
+    <<update_player_model 0 100 0 0 0>>
     <<jump MoralVidalStory>>
 -> Player: The Prince should have helped the man - there might have been a big reward!
+    <<update_player_model 0 0 0 0 100>>
     <<jump MoralVidalStory>>
 ===
 title: MoralVidalStory
@@ -81,15 +94,19 @@ title: MoralVidalStory
 Companion: Right you may be, my <boy/girl>, but alas, he did not, and we may never know what that poor old man had to offer.
 Companion: Now tell me, <FirstName>: what can we learn from Prince Vi'dal's choice? Is there a moral to this story?
 -> Player: ''Personal ambition should not blind us to the needs of others.''
+    <<update_player_model 0 100 0 0 0>>
     Companion: Well done indeed! Prince Vi'dal's ambition may well have cost him months of time spent searching the land.
     <<jump EndOfLesson>>
 -> Player: ''Strangers on the road may reward us for our help.''
+    <<update_player_model 0 0 0 0 100>>
     Companion: True, true. Even old men tend to have a little gold on hand to help get themselves out of a bind.
     <<jump EndOfLesson>>
 -> Player: ''Sometimes even a prince needs a crack on the head.''
+    <<update_player_model 100 0 0 0 0>>
     Companion: Sometimes indeed! I just wouldn't recommend trying it yourself.
     <<jump EndOfLesson>>
 -> Player: ''When care is taken, problems may be solved in unexpected ways.''
+    <<update_player_model 0 0 0 100 0>>
     Companion: Indeed they can! Prince Vidal may have even found the old man's problem worthy of his skills.
     <<jump EndOfLesson>>
 ===

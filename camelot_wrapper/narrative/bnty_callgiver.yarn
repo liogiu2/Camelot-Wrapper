@@ -1,0 +1,42 @@
+title: Start_Bnty_Callgiver
+---
+Companion: There you are, <FirstName>.  I was beginning to think that you were going to stay at home all day!  Jarnas has put out another set of bounties on ingredients for those potions of his, and guess who's got a head start on finding them?
+-> Player: Us?
+    Companion: You bet!  I went into the fields this morning as soon as the bounties went up - I've already found two of the three ingredients!
+    Player: Where's the third?
+    <<jump Bnty_Callgiver_Find>>
+-> Player: *sigh* Here we go again...
+    <<update_player_model 0 0 0 0 -40>>
+    Companion: Don't be like that...  There's more to this than just the gold, you know.  I've already found two of the three ingredients, but the third's a bit of a mystery.
+    Player: What is it?
+    Companion: It's called a "Fizzlebin", and apparently it's a kind of giant mushroom.  I've asked around the village, but no one's ever heard of one.
+    Player: Where we can find one?
+    <<jump Bnty_Callgiver_Find>>
+===
+title: Bnty_Callgiver_Find
+---
+Companion: Well... I don't know.  I searched so carefully in the fields that I'm sure it's not there, but I guess it could be in Maedorn Forest.
+Player: But Jarnas lives in the Maedorn - why wouldn't he just get it himself?
+Companion: Again, I don't know.  Maybe it's too tough to find, or not so easy to get.  He values it the same as the other two, so I'd say it's still worth our trouble.
+-> Player: Agreed - we should go look for it. 
+    <<jump Bnty_Callgiver_Skipped_History>>
+-> Player: Shouldn't we concentrate on getting the first two back to Jarnas?  Someone might collect the bounties before us.
+    <<update_player_model 0 0 0 40 0>>
+    <<jump Bnty_Callgiver_Skipped_History>>
+===
+title: Bnty_Callgiver_Skipped_History
+---
+Companion: Ah... about that...  I'm afraid that "we" won't be doing anything today.  I skipped my history lesson this morning, and my mother is adamant that I stay home this afternoon to catch up.
+-> Player: We'll go tomorrow then.
+    Companion: But by then, someone else is sure to have collected the first two bounties.  No, you'll have to go yourself - I'm just sorry that I can't come with you.
+    <<jump Bnty_Callgiver_Ingridient>>
+-> Player: That's fine.  For the work you did alone this morning, my going alone now is only fair.
+    Companion: I knew you'd understand.
+    <<jump Bnty_Callgiver_Ingridient>>
+===
+title: Bnty_Callgiver_Ingridient
+---
+Companion: Here, take the two ingredients that I found this morning.  You'll need to take them to Jarnas to collect those bounties.  The third ingredient is called a "Fizzlebin" - it's some kind of large mushroom.
+Player: Thanks, I'm on my way.
+Companion:  You should leave soon - I saw the Menner brothers heading toward the forest a little while ago, and they might well be after our prize.  Good luck!
+===

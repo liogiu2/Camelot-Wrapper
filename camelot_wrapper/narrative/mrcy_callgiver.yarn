@@ -1,0 +1,56 @@
+title: Start_CallGiver
+---
+Companion: There you are, <FirstName>.  I was beginning to think that you were going to stay at home all day!  Jarnas has put out another call for ingredients for those potions of his, and this time it's urgent.
+-> Player: What's the trouble?
+    Companion: It seems that one of Jarnas' friends angered an old hag in the forest and got turned into a monster!
+    -> Player: That's awful!
+        Companion: No kidding!  What's worse, the transformation may be permanent if Jarnas can't cure it soon.
+        <<jump Callgiver_Field>>
+    -> Player: Can he be turned back?
+        Companion: Yes, but Jarnas needs those ingredients soon.  The notice said that the transformation would be permanent, if left for too long.
+        <<jump Callgiver_Field>>
+-> Player: *sigh* Here we go again...
+    <<update_player_model 0 0 -40 0 0>>
+    Companion: Don't be like that...  There's a real problem this time!  Apparently one of Jarnas' friends angered an old hag in the forest and got turned into a monster!
+    Companion: What's worse, word of the monster has scared the guardsmen out of the forest.  The path to Jarnas' house won't be nearly as safe as it once was.
+    -> Player: We can handle ourselves, right?
+        <<update_player_model 40 0 0 0 0>>
+        <<jump CallGiver_History>>
+    -> Player: Well, I guess we should find those ingredients then.
+        <<jump CallGiver_History>>
+    Companion:
+    Player:
+===
+title: Callgiver_Field
+---
+Companion: I went into the fields this morning as soon as the call was posted, and I've already found two of the three ingredients.
+Player: Where's the third?
+Companion: Well... I don't know.  I searched so carefully in the fields that I'm sure it's not there, but I guess it could be in Maedorn Forest.
+Player: But Jarnas lives in the Maedorn - why wouldn't he just get it himself?
+Companion: Again, I don't know.  Maybe it's too tough to find, or not so easy to get.  He needs it as well as the other two, so I'd say it's still worth our trouble.
+-> Player: Agreed - we should go look for it.
+    <<jump CallGiver_History>>
+-> Player: Shouldn't we concentrate on getting the first two back to Jarnas?  It sounds like time is running out.
+    <<update_player_model 0 0 0 40 0>>
+    <<jump CallGiver_History>>
+===
+title:CallGiver_History
+---
+Companion: Ah... about that...  I'm afraid that "we" won't be doing anything today. I skipped my history lesson this morning, and my mother is adamant that I stay home this afternoon to catch up.
+-> Player: We'll go tomorrow then.
+    Companion: But by then, it may be too late for Jarnas to save his friend. No, you'll have to go yourself - I'm just sorry that I can't come with you.
+    <<jump CallGiver_Ingredients>>
+-> Player: That's fine.  For the work you did alone this morning, my going alone now is only fair.
+    Companion: I knew you'd understand.
+    <<jump CallGiver_Ingredients>>
+===
+title: CallGiver_Ingredients
+---
+Companion: Here, take the two ingredients that I found this morning. You'll need to take them to Jarnas at his house in Maedorn Forest. The third ingredient is called a "Fizzlebin" - it's some kind of large mushroom.  Hopefully you can find it along the way.
+<<jump CallGiver_End>>
+===
+title: CallGiver_End
+---
+Player: Thanks, I'm on my way.
+Companion:  You should leave soon - the longer we wait, the less chance there is of Jarnas being able to save his friend.  Good luck!
+===

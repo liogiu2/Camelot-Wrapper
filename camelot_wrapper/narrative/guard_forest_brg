@@ -1,0 +1,97 @@
+title: Forest_Start
+---
+Companion: Well hello there, little lad.  Is there sssomething I can help you with?
+-> Player: I need to pass - I'm trying to reach Jarnas' house.
+    <<update_player_model 0 0 40 0 0>>
+    <<jump Forest_Jarnas>>
+-> Player: I want to cross this bridge.
+    Companion: Ssso that is *what* you want... but now I wonder: *why* do you want it?
+    -> Player: If you must know, I'm going to visit Jarnas.
+        <<update_player_model 0 0 40 0 0>>
+        <<jump Forest_Jarnas>>
+    -> Player: My business is my own, troll.
+        <<update_player_model 0 40 0 0 0>>
+        Companion: Your businesssss is your own?  I suppose I'll just have to guesssss, then.
+        Companion: Ssseeing that you have no pack, you can't be going far, but that belt pouch you're wearing means you have ssomething you need to carry. A delivery, perhapsss? Ingredients for that potion-maker, Jarnassss?
+        -> Player: Yes, fine, you guessed it.  May I pass?
+            <<jump Forest_Pass>>
+        -> Player: I'm not interested in your guesses.  Step aside, and let me pass.
+            <<jump Forest_Pass>>
+===
+title: Forest_Jarnas
+---
+Companion: Jarnassss...   Jarnass?  Ah yesss, the old potion-maker who lives in this foressst.  You're delivering ingredientsss, no doubt.
+Player: Yes, fine, you guessed it.  May I pass?
+<<jump Forest_Pass>>
+===
+title: Forest_Pass
+---
+Companion: Oh ho!  All in good time, all in good time, young man.
+-> Player: What do you want, then?
+    <<jump Forest_Collect_Bounties>>
+-> Player: Let me by, troll, or I'll have your head!
+    <<update_player_model 100 0 0 0 0>>
+    <<jump Forest_Fight>>
+===
+title: Forest_Fight
+---
+Companion: Those are ssstrong wordss for sssuch a weak looking boy...
+===
+title: Forest_Collect_Bounties
+---
+Companion: You plan to collect bounties from Jarnasss, but in exchange for a sssmall bit of... assistance...   I can offer far more...
+-> Player: What sort of "assistance"?
+    <<jump Forest_Tiresom_Attacks>>
+-> Player: If you've got the gold, then I'm your man.
+    <<jump Forest_Tiresom_Attacks>>
+===
+title: Forest_Tiresom_Attacks
+---
+Companion: For the past many weeksss, a cruel wizard named Vero has been hunting me.  I always manage to escape, but his constant attacksss are becoming... tiresome.
+-> Player: I can imagine... nobody likes a nasty wizard.
+    <<update_player_model 0 0 40 0 0>>
+    Companion: If I could sssomehow surprise the wizard, my troubless with him would end... quickly.
+    -> Player: How can I help?
+        <<jump Forest_Wizzard_Trap>>
+    -> Player: I'm not so sure I like the sound of this...
+        <<update_player_model -40 0 0 0 0>>
+        Companion: No? Ssso much gold... How can you refuse?
+        -> Player: Ok, you're right.  How can I help?
+            <<update_player_model 0 0 0 0 40>> 
+            <<jump Forest_Wizzard_Trap>>
+        -> Player: Like this, frog-face. [walk away]
+            <<update_player_model 100 0 0 0 0>>
+            <<jump Forest_Fight>>
+-> Player: It sounds like he's doing a public service, trying to kill you and all.
+    <<update_player_model 40 0 0 0 0>> 
+    <<jump Forest_Fight>>
+===
+title: Forest_Wizzard_Trap
+---
+Companion: I need you to lure the wizard into a trap.  You sssee, the wizard passes Jarnasss' house many timesss each day, patrolling along the foressst road.  If you can bring him inside the house...  I can do the resssst.
+-> Player: What about Jarnas?  Do you think he'll help?
+    <<jump Forest_Dont_Worry>>
+-> Player: Jarnas might not like us using his house...
+    <<update_player_model 0 0 0 40 0>> 
+    <<jump Forest_Dont_Worry>>
+===
+title: Forest_Dont_Worry
+---
+Companion: Don't worry about Jarnasss...  He will be... away... while we're there.
+Companion: Hurry along to Jarnassss' house now.  I'll meet you there...
+-> Player: I'm on my way.
+    Companion: Good, good...  Remember: lure the wizard into Jarnassss' house...
+-> Player: No, I've changed my mind - that wizard has had the right idea all along.
+    <<update_player_model 40 0 0 0 0>>
+    Companion: Ssso you've chosen to refuse... oh well...
+===
+title: Forest_Generous
+---
+Companion: Sssince I'm feeling generous right now and you're running errandsss for the potion-maker, I'll give you a bit of advice.
+Player: How do I get something from that high up?
+Companion: Call for it by name, and the great tree will provide.  The tree has sssome magic to it, you see.
+-> Player: Find the wide tree, call for the mushroom - got it.
+    Companion: Good, good!  Now run along and get that ingredient.
+-> Player: A magic tree? You can't be serious.
+    Companion: Don't believe me?  Go sssee for yourself - it's not far away.
+===
