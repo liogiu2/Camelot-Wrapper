@@ -36,7 +36,7 @@ Companion: Again, I don't know.  Maybe it's too tough to find, or not so easy to
 ===
 title:CallGiver_History
 ---
-Companion: Ah... about that...  I'm afraid that "we" won't be doing anything today. I skipped my history lesson this morning, and my mother is adamant that I stay home this afternoon to catch up.
+Companion: Ah... about that...  I'm afraid that ''we'' won't be doing anything today. I skipped my history lesson this morning, and my mother is adamant that I stay home this afternoon to catch up.
 -> Player: We'll go tomorrow then.
     Companion: But by then, it may be too late for Jarnas to save his friend. No, you'll have to go yourself - I'm just sorry that I can't come with you.
     <<jump CallGiver_Ingredients>>
@@ -46,7 +46,7 @@ Companion: Ah... about that...  I'm afraid that "we" won't be doing anything tod
 ===
 title: CallGiver_Ingredients
 ---
-Companion: Here, take the two ingredients that I found this morning. You'll need to take them to Jarnas at his house in Maedorn Forest. The third ingredient is called a "Fizzlebin" - it's some kind of large mushroom.  Hopefully you can find it along the way.
+Companion: Here, take the two ingredients that I found this morning. You'll need to take them to Jarnas at his house in Maedorn Forest. The third ingredient is called a ''Fizzlebin'' - it's some kind of large mushroom.  Hopefully you can find it along the way.
 <<jump CallGiver_End>>
 ===
 title: CallGiver_End
