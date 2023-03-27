@@ -3,6 +3,9 @@
 Camelot-Wrapper is part of the PhD thesis of [Giulio Mori](https://github.com/liogiu2) that has the objective of making an layer of communication between Experience Managers and Environments. The main project is called [EM-Glue](https://github.com/liogiu2/EM-Glue).
 The aim of this library is to give a structure to [Camelot](http://cs.uky.edu/~sgware/projects/camelot/) where AIs can reason on without implementing all the camelot commands hard coded in the code. It uses [PDDL](https://planning.wiki/) as language to build a state of the word and as a medium to move informations of what is changing on the environment. 
 
+# New release is about to come out. This page is under manteinance.
+![work in progress](https://icambrogiolorenzetti.edu.it/wp-content/uploads/sites/91/Work-in-progress-1024x603-1.png?x67262)
+
 ## Compatible version of camelot tested
 [Camelot v1.1](http://cs.uky.edu/~sgware/projects/camelot/v1-1/): Works both on Windows and MacOS
 
