@@ -1,8 +1,14 @@
 import logging
 import subprocess
 from yarnrunner_python import YarnRunner
+import debugpy
 import shlex
 import os
+import jsonpickle
+try:
+    from platform_IO_communication import PlatformIOCommunication
+except (ModuleNotFoundError, ImportError):
+    from .platform_IO_communication import PlatformIOCommunication
 
 class Conversation:
 
@@ -15,6 +21,7 @@ class Conversation:
         self.runner = None
         self.player_name = None
         self.npc_name = None
+        self._platform_communication = PlatformIOCommunication()
     
     def prepare(self, player_name : str, npc_name : str):
         """
@@ -33,6 +40,9 @@ class Conversation:
 
         def update_player_model(fighter, method_actor, storyteller, tactician, power_gamer):
             logging.info("Updating player model with paramenters: {}, {}, {}, {}, {}".format(fighter, method_actor, storyteller, tactician, power_gamer))
+            message = jsonpickle.encode(('update_player_model', str((fighter, method_actor, storyteller, tactician, power_gamer))))
+            self._platform_communication.send_message(message)
+
         
         self.runner.add_command_handler("update_player_model", update_player_model)
 

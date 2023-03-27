@@ -1,0 +1,43 @@
+{
+
+    "name": "First",
+    "description": "First encounter to get the player model set",
+    "metadata": {
+        "target-model": ["fighter", "method_actor", "storyteller", "tactician", "power_gamer"]
+    },
+    "preconditions": "(and (in luca Tavern) (in bob Tavern) (alive bob) (alive luca))",
+    "instructions": [
+        {
+            "type" : "Camelot",
+            "commands": [
+                "DisableInput()"
+            ]
+        },
+        {
+            "type" : "PDDL",
+            "commands": [
+                "move-within-location(luca, bob, Tavern)"
+            ]
+        },
+        {
+            "type" : "Camelot",
+            "commands": [
+                "Face(luca, bob)",
+                "Wave(luca)"
+            ]
+        },
+        {
+            "type" : "PDDL",
+            "commands": [
+                "start_conversation(luca, initial_narrative)",
+                "move-within-location(luca, Tavern.Fireplace, Tavern)"
+            ]
+        },
+        {
+            "type" : "Camelot",
+            "commands": [
+                "EnableInput()"
+            ]
+        }
+    ]
+}
