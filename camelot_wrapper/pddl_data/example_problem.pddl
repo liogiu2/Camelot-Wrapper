@@ -6,7 +6,7 @@
         Tavern - location
         City - location
         bob - player
-        luca - character
+        father - character
         arnell - character
         AlchemyShop.Chest - furniture
         AlchemyShop.Door - entrypoint
@@ -19,8 +19,8 @@
     
     (:init
         (in bob AlchemyShop)
-        (in luca Tavern)
-        (at luca Tavern.Fireplace)
+        (in father Tavern)
+        (at father Tavern.Fireplace)
         (in arnell City)
         (at arnell City.Bench)
         (at bob AlchemyShop.Door)
@@ -31,7 +31,7 @@
         (adjacent City.GreenHouseDoor Tavern.Door)
         (can_open AlchemyShop.Chest)
         (alive bob)
-        (alive luca)
+        (alive father)
         (alive arnell)
     )
     

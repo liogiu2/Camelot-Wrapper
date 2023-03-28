@@ -1,11 +1,11 @@
 {
 
-    "name": "First",
-    "description": "First encounter to get the player model set",
+    "name": "Second-2",
+    "description": "Second encounter to get the player model set",
     "metadata": {
-        "target-model": ["fighter", "method_actor", "storyteller", "tactician", "power_gamer"]
+        "target-model": ["fighter", "method_actor"]
     },
-    "preconditions": "(and (in father Tavern) (in bob Tavern) (alive bob) (alive father))",
+    "preconditions": "(and (in arnell City) (in bob City) (alive bob) (alive arnell))",
     "instructions": [
         {
             "type" : "Camelot",
@@ -16,21 +16,21 @@
         {
             "type" : "PDDL",
             "commands": [
-                "move-within-location(father, bob, Tavern)"
+                "move-within-location(arnell, bob, City)"
             ]
         },
         {
             "type" : "Camelot",
             "commands": [
-                "Face(father, bob)",
-                "Wave(father)"
+                "Face(arnell, bob)",
+                "Dance(arnell)"
             ]
         },
         {
             "type" : "PDDL",
             "commands": [
-                "start_conversation(father, initial_narrative)",
-                "move-within-location(father, Tavern.Fireplace, Tavern)"
+                "start_conversation(arnell, bnty_callgiver)",
+                "move-within-location(arnell, City.Bench, City)"
             ]
         },
         {

@@ -91,7 +91,7 @@ Companion: ''If you offer no challenge,'' said the Prince, ''then my time here i
 ===
 title: MoralVidalStory
 ---
-Companion: Right you may be, my <boy/girl>, but alas, he did not, and we may never know what that poor old man had to offer.
+Companion: Right you may be, my boy, but alas, he did not, and we may never know what that poor old man had to offer.
 Companion: Now tell me, <FirstName>: what can we learn from Prince Vi'dal's choice? Is there a moral to this story?
 -> Player: ''Personal ambition should not blind us to the needs of others.''
     <<update_player_model 0 100 0 0 0>>
