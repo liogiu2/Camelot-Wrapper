@@ -48,7 +48,7 @@ If you use this software and you're writing a research paper, please cite our re
 | "new"                 | string              | New relation added to the world state                     |
 | "changed_value"       | string              | Relation changed value in the world state                 |
 | "new_entity"          | string              | Name of the entity that has been added to the world state |
-| "update_player_model" | string              | An update to the player model happened in the environment. <p> the string contains five values formatted as: <p> "('value_1', 'value_2', [...], 'value_5')|
+| "update_player_model" | string              | An update to the player model happened in the environment. <p> The string contains five values formatted as: <p> "('value_1', 'value_2', [...], 'value_5')"|
 
 ## Contributing
 Pull requests are welcome, but please open an issue first to discuss what you would like to change.
