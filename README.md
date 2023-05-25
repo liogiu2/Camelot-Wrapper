@@ -31,6 +31,17 @@ To have it working correcly, a Camelot Wrapper needs to be launched in combinati
 Please contact [Giulio Mori](https://github.com/liogiu2) for any questions about how is it used.
 If you use this software and you're writing a research paper, please cite our research paper where we showcase this software using the Github function for citation. 
 
+## Table of Compatibility
+### Initialization - additional_data field
+| Key           | Format              | Additional information    |
+|---------------|---------------------|---------------------------|
+| encounters    | list of dictionary  | Each dictionary has 4 keys "name", "description", "metadata", "preconditions"
+                                        "name": string, indicates the name of the encounter. The EM will send this name to have an encounter executed.
+                                        "description": string, description of the encounter that the author defined.
+                                        "metadata": dictionary, with key "target-model" containing a list of the features that the author has defined as target for the encounter
+                                        "preconditions": string, a list of preconditions using PDDL   |
+
+
 ## Contributing
 Pull requests are welcome, but please open an issue first to discuss what you would like to change.
 
