@@ -3,9 +3,15 @@
     "name": "Second",
     "description": "Second encounter to get the player model set",
     "metadata": {
-        "target-model": ["storyteller", "tactician", "power_gamer"]
+        "target-model": {
+            "fighter" : 1, 
+            "method_actor": 0, 
+            "storyteller" : 4, 
+            "tactician": 0, 
+            "power_gamer": 0
+        }
     },
-    "preconditions": "(and (in arnell City) (in bob City) (alive bob) (alive arnell))",
+    "preconditions": "(and (in arnell City) (in annara City) (alive annara) (alive arnell))",
     "instructions": [
         {
             "type" : "Camelot",
@@ -16,13 +22,13 @@
         {
             "type" : "PDDL",
             "commands": [
-                "move-within-location(arnell, bob, City)"
+                "move-within-location(arnell, annara, City)"
             ]
         },
         {
             "type" : "Camelot",
             "commands": [
-                "Face(arnell, bob)",
+                "Face(arnell, annara)",
                 "Dance(arnell)"
             ]
         },

@@ -1,11 +1,17 @@
 {
 
     "name": "Second-2",
-    "description": "Second encounter to get the player model set",
+    "description": "Second encounter to get the player model set: bounty",
     "metadata": {
-        "target-model": ["fighter", "method_actor"]
+        "target-model": {
+            "fighter" : 0, 
+            "method_actor": 0, 
+            "storyteller" : 0, 
+            "tactician": 1, 
+            "power_gamer": 4
+        }
     },
-    "preconditions": "(and (in arnell City) (in bob City) (alive bob) (alive arnell))",
+    "preconditions": "(and (in arnell City) (in annara City) (alive annara) (alive arnell))",
     "instructions": [
         {
             "type" : "Camelot",
@@ -16,13 +22,13 @@
         {
             "type" : "PDDL",
             "commands": [
-                "move-within-location(arnell, bob, City)"
+                "move-within-location(arnell, annara, City)"
             ]
         },
         {
             "type" : "Camelot",
             "commands": [
-                "Face(arnell, bob)",
+                "Face(arnell, annara)",
                 "Dance(arnell)"
             ]
         },

@@ -161,22 +161,32 @@ class CamelotWorldState:
             problem.add_object(obj, check_duplicates=False)
 
 
-    def _random_character(self, name):
+    def _random_character(self, name : str):
         json_parsed = parse_json('characterlist')
         list_body = [d['name'] for d in json_parsed['body_type']]
-        r_int = random.randint(0, len(list_body)-1)
-        body = list_body[r_int]
-        self._camelot_action.action('CreateCharacter', [name, body], self._wait_for_actions)
-        outfit = ''
-        while True:
-            r_int_outfit = random.randint(0, len(json_parsed['outfit'])-1)
-            outfit = json_parsed['outfit'][r_int_outfit]
-            if outfit['Compatibility'] != 'all':
-                if body in outfit['Compatibility']:
+        if name.lower() == "annara":
+            self._camelot_action.action('CreateCharacter', [name, "A"], self._wait_for_actions)
+            self._camelot_action.action('SetClothing', [name, "Witch"], self._wait_for_actions)
+        elif name.lower() == "father":
+            self._camelot_action.action('CreateCharacter', [name, "D"], self._wait_for_actions)
+            self._camelot_action.action('SetClothing', [name, "King"], self._wait_for_actions)
+        elif name.lower() == "arnell":
+            self._camelot_action.action('CreateCharacter', [name, "H"], self._wait_for_actions)
+            self._camelot_action.action('SetClothing', [name, "LightArmour"], self._wait_for_actions)
+        else:
+            r_int = random.randint(0, len(list_body)-1)
+            body = list_body[r_int]
+            self._camelot_action.action('CreateCharacter', [name, body], self._wait_for_actions)
+            outfit = ''
+            while True:
+                r_int_outfit = random.randint(0, len(json_parsed['outfit'])-1)
+                outfit = json_parsed['outfit'][r_int_outfit]
+                if outfit['Compatibility'] != 'all':
+                    if body in outfit['Compatibility']:
+                        break
+                else:
                     break
-            else:
-                break
-        self._camelot_action.action('SetClothing', [name, outfit['name']], self._wait_for_actions)
+            self._camelot_action.action('SetClothing', [name, outfit['name']], self._wait_for_actions)
 
     def _create_locations_from_problem(self, problem):
         list_locations = problem.find_objects_with_type(shared_variables.supported_types['location'])

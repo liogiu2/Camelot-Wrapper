@@ -5,7 +5,7 @@
     "metadata": {
         "target-model": ["fighter", "method_actor", "storyteller", "tactician", "power_gamer"]
     },
-    "preconditions": "(and (in father Tavern) (in bob Tavern) (alive bob) (alive father))",
+    "preconditions": "(and (in father Tavern) (in annara Tavern) (alive annara) (alive father))",
     "instructions": [
         {
             "type" : "Camelot",
@@ -16,13 +16,13 @@
         {
             "type" : "PDDL",
             "commands": [
-                "move-within-location(father, bob, Tavern)"
+                "move-within-location(father, annara, Tavern)"
             ]
         },
         {
             "type" : "Camelot",
             "commands": [
-                "Face(father, bob)",
+                "Face(father, annara)",
                 "Wave(father)"
             ]
         },

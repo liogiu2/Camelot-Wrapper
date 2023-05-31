@@ -5,7 +5,7 @@
         AlchemyShop - location 
         Tavern - location
         City - location
-        bob - player
+        annara - player
         father - character
         arnell - character
         AlchemyShop.Chest - furniture
@@ -18,26 +18,26 @@
     )
     
     (:init
-        (in bob AlchemyShop)
+        (in annara AlchemyShop)
         (in father Tavern)
         (at father Tavern.Fireplace)
         (in arnell City)
         (at arnell City.Bench)
-        (at bob AlchemyShop.Door)
+        (at annara AlchemyShop.Door)
         (at AlchemyShop.Chest AlchemyShop)
         (adjacent AlchemyShop.Door Tavern.BackDoor) 
         (adjacent Tavern.BackDoor AlchemyShop.Door)
         (adjacent Tavern.Door City.GreenHouseDoor) 
         (adjacent City.GreenHouseDoor Tavern.Door)
         (can_open AlchemyShop.Chest)
-        (alive bob)
+        (alive annara)
         (alive father)
         (alive arnell)
     )
     
     (:goal
         (and
-        (at bob City))
+        (at annara City))
         
     )
         
