@@ -47,7 +47,7 @@ If you use this software and you're writing a research paper, please cite our re
 |-----------------------|---------------------|-----------------------------------------------------------|
 | "new"                 | string              | New relation added to the world state                     |
 | "changed_value"       | string              | Relation changed value in the world state                 |
-| "new_entity"          | string              | Name of the entity that has been added to the world state |
+| "new_entity"          | string              | Name of the entity that has been added to the world state. <p> This message is result of a special PDDL action executed by the experience manager |
 | "update_player_model" | string              | An update to the player model happened in the environment. <p> The string contains five values formatted as: <p> "('value_1', 'value_2', 'value_3', 'value_4', 'value_5')"|
 
 ## Contributing
