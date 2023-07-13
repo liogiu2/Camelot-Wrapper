@@ -33,17 +33,17 @@ If you use this software and you're writing a research paper, please cite our re
 
 ## Table of Compatibility
 ### Initialization - additional_data field
-| Key           | Format              | Additional information    |
+| Key           | Format              | Description    |
 |---------------|---------------------|---------------------------|
 | "encounters"  | list of dictionary  | Each dictionary has 4 keys "name", "description", "metadata", "preconditions" <p> "name": string, indicates the name of the encounter. The EM will send this name to have an encounter executed. <p>"description": string, description of the encounter that the author defined.<p>"metadata": dictionary, with key "target-model" containing a list of the features that the author has defined as target for the encounter <p>"preconditions": string, a list of preconditions using PDDL   |
 
 ### Normal Communication - EM -> ENV
-| Message accepted | Format              | Additional information    |
+| Message accepted | Format              | Description    |
 |------------------|---------------------|---------------------------|
 | PDDL actions     | string              | Message containing the PDDL action to be executed |
 
 ### Normal Communication - ENV -> EM
-| Key                   | Format              | Additional information                                    |
+| Key                   | Format              | Description                                    |
 |-----------------------|---------------------|-----------------------------------------------------------|
 | "new"                 | string              | New relation added to the world state                     |
 | "changed_value"       | string              | Relation changed value in the world state                 |
